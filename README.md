@@ -353,12 +353,14 @@ The repository currently includes these example inputs in `examples/`:
 - `ai-design-tool-demand-demo.json` — a richer demo covering logic, Pagination, multi-question pages, child input, score, and nps
 - `service-satisfaction-multi-finish.json` — a more production-like satisfaction flow with branch-specific ending pages
 - `service-satisfaction-three-finish.json` — a three-ending example for positive / neutral / negative user branches
+- `service-satisfaction-post-submit-redirect.json` — a real-world service callback demo with branch-specific finish pages and different post-submit redirects
 
 Generated HTML examples are also checked in for direct inspection and browser testing, including:
 
 - `examples/ai-design-tool-demand-demo.html`
 - `examples/service-satisfaction-multi-finish.html`
 - `examples/service-satisfaction-three-finish.html`
+- `examples/service-satisfaction-post-submit-redirect.html`
 
 ---
 

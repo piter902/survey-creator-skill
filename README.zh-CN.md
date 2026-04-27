@@ -331,12 +331,14 @@ Cursor 没有和 Codex 一样统一的 skill 规范，但这个仓库依然适�
 - `examples/ai-design-tool-demand-demo.json`：更完整的综合示例，覆盖 logic、Pagination、手动分页、一页多题、child input、score、nps
 - `examples/service-satisfaction-multi-finish.json`：更接近真实业务的双结束页满意度问卷示例
 - `examples/service-satisfaction-three-finish.json`：满意 / 中立 / 不满意三结束页分流示例
+- `examples/service-satisfaction-post-submit-redirect.json`：更贴近真实投放的服务回访示例，覆盖多结束页 + 提交后差异化跳转
 
 仓库中也附带了可直接打开查看的生成 HTML：
 
 - `examples/ai-design-tool-demand-demo.html`
 - `examples/service-satisfaction-multi-finish.html`
 - `examples/service-satisfaction-three-finish.html`
+- `examples/service-satisfaction-post-submit-redirect.html`
 
 ---
 
