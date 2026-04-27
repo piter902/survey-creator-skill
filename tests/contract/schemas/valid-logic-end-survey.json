@@ -69,7 +69,14 @@
       "id": "finish_logic_end_survey_comfort",
       "title": "<h2>已提前结束</h2>",
       "description": "<p>没关系，仍然感谢你的时间，祝你今天顺利。</p>",
-      "media": []
+      "media": [],
+      "postSubmit": {
+        "type": "redirect",
+        "url": "https://example.com/follow-up",
+        "mode": "delay",
+        "delayMs": 1800,
+        "openIn": "self"
+      }
     }
   ],
   "logic": [

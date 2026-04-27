@@ -45,6 +45,7 @@ SCHEMA_CASES = {
     'complete-score-media.json': True,
     'complete-nps-media.json': True,
     'full-all-types.json': True,
+    'valid-finish-post-submit-immediate.json': True,
     'invalid-unsupported-field.json': False,
     'invalid-duplicate-id.json': False,
     'invalid-input-datatype.json': False,
@@ -58,6 +59,7 @@ SCHEMA_CASES = {
     'invalid-pagination-extra-fields.json': False,
     'invalid-media-type.json': False,
     'invalid-media-url-scheme.json': False,
+    'invalid-finish-post-submit-url.json': False,
     'invalid-id-unsafe-chars.json': False,
     'invalid-nps-scope-reversed.json': False,
 }
@@ -275,6 +277,39 @@ def test_logic_end_survey_pipeline_and_interaction():
         assert_case('logic-end-survey-gate-submitted', 'question_gate' in answer_ids, True, answers)
         assert_case('logic-end-survey-required-question-omitted', 'question_required_detail' in answer_ids, False, answers)
         assert_case('logic-end-survey-target-finish-reached', last_interaction.get('id'), 'finish_logic_end_survey_comfort', interactions)
+        redirects = data.get('htmlInteractionE2E', {}).get('redirects') or []
+        assert_case('logic-end-survey-delay-redirect-fired', len(redirects) > 0, True, redirects)
+        assert_case('logic-end-survey-delay-redirect-mode', redirects[-1].get('mode'), 'delay', redirects)
+        assert_case('logic-end-survey-delay-redirect-url', redirects[-1].get('url'), 'https://example.com/follow-up', redirects)
+
+
+def test_finish_post_submit_immediate_pipeline_and_interaction():
+    with tempfile.TemporaryDirectory(prefix='survey-creator-contract-finish-post-submit-immediate.') as tmp:
+        tmp_path = Path(tmp)
+        proc = subprocess.run([
+            'python3', str(PIPELINE),
+            '--schema', str(SCHEMAS / 'valid-finish-post-submit-immediate.json'),
+            '--output-dir', str(tmp_path),
+            '--auto-repair',
+            '--fail-on-high-warning',
+            '--json',
+        ], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if proc.returncode != 0:
+            print(proc.stdout)
+            print(proc.stderr, file=sys.stderr)
+            raise AssertionError('finish post submit immediate pipeline returned non-zero')
+        data = json.loads(proc.stdout)
+        assert_case('finish-post-submit-immediate-pipeline-valid', data.get('valid'), True)
+        assert_case('finish-post-submit-immediate-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
+        payload = data.get('htmlInteractionE2E', {}).get('payload') or {}
+        answers = payload.get('answers', [])
+        answer_ids = {item.get('questionId') for item in answers if isinstance(item, dict)}
+        assert_case('finish-post-submit-immediate-question-submitted', 'question_finish_post_submit_gate' in answer_ids, True, answers)
+        redirects = data.get('htmlInteractionE2E', {}).get('redirects') or []
+        assert_case('finish-post-submit-immediate-fired', len(redirects) > 0, True, redirects)
+        assert_case('finish-post-submit-immediate-mode', redirects[-1].get('mode'), 'immediate', redirects)
+        assert_case('finish-post-submit-immediate-open-in', redirects[-1].get('openIn'), 'blank', redirects)
+        assert_case('finish-post-submit-immediate-url', redirects[-1].get('url'), 'https://example.com/next-step', redirects)
 
 
 def test_logic_hide_question_pipeline_and_interaction():
@@ -883,6 +918,7 @@ def main():
     test_logic_pipeline_and_interaction()
     test_logic_jump_page_pipeline_and_interaction()
     test_logic_end_survey_pipeline_and_interaction()
+    test_finish_post_submit_immediate_pipeline_and_interaction()
     test_logic_hide_question_pipeline_and_interaction()
     test_logic_show_option_pipeline_and_interaction()
     test_logic_combo_chain_pipeline_and_interaction()

@@ -274,6 +274,101 @@
       return true;
     }
 
+    function activeFinishScreen() {
+      const activeId = logicState.activeFinishId || currentScreenId();
+      return finishScreens.find((item) => item.id === activeId)
+        || finishScreens.find((item) => item.id === currentScreenId())
+        || defaultFinishScreen;
+    }
+
+    function submitStatusNode() {
+      return document.querySelector('.screen.is-active [data-submit-status]') || form.querySelector('[data-submit-status]');
+    }
+
+    function setSubmitStatus(message, actionsHtml = '') {
+      const node = submitStatusNode();
+      if (!node) return;
+      node.innerHTML = `<div class="submit-status-card"><div class="submit-status-text">${escapeHtml(message)}</div>${actionsHtml}</div>`;
+      node.classList.add('is-visible');
+    }
+
+    function resetAfterSubmit() {
+      cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+      form.reset();
+      updateChildVisibility();
+      show(0, false);
+    }
+
+    function navigateAfterSubmit(action) {
+      const record = {
+        type: action.type,
+        url: action.url,
+        mode: action.mode,
+        delayMs: action.delayMs,
+        openIn: action.openIn,
+        surveyId,
+        triggeredAt: new Date().toISOString()
+      };
+      window.__surveyRedirects = Array.isArray(window.__surveyRedirects) ? window.__surveyRedirects : [];
+      window.__surveyRedirects.push(record);
+      if (typeof window.__surveyNavigate === 'function') {
+        window.__surveyNavigate(record);
+        return;
+      }
+      if (action.openIn === 'blank') {
+        const opened = window.open(action.url, '_blank', 'noopener,noreferrer');
+        if (!opened) window.location.assign(action.url);
+        return;
+      }
+      window.location.assign(action.url);
+    }
+
+    function runPostSubmitAction(finish, payload) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      window.__surveySubmitEvents = Array.isArray(window.__surveySubmitEvents) ? window.__surveySubmitEvents : [];
+      window.__surveySubmitEvents.push({
+        surveyId,
+        finishId: finish?.id || defaultFinishScreen.id,
+        submittedAt: payload?.submittedAt || new Date().toISOString(),
+        postSubmit: action
+      });
+
+      if (!action) {
+        resetAfterSubmit();
+        alert('提交成功，感谢你的填写。');
+        return;
+      }
+
+      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = true; });
+      const immediateActionHtml = action.mode === 'delay'
+        ? `<div class="submit-status-actions"><button class="btn secondary" type="button" data-submit-go-now>立即前往</button></div>`
+        : '';
+
+      if (action.mode === 'delay') {
+        const renderCountdown = () => {
+          const seconds = Math.max(1, Math.ceil(action.delayMs / 1000));
+          setSubmitStatus(`提交成功，${seconds} 秒后将跳转至下一步。`, immediateActionHtml);
+          submitStatusNode()?.querySelector('[data-submit-go-now]')?.addEventListener('click', () => navigateAfterSubmit(action), { once: true });
+        };
+        renderCountdown();
+        const startedAt = Date.now();
+        const timer = window.setInterval(() => {
+          const remaining = Math.max(0, action.delayMs - (Date.now() - startedAt));
+          const seconds = Math.max(1, Math.ceil(remaining / 1000));
+          setSubmitStatus(`提交成功，${seconds} 秒后将跳转至下一步。`, immediateActionHtml);
+          submitStatusNode()?.querySelector('[data-submit-go-now]')?.addEventListener('click', () => navigateAfterSubmit(action), { once: true });
+          if (remaining <= 0) {
+            window.clearInterval(timer);
+            navigateAfterSubmit(action);
+          }
+        }, 250);
+        return;
+      }
+
+      setSubmitStatus('提交成功，正在前往下一步...');
+      navigateAfterSubmit(action);
+    }
+
     function bindEvents() {
       form.addEventListener('click', (e) => {
         if (e.target.matches('[data-next]')) {
@@ -346,11 +441,7 @@
         const payload = assemblePayload();
         console.log(payload);
         localStorage.removeItem(cacheKey);
-        cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
-        form.reset();
-        updateChildVisibility();
-        show(0, false);
-        alert('提交成功，感谢你的填写。');
+        runPostSubmitAction(activeFinishScreen(), payload);
       });
     }
 

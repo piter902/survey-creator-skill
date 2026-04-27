@@ -287,6 +287,8 @@ When multiple finish nodes exist:
 - treat `finish[0]` as the default finish
 - allow `logic.action.type === "end_survey"` to route to a specific `finish[].id` via `action.targetQuestionId`
 - use multiple finish nodes only when the final tone or next-step guidance truly differs between user branches
+- when a finish needs a follow-up destination, place it under `finish[].postSubmit`
+- `finish[].postSubmit.redirect` must run only after successful submit, never when the finish screen first appears
 
 ### Step 5: Build submission payload behavior
 Use `references/submission-contract.md` as the default submit serialization protocol.

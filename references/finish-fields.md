@@ -27,6 +27,31 @@ In HTML, it usually becomes the submit area, completion explanation, or final CT
 - Supported media types: image, audio, video
 - Resource value: link or base64
 
+### `postSubmit`
+- Type: `object`
+- Meaning: post-submit action executed **only after the questionnaire payload has been assembled and submitted successfully**
+- Supported shape today:
+
+```json
+{
+  "type": "redirect",
+  "url": "https://example.com/next-step",
+  "mode": "immediate",
+  "delayMs": 3000,
+  "openIn": "self"
+}
+```
+
+- `type`: currently only `redirect`
+- `url`: destination URL, must start with `http://`, `https://`, `/`, `./`, `../`, or `#`
+- `mode`:
+  - `immediate` = redirect right after successful submit
+  - `delay` = show success state first, then redirect after a countdown
+- `delayMs`: optional for `delay`; runtime defaults to `3000`
+- `openIn`:
+  - `self` = current tab
+  - `blank` = new tab/window when allowed by the browser
+
 ## Top-level shape
 Canonical survey shape:
 
@@ -46,6 +71,7 @@ You may include multiple finish nodes when different logic branches should land 
 - This section should contain or sit immediately adjacent to the submit action
 - It should clarify the last step of the respondent journey
 - Use it to reinforce trust, next steps, or a concise thank-you message
+- If `postSubmit` exists, keep the finish UI as the final confirmation area, but execute the redirect only after submit succeeds
 
 ## Semantic guidance
 
@@ -58,6 +84,7 @@ You may include multiple finish nodes when different logic branches should land 
 - Do not place question instructions in the finish block
 - Do not turn the finish block into a second welcome section
 - Do not use finish copy to restate required-field rules
+- Do not use finish redirect as a pre-submit skip; redirect belongs to the post-submit phase only
 
 ### Lint-worthy situations
 - semantically empty title

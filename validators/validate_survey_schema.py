@@ -8,8 +8,12 @@ PAGINATION_TYPE = "Pagination"
 ALLOWED_DATA_TYPES = {"email", "tel", "number", "text", "date", "time", "dateTime", "dateRange", "timeRange", "dateTimeRange"}
 ALLOWED_LOGIC_OPERATORS = {"selected", "not_selected", "contains", "not_contains", "exists", "not_exists", "answered", "not_answered", "eq", "neq", "gt", "lt"}
 ALLOWED_LOGIC_ACTIONS = {"show_question", "hide_question", "show_option", "hide_option", "auto_select_option", "jump_to_question", "jump_to_page", "end_survey"}
+ALLOWED_POST_SUBMIT_TYPES = {"redirect"}
+ALLOWED_POST_SUBMIT_MODES = {"immediate", "delay"}
+ALLOWED_POST_SUBMIT_OPEN_IN = {"self", "blank"}
 ID_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
 MEDIA_URL_PATTERN = re.compile(r"^(https?://|data:(image|audio|video)/)", re.I)
+POST_SUBMIT_URL_PATTERN = re.compile(r"^(https?://|/|\./|\.\./|#)", re.I)
 
 
 def is_plain_object(v):
@@ -92,6 +96,33 @@ def validate_rich_text_string(value, node_path, reporter, required=True):
         return
     if not isinstance(value, str):
         reporter.error(node_path, "Field must be a string.")
+
+
+def validate_post_submit(post_submit, node_path, reporter):
+    if post_submit is None:
+        return
+    if not is_plain_object(post_submit):
+        reporter.error(node_path, "postSubmit must be an object.")
+        return
+    assert_allowed_keys(post_submit, ["type", "url", "mode", "delayMs", "openIn"], node_path, reporter)
+    if post_submit.get("type") not in ALLOWED_POST_SUBMIT_TYPES:
+        reporter.error(f"{node_path}.type", 'postSubmit.type must equal "redirect".')
+    url = post_submit.get("url")
+    if not is_non_empty_string(url):
+        reporter.error(f"{node_path}.url", "postSubmit.url must be a non-empty string.")
+    elif not POST_SUBMIT_URL_PATTERN.match(url.strip()):
+        reporter.error(f"{node_path}.url", "postSubmit.url must start with http://, https://, /, ./, ../, or #.")
+    mode = post_submit.get("mode")
+    if mode not in ALLOWED_POST_SUBMIT_MODES:
+        reporter.error(f"{node_path}.mode", 'postSubmit.mode must be "immediate" or "delay".')
+    delay_ms = post_submit.get("delayMs")
+    if delay_ms is not None and not is_integer_like(delay_ms):
+        reporter.error(f"{node_path}.delayMs", "postSubmit.delayMs must be an integer or numeric string.")
+    elif is_integer_like(delay_ms) and int(delay_ms) < 0:
+        reporter.error(f"{node_path}.delayMs", "postSubmit.delayMs cannot be negative.")
+    open_in = post_submit.get("openIn")
+    if open_in is not None and open_in not in ALLOWED_POST_SUBMIT_OPEN_IN:
+        reporter.error(f"{node_path}.openIn", 'postSubmit.openIn must be "self" or "blank".')
 
 
 def normalize_rich_text(value):
@@ -608,7 +639,7 @@ def validate_finish_nodes(finish_raw, reporter, id_map):
         if not is_plain_object(finish):
             reporter.error(path, "finish item must be an object.")
             continue
-        assert_allowed_keys(finish, ["type", "id", "title", "description", "media"], path, reporter)
+        assert_allowed_keys(finish, ["type", "id", "title", "description", "media", "postSubmit"], path, reporter)
         if finish.get("type") != "finish":
             reporter.error(f"{path}.type", 'finish.type must equal "finish".')
         if finish.get("id") is not None:
@@ -617,6 +648,7 @@ def validate_finish_nodes(finish_raw, reporter, id_map):
         validate_rich_text_string(finish.get("description"), f"{path}.description", reporter, False)
         if finish.get("media") is not None:
             validate_media_list(finish.get("media"), f"{path}.media", reporter)
+        validate_post_submit(finish.get("postSubmit"), f"{path}.postSubmit", reporter)
         normalized.append(finish)
     return normalized
 
@@ -648,6 +680,12 @@ def semantic_lint(schema, reporter):
             lower = desc.lower()
             if any(token in lower for token in ["必填", "单选", "多选", "下一页", "question", "题目"]):
                 reporter.warn(f"{finish_path}.description", "finish.description may contain question-like or flow-control copy; finish should usually be end-state messaging.", "medium", "finish-looks-like-question-copy", "Rewrite the finish description as completion feedback or next-step guidance.", "Remove question instructions, pagination hints, and required-field wording from the finish block.")
+        post_submit = finish_node.get("postSubmit")
+        if is_plain_object(post_submit):
+            if post_submit.get("type") == "redirect" and not is_non_empty_string(post_submit.get("url")):
+                reporter.warn(f"{finish_path}.postSubmit.url", "postSubmit is present but the redirect URL is empty.", "high", "empty-post-submit-url", "Provide a valid destination URL or remove postSubmit.", "Use an absolute https URL or a safe relative path.")
+            if post_submit.get("mode") == "delay" and post_submit.get("delayMs") is None:
+                reporter.warn(f"{finish_path}.postSubmit.delayMs", "Delayed redirect is configured without delayMs; runtime will fall back to 3000ms.", "low", "implicit-post-submit-delay", "Set delayMs explicitly if the countdown matters for the business flow.", "Add delayMs such as 2000 or 3000.")
 
     pagination_indices = []
     for i, question in enumerate(questions):

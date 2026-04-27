@@ -61,6 +61,7 @@ These notes summarize the JSON reference files copied from the admin designer ma
 3. `finish` is canonically an array of one or more finish nodes.
    - The legacy single-object shape may still be normalized for compatibility, but new schemas should always use an array.
    - This is what enables future logic rules to target different ending pages.
+   - Each finish node may optionally define `postSubmit` for actions that run only after submit succeeds.
 4. Media blocks are optional unless the prompt or scenario requires them.
 5. `Pagination` separators can be used to manually group multiple questions into one step only when `onePageOneQuestion === false`.
    - Consecutive or leading/trailing separators are allowed but usually redundant.
@@ -93,3 +94,5 @@ Use them only when the prompt implies “Other, please specify”, follow-up tex
 16. Supported action types are: `show_question`, `hide_question`, `show_option`, `hide_option`, `auto_select_option`, `jump_to_question`, `jump_to_page`, `end_survey`.
 17. Questions or options targeted by `show_*` rules are treated as hidden by default until a matching rule becomes true.
 18. Hidden questions/options should not be validated or submitted.
+19. `finish[].postSubmit` currently supports redirect actions only.
+20. Redirects must run after successful submit, not when the finish page is first displayed.

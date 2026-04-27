@@ -103,6 +103,42 @@
       return typeof value === 'string' && /^(https?:\/\/|data:(image|audio|video)\/)/i.test(value);
     }
 
+    function isSafeRedirectUrl(value) {
+      return typeof value === 'string' && /^(https?:\/\/|\/|\.\/|\.\.\/|#)/i.test(value.trim());
+    }
+
+    function normalizePostSubmitAction(postSubmit) {
+      if (!postSubmit || typeof postSubmit !== 'object') return null;
+      if (postSubmit.type !== 'redirect' || !isSafeRedirectUrl(postSubmit.url || '')) return null;
+      const mode = postSubmit.mode === 'delay' ? 'delay' : 'immediate';
+      const delayValue = Number(postSubmit.delayMs);
+      const delayMs = mode === 'delay' && Number.isFinite(delayValue) && delayValue >= 0 ? delayValue : 3000;
+      const openIn = postSubmit.openIn === 'blank' ? 'blank' : 'self';
+      return {
+        type: 'redirect',
+        url: String(postSubmit.url).trim(),
+        mode,
+        delayMs,
+        openIn
+      };
+    }
+
+    function finishSubmitButtonLabel(finish) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      if (!action) return '确认并提交';
+      return action.mode === 'delay' ? '提交并进入下一步' : '提交并前往';
+    }
+
+    function finishSubmitNote(finish) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      if (!action) return '提交后将立即完成本次问卷，页面不会再要求额外填写内容。';
+      if (action.mode === 'delay') {
+        const seconds = Math.max(1, Math.ceil(action.delayMs / 1000));
+        return `提交成功后将展示结束提示，并在 ${seconds} 秒后跳转至下一步。`;
+      }
+      return '提交成功后将立即跳转至下一步页面。';
+    }
+
     function mediaTitle(type) {
       const map = {
         image: '图片素材',

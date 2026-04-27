@@ -101,6 +101,8 @@ async function fillQuestionField(field) {
   await page.addInitScript(() => {
     localStorage.clear();
     window.__surveyPayloads = [];
+    window.__surveyRedirects = [];
+    window.__surveySubmitEvents = [];
     const originalLog = console.log;
     console.log = (...args) => {
       try {
@@ -110,6 +112,7 @@ async function fillQuestionField(field) {
       }
       originalLog(...args);
     };
+    window.__surveyNavigate = () => {};
     window.alert = () => {};
   });
 
@@ -144,7 +147,14 @@ async function fillQuestionField(field) {
       if (state.type === 'finish') {
         await page.locator('.screen.is-active button[type="submit"]').click();
         submitClicked = true;
-        await page.waitForTimeout(300);
+        const waitAfterSubmit = await page.evaluate(() => {
+          const events = Array.isArray(window.__surveySubmitEvents) ? window.__surveySubmitEvents : [];
+          const action = events[events.length - 1]?.postSubmit;
+          if (action?.mode === 'delay') return Math.min(Number(action.delayMs || 0) + 500, 5000);
+          if (action?.mode === 'immediate') return 200;
+          return 300;
+        });
+        await page.waitForTimeout(waitAfterSubmit);
         break;
       }
 
@@ -175,6 +185,8 @@ async function fillQuestionField(field) {
   const result = await page.evaluate(() => {
     const payloads = (window.__surveyPayloads || []).map(args => args[0]).filter(item => item && typeof item === 'object' && item.surveyId && Array.isArray(item.answers));
     const payload = payloads[payloads.length - 1] || null;
+    const redirects = Array.isArray(window.__surveyRedirects) ? window.__surveyRedirects : [];
+    const submitEvents = Array.isArray(window.__surveySubmitEvents) ? window.__surveySubmitEvents : [];
     const renderedQuestions = Array.from(document.querySelectorAll('.screen[data-schema-type], .field[data-schema-type]'))
       .map(node => ({ id: node.dataset.screenId, type: node.dataset.schemaType }))
       .filter(item => item.id && !['survey', 'survey-all', 'finish', 'page'].includes(item.type));
@@ -195,7 +207,8 @@ async function fillQuestionField(field) {
       const key = localStorage.key(i);
       if (key && key.startsWith('survey_step_cache_')) cacheKeys.push(key);
     }
-    return { payload, renderedQuestions, renderedQuestionTypes, schemaQuestions, cacheKeys };
+    const submitStatus = document.querySelector('[data-submit-status]')?.innerText?.trim() || '';
+    return { payload, redirects, submitEvents, submitStatus, renderedQuestions, renderedQuestionTypes, schemaQuestions, cacheKeys };
   });
 
   await browser.close();
@@ -399,6 +412,9 @@ def validate_single_viewport_interaction(html_path: Path, viewport_name):
         "viewport": raw.get("viewport") or {"name": viewport_name, **VIEWPORTS.get(viewport_name, {})},
         "interactions": raw.get("interactions", []),
         "payload": payload,
+        "redirects": result.get("redirects") or [],
+        "submitEvents": result.get("submitEvents") or [],
+        "submitStatus": result.get("submitStatus") or "",
         "questionTypes": question_types,
         "renderedQuestions": result.get("renderedQuestions") or [],
         "schemaQuestions": result.get("schemaQuestions") or [],
@@ -429,6 +445,9 @@ def validate_html_interaction_e2e(html_path: Path, viewport="all"):
         "viewports": viewport_reports,
         "interactions": first.get("interactions", []),
         "payload": first.get("payload"),
+        "redirects": first.get("redirects", []),
+        "submitEvents": first.get("submitEvents", []),
+        "submitStatus": first.get("submitStatus", ""),
         "questionTypes": first.get("questionTypes", []),
         "renderedQuestions": first.get("renderedQuestions", []),
         "schemaQuestions": first.get("schemaQuestions", []),

@@ -156,6 +156,8 @@ This project already enforces these runtime rules:
 - auto-select only applies to final visible targets
 - `end_survey` can target a specific `finish[].id`
 - multiple finish nodes are supported for branch-specific endings
+- each `finish[]` may optionally define `postSubmit.redirect`
+- redirect actions only run **after** a successful submit, so survey payload collection is not skipped
 
 ---
 

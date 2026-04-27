@@ -1,0 +1,53 @@
+{
+  "survey": {
+    "type": "survey",
+    "id": "survey_finish_post_submit_immediate",
+    "title": "<h1>提交后立即跳转</h1>",
+    "description": "<p>验证 finish.postSubmit 会在提交成功后立即跳转。</p>",
+    "attribute": {
+      "onePageOneQuestion": true,
+      "allowBack": true,
+      "media": []
+    }
+  },
+  "questions": [
+    {
+      "type": "radio",
+      "id": "question_finish_post_submit_gate",
+      "title": "<h2>你是否愿意继续查看下一步说明？</h2>",
+      "description": "<p>请选择一项后提交。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_finish_post_submit_yes",
+          "title": "<p>愿意</p>",
+          "attribute": { "media": [] }
+        },
+        {
+          "id": "option_finish_post_submit_no",
+          "title": "<p>暂时不用</p>",
+          "attribute": { "media": [] }
+        }
+      ]
+    }
+  ],
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_post_submit_immediate",
+      "title": "<h2>感谢你的反馈</h2>",
+      "description": "<p>提交成功后会立即带你进入后续说明页。</p>",
+      "media": [],
+      "postSubmit": {
+        "type": "redirect",
+        "url": "https://example.com/next-step",
+        "mode": "immediate",
+        "openIn": "blank"
+      }
+    }
+  ]
+}

@@ -260,6 +260,32 @@
       line-height: 1.7;
       color: var(--text-soft);
     }
+    .finish-submit-status {
+      display: none;
+    }
+    .finish-submit-status.is-visible {
+      display: block;
+    }
+    .submit-status-card {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid rgba(46, 160, 67, 0.24);
+      border-radius: 16px;
+      background: rgba(46, 160, 67, 0.08);
+    }
+    .submit-status-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .dark .submit-status-text {
+      color: var(--text-light);
+    }
+    .submit-status-actions {
+      display: flex;
+      justify-content: flex-start;
+    }
     .hero-grid, .finish-grid {
       grid-template-columns: 1fr;
       align-items: start;

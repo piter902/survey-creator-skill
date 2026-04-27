@@ -71,6 +71,10 @@ function validateHtmlRuntime(html) {
   checkPattern(html, reporter, 'runtime.submitIntercept', 'HTML should intercept form submit.', "form.addEventListener('submit'");
   checkPattern(html, reporter, 'runtime.changeIntercept', 'HTML should react to checkbox/input changes.', "form.addEventListener('change'");
   checkPattern(html, reporter, 'runtime.inputIntercept', 'HTML should react to input changes for cache persistence.', "form.addEventListener('input'");
+  if (has(html, 'postSubmit')) {
+    checkPattern(html, reporter, 'runtime.postSubmit', 'HTML with finish postSubmit should normalize and execute post-submit actions.', 'function runPostSubmitAction(');
+    checkPattern(html, reporter, 'runtime.postSubmit.redirect', 'HTML with finish postSubmit should support redirect execution.', 'function navigateAfterSubmit(');
+  }
 
   if (has(html, 'onePageOneQuestion')) {
     checkPattern(html, reporter, 'runtime.screens', 'Step mode should define screens().', 'function screens()');
@@ -115,6 +119,7 @@ function validateHtmlRuntime(html) {
       exclusive: has(html, 'dataset.exclusive'),
       mutualExclusion: has(html, 'dataset.mutualExclusion'),
       childVisibility: has(html, 'function updateChildVisibility()'),
+      postSubmit: has(html, 'function runPostSubmitAction('),
     }
   };
 

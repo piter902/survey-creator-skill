@@ -17,6 +17,13 @@
                 "type": "audio",
                 "url": "媒体链接"   
             }
-        ]
+        ],
+        "postSubmit": {
+            "type": "redirect",
+            "url": "https://example.com/next-step",
+            "mode": "delay",
+            "delayMs": 3000,
+            "openIn": "self"
+        }
     }
 ]

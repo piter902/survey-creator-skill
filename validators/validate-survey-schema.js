@@ -9,8 +9,12 @@ const ALLOWED_QUESTION_TYPES = new Set(['radio', 'checkbox', 'input']);
 const ALLOWED_DATA_TYPES = new Set([
   'email', 'tel', 'number', 'text', 'date', 'time', 'dateTime', 'dateRange', 'timeRange', 'dateTimeRange'
 ]);
+const ALLOWED_POST_SUBMIT_TYPES = new Set(['redirect']);
+const ALLOWED_POST_SUBMIT_MODES = new Set(['immediate', 'delay']);
+const ALLOWED_POST_SUBMIT_OPEN_IN = new Set(['self', 'blank']);
 const ID_PATTERN = /^[A-Za-z][A-Za-z0-9_-]*$/;
 const MEDIA_URL_PATTERN = /^(https?:\/\/|data:(image|audio|video)\/)/i;
+const POST_SUBMIT_URL_PATTERN = /^(https?:\/\/|\/|\.\/|\.\.\/|#)/i;
 
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -80,6 +84,22 @@ function validateRichTextString(value, nodePath, reporter, required = true) {
     return;
   }
   if (typeof value !== 'string') reporter.error(nodePath, 'Field must be a string.');
+}
+
+function validatePostSubmit(postSubmit, nodePath, reporter) {
+  if (postSubmit == null) return;
+  if (!isPlainObject(postSubmit)) {
+    reporter.error(nodePath, 'postSubmit must be an object.');
+    return;
+  }
+  assertAllowedKeys(postSubmit, ['type', 'url', 'mode', 'delayMs', 'openIn'], nodePath, reporter);
+  if (!ALLOWED_POST_SUBMIT_TYPES.has(postSubmit.type)) reporter.error(`${nodePath}.type`, 'postSubmit.type must equal "redirect".');
+  if (!isNonEmptyString(postSubmit.url)) reporter.error(`${nodePath}.url`, 'postSubmit.url must be a non-empty string.');
+  else if (!POST_SUBMIT_URL_PATTERN.test(postSubmit.url.trim())) reporter.error(`${nodePath}.url`, 'postSubmit.url must start with http://, https://, /, ./, ../, or #.');
+  if (!ALLOWED_POST_SUBMIT_MODES.has(postSubmit.mode)) reporter.error(`${nodePath}.mode`, 'postSubmit.mode must be "immediate" or "delay".');
+  if (postSubmit.delayMs != null && !isIntegerLike(postSubmit.delayMs)) reporter.error(`${nodePath}.delayMs`, 'postSubmit.delayMs must be an integer or numeric string.');
+  else if (isIntegerLike(postSubmit.delayMs) && Number(postSubmit.delayMs) < 0) reporter.error(`${nodePath}.delayMs`, 'postSubmit.delayMs cannot be negative.');
+  if (postSubmit.openIn != null && !ALLOWED_POST_SUBMIT_OPEN_IN.has(postSubmit.openIn)) reporter.error(`${nodePath}.openIn`, 'postSubmit.openIn must be "self" or "blank".');
 }
 
 function registerId(id, pathName, reporter, idMap) {
@@ -257,12 +277,13 @@ function validateFinishNodes(finishRaw, reporter, idMap) {
       reporter.error(nodePath, 'finish item must be an object.');
       return;
     }
-    assertAllowedKeys(finish, ['type', 'id', 'title', 'description', 'media'], nodePath, reporter);
+    assertAllowedKeys(finish, ['type', 'id', 'title', 'description', 'media', 'postSubmit'], nodePath, reporter);
     if (finish.type !== 'finish') reporter.error(`${nodePath}.type`, 'finish.type must equal "finish".');
     if (finish.id != null) registerId(finish.id, `${nodePath}.id`, reporter, idMap);
     validateRichTextString(finish.title, `${nodePath}.title`, reporter, true);
     validateRichTextString(finish.description, `${nodePath}.description`, reporter, false);
     if (finish.media != null) validateMediaList(finish.media, `${nodePath}.media`, reporter);
+    validatePostSubmit(finish.postSubmit, `${nodePath}.postSubmit`, reporter);
     normalized.push(finish);
   });
   return normalized;
