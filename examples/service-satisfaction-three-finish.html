@@ -908,183 +908,21 @@
     const surveySchema = {
   "survey": {
     "type": "survey",
-    "id": "survey_ai_design_tool_demo_20260423",
-    "title": "<h1>AI + 设计工具需求调研 Demo</h1>",
-    "description": "<p>这是一份用于 <strong>survey-creator-skill</strong> 开源示例的综合问卷，用来演示 <em>schema → validation → HTML</em> 的完整流程。</p><p>本示例同时覆盖：<strong>logic</strong>、<strong>Pagination 手动分页</strong>、<strong>一页多题</strong>、<strong>child input</strong>、<strong>score</strong> 与 <strong>nps</strong>。</p>",
+    "id": "survey_service_satisfaction_three_finish",
+    "title": "<h1>服务体验满意度调研</h1>",
+    "description": "<p>这是一份演示 <strong>三结束页分流</strong> 的问卷示例：满意、中立、不满意的用户，会进入不同语气和动作引导的结束页。</p>",
     "attribute": {
-      "onePageOneQuestion": false,
-      "allowBack": false,
+      "onePageOneQuestion": true,
+      "allowBack": true,
       "media": []
     }
   },
   "questions": [
     {
       "type": "radio",
-      "id": "question_recent_usage",
-      "title": "<h2>过去 3 个月，你是否使用过 AI 工具来输出 UI 稿？</h2>",
-      "description": "<p>这里会触发后续逻辑：若你选“高频使用”，会显示进阶追问；若你选“还没有正式使用过”，会直接跳过中间页。</p>",
-      "attribute": {
-        "required": true,
-        "random": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "option_used_often",
-          "title": "<p>是，已经高频使用</p>",
-          "attribute": {
-            "random": false,
-            "media": []
-          }
-        },
-        {
-          "id": "option_used_tried",
-          "title": "<p>试过，但还没形成稳定工作流</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_not_used",
-          "title": "<p>还没有正式使用过</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_other_state",
-          "title": "<p>其他，请说明</p>",
-          "child": [
-            {
-              "type": "input",
-              "id": "child_other_state_reason",
-              "title": "<p>请简单描述你的现状</p>",
-              "attribute": {
-                "required": false,
-                "dataType": "text",
-                "placeholder": "例如：只在灵感探索阶段使用，还没有进入正式项目",
-                "maxLength": 160
-              }
-            }
-          ],
-          "attribute": {
-            "media": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "checkbox",
-      "id": "question_feature_priority",
-      "title": "<h2>如果要选一个 AI 设计工具，你最在意哪些能力？</h2>",
-      "description": "<p>这是第一页中的第二道题，用来演示一页多题。这里也会触发 <code>auto_select_option</code> 和 <code>hide_option</code>。</p>",
-      "attribute": {
-        "required": true,
-        "random": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "option_feature_prompt_to_ui",
-          "title": "<p>一句话生成页面 / 线框 / 高保真 UI</p>",
-          "attribute": {
-            "random": false,
-            "media": []
-          }
-        },
-        {
-          "id": "option_feature_design_system",
-          "title": "<p>能复用设计系统与已有组件</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_feature_editability",
-          "title": "<p>生成后还能继续编辑，而不是只能看图</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_feature_collaboration",
-          "title": "<p>支持和 Figma / Pencil / Codex 等工作流协作</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_feature_blank_canvas",
-          "title": "<p>我更希望从纯空白画布手工开始</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_feature_other",
-          "title": "<p>其他能力诉求</p>",
-          "child": [
-            {
-              "type": "input",
-              "id": "child_feature_other_text",
-              "title": "<p>请补充你的能力诉求</p>",
-              "attribute": {
-                "required": false,
-                "dataType": "text",
-                "placeholder": "例如：自动生成交互动效、自动补齐埋点、自动生成设计说明",
-                "maxLength": 160
-              }
-            }
-          ],
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "option_feature_not_sure",
-          "title": "<p>暂无明确判断，以上都不确定</p>",
-          "attribute": {
-            "exclusive": true,
-            "media": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "Pagination",
-      "id": "page_sep_logic_followup"
-    },
-    {
-      "type": "input",
-      "id": "question_workflow_bottleneck",
-      "title": "<h2>如果你已经尝试过 AI 出图，目前最卡的环节是什么？</h2>",
-      "description": "<p>这是第二页中的逻辑追问题，默认隐藏，仅在“高频使用”时展示；若用户从未使用过 AI，则整页会被跳过。</p>",
-      "attribute": {
-        "required": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "option_workflow_bottleneck_text",
-          "title": "<p>请描述你最主要的工作流阻塞点</p>",
-          "attribute": {
-            "dataType": "text",
-            "placeholder": "例如：生成结果不稳定、难以复用设计系统、改稿成本高",
-            "maxLength": 200,
-            "minLength": 4
-          }
-        }
-      ]
-    },
-    {
-      "type": "Pagination",
-      "id": "page_sep_profile_and_eval"
-    },
-    {
-      "type": "checkbox",
-      "id": "question_platform_focus",
-      "title": "<h2>你目前主要面向哪些端进行设计？</h2>",
-      "description": "<p>这里演示 <code>mutual-exclusion</code>：Web-first 与 Mobile-first 不能同时选中，但仍可与其他普通选项共存。</p>",
+      "id": "question_experience_level",
+      "title": "<h2>你对本次服务的整体感受是？</h2>",
+      "description": "<p>请选择最符合你当前感受的一项。</p>",
       "attribute": {
         "required": true,
         "random": false,
@@ -1092,31 +930,22 @@
       },
       "option": [
         {
-          "id": "option_platform_web_first",
-          "title": "<p>Web-first</p>",
-          "attribute": {
-            "mutual-exclusion": true,
-            "media": []
-          }
-        },
-        {
-          "id": "option_platform_mobile_first",
-          "title": "<p>Mobile-first</p>",
-          "attribute": {
-            "mutual-exclusion": true,
-            "media": []
-          }
-        },
-        {
-          "id": "option_platform_cross_platform",
-          "title": "<p>跨端统一设计</p>",
+          "id": "option_experience_good",
+          "title": "<p>满意，整体体验很好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_platform_admin_b2b",
-          "title": "<p>B 端后台 / 配置类系统</p>",
+          "id": "option_experience_neutral",
+          "title": "<p>一般，还有可优化空间</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_experience_bad",
+          "title": "<p>不满意，体验低于预期</p>",
           "attribute": {
             "media": []
           }
@@ -1124,137 +953,116 @@
       ]
     },
     {
-      "type": "input",
-      "id": "question_profile",
-      "title": "<h2>为了更好理解你的背景，请补充以下信息</h2>",
-      "description": "<p>该题演示一个 <strong>input</strong> 问题可同时包含多个字段，并按 <code>option[].id</code> 分别提交。</p>",
+      "type": "checkbox",
+      "id": "question_neutral_reason",
+      "title": "<h2>如果你觉得一般，主要还差在哪些地方？</h2>",
+      "description": "<p>可多选，帮助我们判断优先优化方向。</p>",
       "attribute": {
         "required": true,
+        "random": false,
         "media": []
       },
       "option": [
         {
-          "id": "option_profile_role",
-          "title": "<p>你的角色</p>",
+          "id": "option_neutral_speed",
+          "title": "<p>效率还不够高</p>",
           "attribute": {
-            "dataType": "text",
-            "placeholder": "例如：UI 设计师 / 产品经理 / 前端开发",
-            "maxLength": 60,
-            "minLength": 2
-          }
-        },
-        {
-          "id": "option_profile_email",
-          "title": "<p>邮箱</p>",
-          "attribute": {
-            "dataType": "email",
-            "placeholder": "name@example.com",
-            "maxLength": 120
-          }
-        },
-        {
-          "id": "option_profile_team_size",
-          "title": "<p>团队人数</p>",
-          "attribute": {
-            "dataType": "number",
-            "placeholder": "例如：5",
-            "maxLength": 3
-          }
-        }
-      ]
-    },
-    {
-      "type": "score",
-      "id": "question_score_current_tools",
-      "title": "<h2>请给你现在使用的设计工具组合打分</h2>",
-      "description": "<p>1 分最低，5 分最高。</p>",
-      "attribute": {
-        "required": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "option_score_quality",
-          "title": "<p>输出质量</p>",
-          "attribute": {
-            "scope": [
-              1,
-              5
-            ],
-            "step": 1,
-            "scoreDesc": {
-              "1": "很差",
-              "2": "较差",
-              "3": "一般",
-              "4": "满意",
-              "5": "非常满意"
-            },
             "media": []
           }
         },
         {
-          "id": "option_score_speed",
-          "title": "<p>产出速度</p>",
+          "id": "option_neutral_clarity",
+          "title": "<p>沟通说明不够清楚</p>",
           "attribute": {
-            "scope": [
-              1,
-              5
-            ],
-            "step": 1,
-            "scoreDesc": {
-              "1": "很差",
-              "2": "较差",
-              "3": "一般",
-              "4": "满意",
-              "5": "非常满意"
-            },
             "media": []
           }
         },
         {
-          "id": "option_score_editability",
-          "title": "<p>后续可编辑性</p>",
+          "id": "option_neutral_detail",
+          "title": "<p>细节体验还可以更精致</p>",
           "attribute": {
-            "scope": [
-              1,
-              5
-            ],
-            "step": 1,
-            "scoreDesc": {
-              "1": "很差",
-              "2": "较差",
-              "3": "一般",
-              "4": "满意",
-              "5": "非常满意"
-            },
             "media": []
           }
         }
       ]
     },
     {
-      "type": "nps",
-      "id": "question_nps_recommendation",
-      "title": "<h2>如果有一款真正可编辑、可复用设计系统、可直接进入工作流的 AI 设计工具，你愿意推荐给同事吗？</h2>",
-      "description": "<p>请按 0-10 分打分，0 表示完全不愿意推荐，10 表示非常愿意推荐。</p>",
+      "type": "checkbox",
+      "id": "question_bad_reason",
+      "title": "<h2>如果不满意，最主要的问题是什么？</h2>",
+      "description": "<p>可多选，我们会优先定位最影响体验的问题。</p>",
       "attribute": {
         "required": true,
+        "random": false,
         "media": []
       },
       "option": [
         {
-          "id": "option_nps_recommendation",
+          "id": "option_bad_attitude",
+          "title": "<p>服务态度不够好</p>",
           "attribute": {
-            "scope": [
-              0,
-              10
-            ],
-            "media": [],
-            "scoreDesc": {
-              "0-6": "不推荐",
-              "7-8": "中立",
-              "9-10": "愿意推荐"
+            "media": []
+          }
+        },
+        {
+          "id": "option_bad_speed",
+          "title": "<p>响应 / 处理速度慢</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_bad_result",
+          "title": "<p>问题没有得到解决</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_bad_other",
+          "title": "<p>其他，请说明</p>",
+          "attribute": {
+            "media": []
+          },
+          "child": [
+            {
+              "type": "input",
+              "id": "child_bad_other_text",
+              "title": "<p>补充说明</p>",
+              "attribute": {
+                "required": true,
+                "dataType": "text",
+                "placeholder": "请补充更具体的问题",
+                "maxLength": 200
+              }
             }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "question_followup_permission",
+      "title": "<h2>我们是否可以联系你继续跟进？</h2>",
+      "description": "<p>仅用于本次服务问题处理，不会用于营销。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_followup_yes",
+          "title": "<p>可以，请联系我</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_followup_no",
+          "title": "<p>暂时不用联系</p>",
+          "attribute": {
+            "media": []
           }
         }
       ]
@@ -1263,61 +1071,108 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_ai_design_tool_demo",
-      "title": "<h2>感谢你的反馈</h2>",
-      "description": "<p>这份 demo 问卷已经覆盖了 <strong>radio / checkbox / input / score / nps / logic / Pagination</strong> 等主要能力。</p><p>提交后，页面会按默认 submission contract 组装 payload，并在浏览器中输出到 <code>console.log</code>。</p>",
+      "id": "finish_positive",
+      "title": "<h2>感谢你的认可</h2>",
+      "description": "<p>你的满意会帮助我们继续保持好的服务标准，也欢迎你未来持续给我们建议。</p>",
+      "media": []
+    },
+    {
+      "type": "finish",
+      "id": "finish_neutral",
+      "title": "<h2>感谢你的建议</h2>",
+      "description": "<p>我们已经收到你的优化方向，会优先复盘影响体验的关键环节。</p>",
+      "media": []
+    },
+    {
+      "type": "finish",
+      "id": "finish_negative",
+      "title": "<h2>很抱歉这次没有让你满意</h2>",
+      "description": "<p>我们会认真处理你的反馈，并持续改进后续服务流程。感谢你仍愿意告诉我们真实感受。</p>",
       "media": []
     }
   ],
   "logic": [
     {
-      "id": "logic_show_workflow_bottleneck",
+      "id": "logic_good_to_positive_finish",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "question_experience_level",
         "operator": "selected",
-        "optionId": "option_used_often"
+        "optionId": "option_experience_good"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_positive"
+      }
+    },
+    {
+      "id": "logic_show_neutral_reason",
+      "when": {
+        "questionId": "question_experience_level",
+        "operator": "selected",
+        "optionId": "option_experience_neutral"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_workflow_bottleneck"
+        "targetQuestionId": "question_neutral_reason"
       }
     },
     {
-      "id": "logic_auto_select_prompt_to_ui",
+      "id": "logic_neutral_reason_to_neutral_finish",
       "when": {
-        "questionId": "question_recent_usage",
-        "operator": "selected",
-        "optionId": "option_used_often"
+        "questionId": "question_neutral_reason",
+        "operator": "answered"
       },
       "action": {
-        "type": "auto_select_option",
-        "targetQuestionId": "question_feature_priority",
-        "targetOptionId": "option_feature_prompt_to_ui"
+        "type": "end_survey",
+        "targetQuestionId": "finish_neutral"
       }
     },
     {
-      "id": "logic_hide_blank_canvas_for_power_users",
+      "id": "logic_show_bad_reason",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "question_experience_level",
         "operator": "selected",
-        "optionId": "option_used_often"
+        "optionId": "option_experience_bad"
       },
       "action": {
-        "type": "hide_option",
-        "targetQuestionId": "question_feature_priority",
-        "targetOptionId": "option_feature_blank_canvas"
+        "type": "show_question",
+        "targetQuestionId": "question_bad_reason"
       }
     },
     {
-      "id": "logic_jump_skip_followup_page",
+      "id": "logic_show_followup_permission",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "question_experience_level",
         "operator": "selected",
-        "optionId": "option_not_used"
+        "optionId": "option_experience_bad"
       },
       "action": {
-        "type": "jump_to_page",
-        "targetQuestionId": "question_platform_focus"
+        "type": "show_question",
+        "targetQuestionId": "question_followup_permission"
+      }
+    },
+    {
+      "id": "logic_bad_followup_yes_to_negative_finish",
+      "when": {
+        "questionId": "question_followup_permission",
+        "operator": "selected",
+        "optionId": "option_followup_yes"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_negative"
+      }
+    },
+    {
+      "id": "logic_bad_followup_no_to_negative_finish",
+      "when": {
+        "questionId": "question_followup_permission",
+        "operator": "selected",
+        "optionId": "option_followup_no"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_negative"
       }
     }
   ]

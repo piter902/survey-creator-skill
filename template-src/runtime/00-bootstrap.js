@@ -79,13 +79,15 @@
           ]
         }
       ],
-      finish: {
-        type: 'finish',
-        id: 'finish_tpl_f2m5z1qp',
-        title: '<h2>提交前请确认信息无误</h2>',
-        description: '<p>提交后我们会记录你的答案，用于后续分析与体验优化。</p>',
-        media: []
-      }
+      finish: [
+        {
+          type: 'finish',
+          id: 'finish_tpl_f2m5z1qp',
+          title: '<h2>提交前请确认信息无误</h2>',
+          description: '<p>提交后我们会记录你的答案，用于后续分析与体验优化。</p>',
+          media: []
+        }
+      ]
     };
 
     const surveyStylePack = "consumer-minimal";
@@ -97,6 +99,34 @@
     const surveyId = surveySchema.survey.id;
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
+    const finishScreens = (() => {
+      const rawFinish = Array.isArray(surveySchema.finish)
+        ? surveySchema.finish
+        : surveySchema.finish && typeof surveySchema.finish === 'object'
+        ? [surveySchema.finish]
+        : [];
+      const normalized = rawFinish
+        .filter((item) => item && typeof item === 'object')
+        .map((item, index) => ({
+          ...item,
+          type: 'finish',
+          id: item.id || `finish_${index + 1}`,
+          media: Array.isArray(item.media) ? item.media : []
+        }));
+      if (!normalized.length) {
+        normalized.push({
+          type: 'finish',
+          id: 'finish_fallback',
+          title: '<h2>提交完成</h2>',
+          description: '<p>感谢你的填写。</p>',
+          media: []
+        });
+      }
+      return normalized;
+    })();
+    surveySchema.finish = finishScreens;
+    const defaultFinishScreen = finishScreens[0];
+    const finishScreenIds = new Set(finishScreens.map((item) => item.id).filter(Boolean));
     const rawQuestions = Array.isArray(surveySchema.questions) ? surveySchema.questions : [];
     const answerableQuestions = rawQuestions.filter((question) => question?.type !== 'Pagination');
     document.body.dataset.stylePack = surveyStylePack || 'consumer-minimal';

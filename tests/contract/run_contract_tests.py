@@ -9,6 +9,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'validators'))
 CONTRACT = ROOT / 'tests' / 'contract'
 SCHEMAS = CONTRACT / 'schemas'
 PAYLOADS = CONTRACT / 'payloads'
@@ -18,6 +19,9 @@ VALIDATE_PAYLOAD_SCHEMA = ROOT / 'validators' / 'validate_payload_against_schema
 VALIDATE_INTERACTION_E2E = ROOT / 'validators' / 'validate_survey_html_interaction_e2e.py'
 VALIDATE_ACCESSIBILITY = ROOT / 'validators' / 'validate_survey_html_accessibility.py'
 PIPELINE = ROOT / 'validators' / 'run_survey_creator_pipeline.py'
+from run_survey_creator_pipeline import validate_browser_payloads_against_schema, compute_release_decision
+from auto_repair_survey_html import auto_repair_html
+from render_survey_html import render_html_from_schema, DEFAULT_TEMPLATE
 
 SCHEMA_CASES = {
     'minimal-radio.json': True,
@@ -263,11 +267,14 @@ def test_logic_end_survey_pipeline_and_interaction():
         data = json.loads(proc.stdout)
         assert_case('logic-end-survey-pipeline-valid', data.get('valid'), True)
         assert_case('logic-end-survey-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
+        interactions = data.get('htmlInteractionE2E', {}).get('interactions') or []
+        last_interaction = interactions[-1] if interactions else {}
         payload = data.get('htmlInteractionE2E', {}).get('payload') or {}
         answers = payload.get('answers', [])
         answer_ids = {item.get('questionId') for item in answers if isinstance(item, dict)}
         assert_case('logic-end-survey-gate-submitted', 'question_gate' in answer_ids, True, answers)
         assert_case('logic-end-survey-required-question-omitted', 'question_required_detail' in answer_ids, False, answers)
+        assert_case('logic-end-survey-target-finish-reached', last_interaction.get('id'), 'finish_logic_end_survey_comfort', interactions)
 
 
 def test_logic_hide_question_pipeline_and_interaction():
@@ -793,6 +800,54 @@ def test_interaction_e2e_rejects_bad_runtime_payload():
         assert_case('interaction-e2e-bad-runtime-optionid-detected', 'does not exist under schema question' in messages, True, messages)
 
 
+def test_pipeline_release_decision_blocks_browser_payload_schema_mismatch():
+    schema = json.loads((SCHEMAS / 'full-all-types.json').read_text(encoding='utf-8'))
+    payload = json.loads((PAYLOADS / 'valid-all-types.json').read_text(encoding='utf-8'))
+    bad_payload = json.loads(json.dumps(payload))
+    for answer in bad_payload.get('answers', []):
+        if answer.get('questionType') == 'score':
+            answer['value'][0]['optionId'] = 'option_score_missing_from_browser'
+            break
+    interaction_report = {
+        'viewports': {
+            'desktop': {'payload': bad_payload},
+            'mobile': {'payload': payload},
+        }
+    }
+    browser_payload_report = validate_browser_payloads_against_schema(schema, interaction_report)
+    assert_case('browser-payload-schema-report-valid', browser_payload_report.get('valid'), False, browser_payload_report.get('errors'))
+    full_report = {
+        'schema': {'valid': True, 'errors': [], 'warnings': []},
+        'html': {'valid': True, 'errors': [], 'warnings': []},
+        'htmlSyntax': {'valid': True, 'errors': [], 'warnings': []},
+        'htmlE2E': {'valid': True, 'errors': [], 'warnings': []},
+        'htmlInteractionE2E': {'valid': True, 'errors': [], 'warnings': []},
+        'htmlAccessibility': {'valid': True, 'errors': [], 'warnings': []},
+        'userVisible': {'valid': True, 'errors': [], 'warnings': []},
+        'payload': {'valid': True, 'errors': [], 'warnings': []},
+        'payloadAgainstSchema': {'valid': True, 'errors': [], 'warnings': []},
+        'browserPayloadAgainstSchema': browser_payload_report,
+        'summary': {'schema': {'warning_severity': {'high': 0, 'medium': 0, 'low': 0}}},
+    }
+    release_decision = compute_release_decision(full_report)
+    assert_case('browser-payload-release-shipready', release_decision.get('shipReady'), False, release_decision)
+    blocked_types = {item.get('type') for item in release_decision.get('blockedReasons', []) if isinstance(item, dict)}
+    assert_case('browser-payload-release-blocked-type', 'browser-payload-schema-mismatch' in blocked_types, True, release_decision)
+
+
+def test_auto_repair_html_preserves_requested_style_pack():
+    schema = json.loads((SCHEMAS / 'minimal-radio.json').read_text(encoding='utf-8'))
+    template_text = DEFAULT_TEMPLATE.read_text(encoding='utf-8')
+    html = render_html_from_schema(schema, template_text, style_pack='consumer-campaign')
+    broken_html = html.replace('function render() {', 'function render( {', 1)
+    report = auto_repair_html(broken_html, style_pack='consumer-campaign')
+    assert_case('auto-repair-stylepack-changed', report.get('changed'), True, report)
+    assert_case('auto-repair-stylepack-valid', report.get('finalValidation', {}).get('valid'), True, report.get('finalValidation'))
+    repaired_html = report.get('html', '')
+    assert_case('auto-repair-stylepack-preserved', 'const surveyStylePack = "consumer-campaign";' in repaired_html, True, repaired_html[:500])
+    assert_case('auto-repair-stylepack-rerender-path', any(item.get('action') == 'rerendered-from-extracted-schema' for item in report.get('appliedFixes', [])), True, report.get('appliedFixes'))
+
+
 
 def test_accessibility_rejects_unlabeled_control():
     with tempfile.TemporaryDirectory(prefix='survey-creator-contract-a11y.') as tmp:
@@ -840,6 +895,8 @@ def main():
     test_pagination_pipeline_and_interaction()
     test_full_pipeline()
     test_interaction_e2e_rejects_bad_runtime_payload()
+    test_pipeline_release_decision_blocks_browser_payload_schema_mismatch()
+    test_auto_repair_html_preserves_requested_style_pack()
     test_accessibility_rejects_unlabeled_control()
     print('\n✅ survey-creator-skill contract tests passed')
 

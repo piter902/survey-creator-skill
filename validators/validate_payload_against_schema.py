@@ -59,8 +59,9 @@ def effective_data_type(node):
 
 
 def normalize_schema(schema):
-    if isinstance(schema.get("finish"), list) and len(schema.get("finish")) == 1:
-        schema = {**schema, "finish": schema["finish"][0]}
+    finish = schema.get("finish")
+    if isinstance(finish, dict):
+        schema = {**schema, "finish": [finish]}
     return schema
 
 

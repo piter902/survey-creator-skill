@@ -81,6 +81,7 @@
       const hiddenOptions = new Set(logicShowOptionTargets);
       const jumpTargets = new Map();
       const autoSelects = [];
+      let activeFinishId = defaultFinishScreen.id;
       logicRules.forEach((rule) => {
         if (!rule?.when || !rule?.action) return;
         if (!evaluateLogicCondition(rule.when)) return;
@@ -93,10 +94,14 @@
         if ((action.type === 'jump_to_question' || action.type === 'jump_to_page') && action.targetQuestionId && rule.when.questionId) {
           jumpTargets.set(rule.when.questionId, action.targetQuestionId);
         }
-        if (action.type === 'end_survey' && rule.when.questionId) jumpTargets.set(rule.when.questionId, surveySchema.finish.id);
+        if (action.type === 'end_survey' && rule.when.questionId) {
+          const targetFinishId = finishScreenIds.has(action.targetQuestionId) ? action.targetQuestionId : defaultFinishScreen.id;
+          jumpTargets.set(rule.when.questionId, targetFinishId);
+          activeFinishId = targetFinishId;
+        }
         if (action.type === 'auto_select_option' && optionKey) autoSelects.push({ questionId: action.targetQuestionId, optionId: action.targetOptionId });
       });
-      return { hiddenQuestions, hiddenOptions, jumpTargets, autoSelects };
+      return { hiddenQuestions, hiddenOptions, jumpTargets, autoSelects, activeFinishId };
     }
 
     function isQuestionHidden(questionId) {
@@ -116,7 +121,7 @@
     }
 
     function clearQuestionState(question) {
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen) return;
       screen.querySelectorAll('input, textarea').forEach((input) => {
         input.value = '';
@@ -149,10 +154,10 @@
         (question.option || []).forEach((option) => {
           if (!isOptionHidden(question.id, option.id)) return;
           const selectors = [
-            `.option[data-option-id="${option.id}"] input`,
-            `[data-option-field="${option.id}"] [data-option-id="${option.id}"]`,
-            `[data-score-option="${option.id}"] .score-pill`,
-            `[data-nps-option="${option.id}"] .score-pill`
+            `.option${dataSelector('option-id', option.id)} input`,
+            `${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}`,
+            `${dataSelector('score-option', option.id)} .score-pill`,
+            `${dataSelector('nps-option', option.id)} .score-pill`
           ];
           document.querySelectorAll(selectors.join(',')).forEach((node) => {
             if (node.matches('input')) node.checked = false;
@@ -161,7 +166,7 @@
               node.setAttribute('aria-pressed', 'false');
             }
           });
-          document.querySelectorAll(`[data-option-field="${option.id}"] [data-option-id="${option.id}"], [data-child-wrap="${option.id}"] [data-child-id]`).forEach(clearFieldValue);
+          document.querySelectorAll(`${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}, ${dataSelector('child-wrap', option.id)} [data-child-id]`).forEach(clearFieldValue);
         });
       });
     }
@@ -169,10 +174,10 @@
     function applyAutoSelects() {
       logicState.autoSelects.forEach(({ questionId, optionId }) => {
         if (isQuestionUnavailable(questionId) || isOptionHidden(questionId, optionId)) return;
-        const input = document.querySelector(`.option[data-option-id="${optionId}"] input[name="${questionId}"]`);
+        const input = document.querySelector(`.option${dataSelector('option-id', optionId)} input${selectorAttr('name', questionId)}`);
         if (!input) return;
         if (input.type === 'radio') {
-          document.querySelectorAll(`input[name="${questionId}"]`).forEach((node) => { if (node !== input) node.checked = false; });
+          document.querySelectorAll(`input${selectorAttr('name', questionId)}`).forEach((node) => { if (node !== input) node.checked = false; });
         }
         input.checked = true;
       });
@@ -201,7 +206,7 @@
         const sourceIndex = screenIndexMap.get(sourceScreenId);
         const targetIndex = screenIndexMap.get(targetScreenId);
         if (sourceIndex == null) return;
-        const endExclusive = targetId === surveySchema.finish.id
+        const endExclusive = finishScreenIds.has(targetId)
           ? orderedScreens.length
           : targetIndex;
         if (endExclusive == null || endExclusive <= sourceIndex + 1) return;
@@ -218,7 +223,9 @@
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
         let hidden = false;
-        if (!['survey', 'finish', 'survey-all'].includes(node.dataset.schemaType)) {
+        if (node.dataset.schemaType === 'finish') {
+          hidden = node.dataset.screenId !== logicState.activeFinishId;
+        } else if (!['survey', 'finish', 'survey-all'].includes(node.dataset.schemaType)) {
           if (node.dataset.schemaType === 'page') {
             const pageQuestions = questionsOnScreen(node);
             hidden = pageQuestions.length > 0 ? pageQuestions.every((question) => isQuestionUnavailable(question.id)) : false;
@@ -234,10 +241,10 @@
         (question.option || []).forEach((option) => {
           const hidden = isOptionHidden(question.id, option.id);
           const selector = [
-            `.option[data-option-id="${option.id}"]`,
-            `[data-option-field="${option.id}"]`,
-            `[data-score-option="${option.id}"]`,
-            `[data-nps-option="${option.id}"]`
+            `.option${dataSelector('option-id', option.id)}`,
+            dataSelector('option-field', option.id),
+            dataSelector('score-option', option.id),
+            dataSelector('nps-option', option.id)
           ].join(',');
           document.querySelectorAll(selector).forEach((node) => {
             node.classList.toggle('is-hidden-by-logic', hidden);
@@ -254,4 +261,3 @@
       if (nextActiveId) showById(nextActiveId);
       else saveCache();
     }
-

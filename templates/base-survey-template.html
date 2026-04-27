@@ -984,13 +984,15 @@
           ]
         }
       ],
-      finish: {
-        type: 'finish',
-        id: 'finish_tpl_f2m5z1qp',
-        title: '<h2>提交前请确认信息无误</h2>',
-        description: '<p>提交后我们会记录你的答案，用于后续分析与体验优化。</p>',
-        media: []
-      }
+      finish: [
+        {
+          type: 'finish',
+          id: 'finish_tpl_f2m5z1qp',
+          title: '<h2>提交前请确认信息无误</h2>',
+          description: '<p>提交后我们会记录你的答案，用于后续分析与体验优化。</p>',
+          media: []
+        }
+      ]
     };
 
     const surveyStylePack = "consumer-minimal";
@@ -1002,6 +1004,34 @@
     const surveyId = surveySchema.survey.id;
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
+    const finishScreens = (() => {
+      const rawFinish = Array.isArray(surveySchema.finish)
+        ? surveySchema.finish
+        : surveySchema.finish && typeof surveySchema.finish === 'object'
+        ? [surveySchema.finish]
+        : [];
+      const normalized = rawFinish
+        .filter((item) => item && typeof item === 'object')
+        .map((item, index) => ({
+          ...item,
+          type: 'finish',
+          id: item.id || `finish_${index + 1}`,
+          media: Array.isArray(item.media) ? item.media : []
+        }));
+      if (!normalized.length) {
+        normalized.push({
+          type: 'finish',
+          id: 'finish_fallback',
+          title: '<h2>提交完成</h2>',
+          description: '<p>感谢你的填写。</p>',
+          media: []
+        });
+      }
+      return normalized;
+    })();
+    surveySchema.finish = finishScreens;
+    const defaultFinishScreen = finishScreens[0];
+    const finishScreenIds = new Set(finishScreens.map((item) => item.id).filter(Boolean));
     const rawQuestions = Array.isArray(surveySchema.questions) ? surveySchema.questions : [];
     const answerableQuestions = rawQuestions.filter((question) => question?.type !== 'Pagination');
     document.body.dataset.stylePack = surveyStylePack || 'consumer-minimal';
@@ -1126,6 +1156,7 @@
       const hiddenOptions = new Set(logicShowOptionTargets);
       const jumpTargets = new Map();
       const autoSelects = [];
+      let activeFinishId = defaultFinishScreen.id;
       logicRules.forEach((rule) => {
         if (!rule?.when || !rule?.action) return;
         if (!evaluateLogicCondition(rule.when)) return;
@@ -1138,10 +1169,14 @@
         if ((action.type === 'jump_to_question' || action.type === 'jump_to_page') && action.targetQuestionId && rule.when.questionId) {
           jumpTargets.set(rule.when.questionId, action.targetQuestionId);
         }
-        if (action.type === 'end_survey' && rule.when.questionId) jumpTargets.set(rule.when.questionId, surveySchema.finish.id);
+        if (action.type === 'end_survey' && rule.when.questionId) {
+          const targetFinishId = finishScreenIds.has(action.targetQuestionId) ? action.targetQuestionId : defaultFinishScreen.id;
+          jumpTargets.set(rule.when.questionId, targetFinishId);
+          activeFinishId = targetFinishId;
+        }
         if (action.type === 'auto_select_option' && optionKey) autoSelects.push({ questionId: action.targetQuestionId, optionId: action.targetOptionId });
       });
-      return { hiddenQuestions, hiddenOptions, jumpTargets, autoSelects };
+      return { hiddenQuestions, hiddenOptions, jumpTargets, autoSelects, activeFinishId };
     }
 
     function isQuestionHidden(questionId) {
@@ -1161,7 +1196,7 @@
     }
 
     function clearQuestionState(question) {
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen) return;
       screen.querySelectorAll('input, textarea').forEach((input) => {
         input.value = '';
@@ -1194,10 +1229,10 @@
         (question.option || []).forEach((option) => {
           if (!isOptionHidden(question.id, option.id)) return;
           const selectors = [
-            `.option[data-option-id="${option.id}"] input`,
-            `[data-option-field="${option.id}"] [data-option-id="${option.id}"]`,
-            `[data-score-option="${option.id}"] .score-pill`,
-            `[data-nps-option="${option.id}"] .score-pill`
+            `.option${dataSelector('option-id', option.id)} input`,
+            `${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}`,
+            `${dataSelector('score-option', option.id)} .score-pill`,
+            `${dataSelector('nps-option', option.id)} .score-pill`
           ];
           document.querySelectorAll(selectors.join(',')).forEach((node) => {
             if (node.matches('input')) node.checked = false;
@@ -1206,7 +1241,7 @@
               node.setAttribute('aria-pressed', 'false');
             }
           });
-          document.querySelectorAll(`[data-option-field="${option.id}"] [data-option-id="${option.id}"], [data-child-wrap="${option.id}"] [data-child-id]`).forEach(clearFieldValue);
+          document.querySelectorAll(`${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}, ${dataSelector('child-wrap', option.id)} [data-child-id]`).forEach(clearFieldValue);
         });
       });
     }
@@ -1214,10 +1249,10 @@
     function applyAutoSelects() {
       logicState.autoSelects.forEach(({ questionId, optionId }) => {
         if (isQuestionUnavailable(questionId) || isOptionHidden(questionId, optionId)) return;
-        const input = document.querySelector(`.option[data-option-id="${optionId}"] input[name="${questionId}"]`);
+        const input = document.querySelector(`.option${dataSelector('option-id', optionId)} input${selectorAttr('name', questionId)}`);
         if (!input) return;
         if (input.type === 'radio') {
-          document.querySelectorAll(`input[name="${questionId}"]`).forEach((node) => { if (node !== input) node.checked = false; });
+          document.querySelectorAll(`input${selectorAttr('name', questionId)}`).forEach((node) => { if (node !== input) node.checked = false; });
         }
         input.checked = true;
       });
@@ -1246,7 +1281,7 @@
         const sourceIndex = screenIndexMap.get(sourceScreenId);
         const targetIndex = screenIndexMap.get(targetScreenId);
         if (sourceIndex == null) return;
-        const endExclusive = targetId === surveySchema.finish.id
+        const endExclusive = finishScreenIds.has(targetId)
           ? orderedScreens.length
           : targetIndex;
         if (endExclusive == null || endExclusive <= sourceIndex + 1) return;
@@ -1263,7 +1298,9 @@
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
         let hidden = false;
-        if (!['survey', 'finish', 'survey-all'].includes(node.dataset.schemaType)) {
+        if (node.dataset.schemaType === 'finish') {
+          hidden = node.dataset.screenId !== logicState.activeFinishId;
+        } else if (!['survey', 'finish', 'survey-all'].includes(node.dataset.schemaType)) {
           if (node.dataset.schemaType === 'page') {
             const pageQuestions = questionsOnScreen(node);
             hidden = pageQuestions.length > 0 ? pageQuestions.every((question) => isQuestionUnavailable(question.id)) : false;
@@ -1279,10 +1316,10 @@
         (question.option || []).forEach((option) => {
           const hidden = isOptionHidden(question.id, option.id);
           const selector = [
-            `.option[data-option-id="${option.id}"]`,
-            `[data-option-field="${option.id}"]`,
-            `[data-score-option="${option.id}"]`,
-            `[data-nps-option="${option.id}"]`
+            `.option${dataSelector('option-id', option.id)}`,
+            dataSelector('option-field', option.id),
+            dataSelector('score-option', option.id),
+            dataSelector('nps-option', option.id)
           ].join(',');
           document.querySelectorAll(selector).forEach((node) => {
             node.classList.toggle('is-hidden-by-logic', hidden);
@@ -1299,7 +1336,6 @@
       if (nextActiveId) showById(nextActiveId);
       else saveCache();
     }
-
     function shuffleIfNeeded(items, shouldRandom) {
       const list = [...items];
       if (!shouldRandom || list.length <= 1) return list;
@@ -1376,6 +1412,23 @@
         .replaceAll('>', '&gt;');
     }
 
+    function cssEscape(value) {
+      const input = String(value ?? '');
+      if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(input);
+      return input.replace(/[\0-\x1F\x7F]|^-?\d|^-$|[^\w-]/g, (token) => {
+        if (token === '\0') return '\uFFFD';
+        return `\\${token.codePointAt(0).toString(16)} `;
+      });
+    }
+
+    function selectorAttr(attrName, value) {
+      return `[${attrName}="${cssEscape(value)}"]`;
+    }
+
+    function dataSelector(name, value) {
+      return selectorAttr(`data-${name}`, value);
+    }
+
     function safeJsonAttr(value) {
       return escapeAttr(JSON.stringify(value || {}));
     }
@@ -1402,18 +1455,24 @@
       return `<a class="media-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeAttr(text)}</a>`;
     }
 
+    function renderMediaSourceAttr(url, attrName = 'src') {
+      return isSafeMediaUrl(url) ? ` ${attrName}="${escapeAttr(url)}"` : '';
+    }
+
     function renderMediaItem(m, context = 'question') {
       const label = `<small>${mediaTitle(m.type)}</small>`;
       const variantClass = context ? `media-card--${escapeAttr(context)}` : '';
-      const mediaUrl = isSafeMediaUrl(m.url) ? escapeAttr(m.url) : '';
+      if (!isSafeMediaUrl(m?.url)) {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">资源地址不安全或格式不合法，已跳过内嵌预览。</div></div>`;
+      }
       if (m.type === 'image') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img src="${mediaUrl}" alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img${renderMediaSourceAttr(m.url)} alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
       }
       if (m.type === 'audio') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata" src="${mediaUrl}"></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata"${renderMediaSourceAttr(m.url)}></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
       }
       if (m.type === 'video') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline src="${mediaUrl}"></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline${renderMediaSourceAttr(m.url)}></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
       }
       return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">当前资源类型暂不支持内嵌预览，请打开原始资源查看。</div>${renderMediaLink(m.url)}</div>`;
     }
@@ -1556,8 +1615,7 @@
       return screenShell(`page_${String(pageIndex + 1).padStart(2, '0')}`, 'page', `${blocks}<div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="button" data-next>下一页</button></div></div>`);
     }
 
-    function renderFinish() {
-      const f = surveySchema.finish;
+    function renderFinish(f) {
       const allowBack = surveySchema.survey.attribute?.allowBack === true;
       return screenShell(f.id, 'finish', `<section class="finish-state"><div class="finish-kicker">反馈确认</div><div class="finish-badge">✓ 即将完成提交</div>${renderHeroVisual(f.media || [], 'finish')}<div class="finish-copy">${renderRich(f.title)}${renderRich(f.description)}</div><div class="finish-note">提交后将立即完成本次问卷，页面不会再要求额外填写内容。</div></section><div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="submit">确认并提交</button></div></div>`, true);
     }
@@ -1569,12 +1627,14 @@
 
     function render() {
       const onePageOneQuestion = surveySchema.survey.attribute?.onePageOneQuestion === true;
+      const defaultFinish = defaultFinishScreen;
+      const renderedFinishes = finishScreens.map((finish) => renderFinish(finish));
       if (hasManualPagination && !onePageOneQuestion) {
-        form.innerHTML = [renderSurvey(), ...manualPages.map((group, index) => renderManualPage(group, index)), renderFinish()].join('');
+        form.innerHTML = [renderSurvey(), ...manualPages.map((group, index) => renderManualPage(group, index)), ...renderedFinishes].join('');
       } else if (onePageOneQuestion) {
-        form.innerHTML = [renderSurvey(), ...answerableQuestions.map(renderQuestion), renderFinish()].join('');
+        form.innerHTML = [renderSurvey(), ...answerableQuestions.map(renderQuestion), ...renderedFinishes].join('');
       } else {
-        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(surveySchema.finish.title)}${renderRich(surveySchema.finish.description)}</div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">提交问卷</button></div></div>`);
+        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(defaultFinish.title)}${renderRich(defaultFinish.description)}</div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">提交问卷</button></div></div>`);
       }
       rebuildQuestionScreenMap();
       bindEvents();
@@ -1647,7 +1707,7 @@
       show(index >= 0 ? index : 0, save);
     }
     function visibleChildWrapForInput(input) {
-      return input.closest('.option')?.querySelector(`[data-child-wrap="${input.value}"]`);
+      return input.closest('.option')?.querySelector(dataSelector('child-wrap', input.value));
     }
 
     function updateChildVisibility() {
@@ -1672,7 +1732,7 @@
       const optionId = button.dataset.scoreOptionId;
       const scoreValue = button.dataset.scoreValue;
       const screen = button.closest('[data-screen-id]');
-      screen.querySelectorAll(`[data-score-option-id="${optionId}"]`).forEach((el) => {
+      screen.querySelectorAll(dataSelector('score-option-id', optionId)).forEach((el) => {
         const active = el === button;
         el.classList.toggle('is-active', active);
         el.setAttribute('aria-pressed', active ? 'true' : 'false');
@@ -1681,7 +1741,7 @@
       const question = (candidateQuestions.length ? candidateQuestions : answerableQuestions).find((item) => (item.option || []).some((opt) => opt.id === optionId));
       const option = question?.option?.find((item) => item.id === optionId);
       const desc = scoreDescForValue(option?.attribute?.scoreDesc || {}, scoreValue);
-      const descEl = screen.querySelector(`[data-score-desc-for="${optionId}"]`);
+      const descEl = screen.querySelector(dataSelector('score-desc-for', optionId));
       if (descEl) descEl.textContent = desc;
     }
     function extractFieldValue(field) {
@@ -1725,11 +1785,11 @@
     }
 
     function collectQuestion(question) {
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen || isQuestionUnavailable(question.id)) return null;
 
       if (question.type === 'radio') {
-        const checked = Array.from(screen.querySelectorAll(`input[name="${question.id}"]:checked`)).find((input) => !isOptionHidden(question.id, input.value));
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).find((input) => !isOptionHidden(question.id, input.value));
         if (!checked) return null;
         const optionEl = checked.closest('.option');
         const child = readChildAnswers(optionEl);
@@ -1739,7 +1799,7 @@
       }
 
       if (question.type === 'checkbox') {
-        const checked = Array.from(screen.querySelectorAll(`input[name="${question.id}"]:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
         if (!checked.length) return null;
         return {
           questionType: question.type,
@@ -1755,7 +1815,7 @@
 
       if (question.type === 'input') {
         const value = question.option.filter((opt) => !isOptionHidden(question.id, opt.id)).map((opt) => {
-          const field = screen.querySelector(`[data-option-id="${opt.id}"]`);
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
           const extracted = extractFieldValue(field);
           if (!extracted) return null;
           return { optionId: opt.id, dataType: opt.attribute?.dataType || 'text', value: extracted };
@@ -1787,7 +1847,7 @@
 
     function validateQuestion(question) {
       if (!question || isQuestionUnavailable(question.id)) return true;
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen) return true;
       screen.querySelectorAll('.error').forEach((el) => el.classList.remove('is-visible'));
       screen.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
@@ -1800,7 +1860,7 @@
 
       if (question.type === 'input') {
         for (const opt of question.option.filter((item) => !isOptionHidden(question.id, item.id))) {
-          const field = screen.querySelector(`[data-option-id="${opt.id}"]`);
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
           const msg = validateByDataType(field, opt.attribute || {});
           if (msg) {
             field.classList.add('is-invalid');
@@ -1840,7 +1900,7 @@
           const msg = validateByDataType(field, attr);
           if (msg) {
             field.classList.add('is-invalid');
-            const err = optionEl.querySelector(`[data-child-error="${field.dataset.childId}"]`);
+            const err = optionEl.querySelector(dataSelector('child-error', field.dataset.childId));
             if (err) {
               err.textContent = msg;
               err.classList.add('is-visible');
@@ -1870,14 +1930,14 @@
 
     function hydrateAll() {
       Object.entries(cache.answers || {}).forEach(([questionId, answer]) => {
-        const screen = document.querySelector(`[data-screen-id="${questionId}"]`);
+        const screen = document.querySelector(dataSelector('screen-id', questionId));
         if (!screen) return;
 
         if (answer.questionType === 'radio') {
-          const input = screen.querySelector(`input[value="${answer.value.optionId}"]`);
+          const input = screen.querySelector(`input${selectorAttr('value', answer.value.optionId)}`);
           if (input) input.checked = true;
           (answer.value.child || []).forEach((item) => {
-            const child = screen.querySelector(`[data-child-id="${item.childId}"]`);
+            const child = screen.querySelector(dataSelector('child-id', item.childId));
             if (!child) return;
             if (child.matches('[data-range-type]')) hydrateRangeField(child, item.value);
             else child.value = typeof item.value === 'object' ? '' : (item.value || '');
@@ -1886,10 +1946,10 @@
 
         if (answer.questionType === 'checkbox') {
           (answer.value || []).forEach((item) => {
-            const input = screen.querySelector(`input[value="${item.optionId}"]`);
+            const input = screen.querySelector(`input${selectorAttr('value', item.optionId)}`);
             if (input) input.checked = true;
             (item.child || []).forEach((childItem) => {
-              const child = screen.querySelector(`[data-child-id="${childItem.childId}"]`);
+              const child = screen.querySelector(dataSelector('child-id', childItem.childId));
               if (!child) return;
               if (child.matches('[data-range-type]')) hydrateRangeField(child, childItem.value);
               else child.value = typeof childItem.value === 'object' ? '' : (childItem.value || '');
@@ -1899,7 +1959,7 @@
 
         if (answer.questionType === 'input') {
           (answer.value || []).forEach((item) => {
-            const field = screen.querySelector(`[data-option-id="${item.optionId}"]`);
+            const field = screen.querySelector(dataSelector('option-id', item.optionId));
             if (!field) return;
             if (field.matches('[data-range-type]')) hydrateRangeField(field, item.value);
             else field.value = typeof item.value === 'object' ? '' : (item.value || '');
@@ -1908,14 +1968,14 @@
 
         if (answer.questionType === 'score') {
           (answer.value || []).forEach((item) => {
-            const button = screen.querySelector(`[data-score-option-id="${item.optionId}"][data-score-value="${formatScoreValue(item.score)}"]`);
+            const button = screen.querySelector(`${dataSelector('score-option-id', item.optionId)}${dataSelector('score-value', formatScoreValue(item.score))}`);
             if (button) updateScoreDisplay(button);
           });
         }
 
 
         if (answer.questionType === 'nps') {
-          const button = screen.querySelector(`[data-score-option-id="${answer.value.optionId}"][data-score-value="${formatScoreValue(answer.value.score)}"]`);
+          const button = screen.querySelector(`${dataSelector('score-option-id', answer.value.optionId)}${dataSelector('score-value', formatScoreValue(answer.value.score))}`);
           if (button) updateScoreDisplay(button);
         }
       });

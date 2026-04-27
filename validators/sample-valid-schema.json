@@ -226,10 +226,13 @@
       ]
     }
   ],
-  "finish": {
-    "type": "finish",
-    "title": "<h2>感谢填写</h2>",
-    "description": "<p>可以提交了。</p>",
-    "media": []
-  }
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_sample_default",
+      "title": "<h2>感谢填写</h2>",
+      "description": "<p>可以提交了。</p>",
+      "media": []
+    }
+  ]
 }

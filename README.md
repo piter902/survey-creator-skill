@@ -102,6 +102,15 @@ Think of this repo as a packaged survey capability that an agent can read, retri
 - `finish`
 - `Pagination`
 
+## Supported toC style packs
+
+- `consumer-minimal`
+- `consumer-polished`
+- `consumer-trust`
+- `consumer-editorial`
+- `consumer-utility`
+- `consumer-campaign`
+
 ---
 
 ## Supported logic operators
@@ -145,6 +154,8 @@ This project already enforces these runtime rules:
 - conflicting rules resolve by declaration order
 - later matched logic overrides earlier matched logic
 - auto-select only applies to final visible targets
+- `end_survey` can target a specific `finish[].id`
+- multiple finish nodes are supported for branch-specific endings
 
 ---
 
@@ -334,14 +345,18 @@ Recommended prompt:
 
 ## Example files
 
-The repository currently includes two example inputs in `examples/`:
+The repository currently includes these example inputs in `examples/`:
 
 - `minimal-survey.json` — the smallest valid survey example
 - `ai-design-tool-demand-demo.json` — a richer demo covering logic, Pagination, multi-question pages, child input, score, and nps
+- `service-satisfaction-multi-finish.json` — a more production-like satisfaction flow with branch-specific ending pages
+- `service-satisfaction-three-finish.json` — a three-ending example for positive / neutral / negative user branches
 
-The integrated demo also has a generated HTML artifact:
+Generated HTML examples are also checked in for direct inspection and browser testing, including:
 
 - `examples/ai-design-tool-demand-demo.html`
+- `examples/service-satisfaction-multi-finish.html`
+- `examples/service-satisfaction-three-finish.html`
 
 ---
 

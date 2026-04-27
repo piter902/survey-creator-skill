@@ -10,8 +10,7 @@
       return screenShell(`page_${String(pageIndex + 1).padStart(2, '0')}`, 'page', `${blocks}<div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="button" data-next>下一页</button></div></div>`);
     }
 
-    function renderFinish() {
-      const f = surveySchema.finish;
+    function renderFinish(f) {
       const allowBack = surveySchema.survey.attribute?.allowBack === true;
       return screenShell(f.id, 'finish', `<section class="finish-state"><div class="finish-kicker">反馈确认</div><div class="finish-badge">✓ 即将完成提交</div>${renderHeroVisual(f.media || [], 'finish')}<div class="finish-copy">${renderRich(f.title)}${renderRich(f.description)}</div><div class="finish-note">提交后将立即完成本次问卷，页面不会再要求额外填写内容。</div></section><div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="submit">确认并提交</button></div></div>`, true);
     }
@@ -23,12 +22,14 @@
 
     function render() {
       const onePageOneQuestion = surveySchema.survey.attribute?.onePageOneQuestion === true;
+      const defaultFinish = defaultFinishScreen;
+      const renderedFinishes = finishScreens.map((finish) => renderFinish(finish));
       if (hasManualPagination && !onePageOneQuestion) {
-        form.innerHTML = [renderSurvey(), ...manualPages.map((group, index) => renderManualPage(group, index)), renderFinish()].join('');
+        form.innerHTML = [renderSurvey(), ...manualPages.map((group, index) => renderManualPage(group, index)), ...renderedFinishes].join('');
       } else if (onePageOneQuestion) {
-        form.innerHTML = [renderSurvey(), ...answerableQuestions.map(renderQuestion), renderFinish()].join('');
+        form.innerHTML = [renderSurvey(), ...answerableQuestions.map(renderQuestion), ...renderedFinishes].join('');
       } else {
-        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(surveySchema.finish.title)}${renderRich(surveySchema.finish.description)}</div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">提交问卷</button></div></div>`);
+        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(defaultFinish.title)}${renderRich(defaultFinish.description)}</div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">提交问卷</button></div></div>`);
       }
       rebuildQuestionScreenMap();
       bindEvents();

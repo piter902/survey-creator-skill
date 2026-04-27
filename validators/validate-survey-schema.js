@@ -9,6 +9,8 @@ const ALLOWED_QUESTION_TYPES = new Set(['radio', 'checkbox', 'input']);
 const ALLOWED_DATA_TYPES = new Set([
   'email', 'tel', 'number', 'text', 'date', 'time', 'dateTime', 'dateRange', 'timeRange', 'dateTimeRange'
 ]);
+const ID_PATTERN = /^[A-Za-z][A-Za-z0-9_-]*$/;
+const MEDIA_URL_PATTERN = /^(https?:\/\/|data:(image|audio|video)\/)/i;
 
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -68,6 +70,7 @@ function validateMediaList(media, nodePath, reporter, required = false) {
     assertAllowedKeys(item, ['type', 'url'], itemPath, reporter);
     if (!ALLOWED_MEDIA_TYPES.has(item.type)) reporter.error(`${itemPath}.type`, 'Media type must be image, audio, or video.');
     if (!isNonEmptyString(item.url)) reporter.error(`${itemPath}.url`, 'Media url must be a non-empty string.');
+    else if (!MEDIA_URL_PATTERN.test(item.url)) reporter.error(`${itemPath}.url`, 'Media url must start with http://, https://, or a data:image/audio/video URL.');
   });
 }
 
@@ -82,6 +85,10 @@ function validateRichTextString(value, nodePath, reporter, required = true) {
 function registerId(id, pathName, reporter, idMap) {
   if (!isNonEmptyString(id)) {
     reporter.error(pathName, 'id must be a non-empty string.');
+    return;
+  }
+  if (!ID_PATTERN.test(id)) {
+    reporter.error(pathName, 'id must start with a letter and contain only letters, numbers, underscores, or hyphens.');
     return;
   }
   const existing = idMap.get(id);
@@ -225,33 +232,40 @@ function validateSurveyNode(survey, reporter, idMap) {
   if (survey.attribute.media != null) validateMediaList(survey.attribute.media, `${nodePath}.attribute.media`, reporter);
 }
 
-function normalizeFinish(finish, reporter) {
-  if (Array.isArray(finish)) {
-    if (finish.length !== 1) {
-      reporter.error('finish', 'finish array must contain exactly one item if array-wrapped.');
-      return null;
-    }
-    reporter.warn('finish', 'finish was array-wrapped and has been normalized to a single object.');
-    return finish[0];
+function normalizeFinishNodes(finish, reporter) {
+  if (isPlainObject(finish)) {
+    if (reporter) reporter.warn('finish', 'finish object has been normalized to a one-item array; prefer finish: [{...}] as the canonical shape.');
+    return [finish];
   }
-  return finish;
+  if (Array.isArray(finish)) {
+    if (!finish.length) {
+      if (reporter) reporter.error('finish', 'finish must contain at least one finish object.');
+      return [];
+    }
+    return finish;
+  }
+  if (reporter) reporter.error('finish', 'finish must be an array of finish objects.');
+  return [];
 }
 
-function validateFinishNode(finishRaw, reporter, idMap) {
-  const finish = normalizeFinish(finishRaw, reporter);
-  if (!finish) return null;
-  const nodePath = 'finish';
-  if (!isPlainObject(finish)) {
-    reporter.error(nodePath, 'finish must be an object.');
-    return null;
-  }
-  assertAllowedKeys(finish, ['type', 'id', 'title', 'description', 'media'], nodePath, reporter);
-  if (finish.type !== 'finish') reporter.error(`${nodePath}.type`, 'finish.type must equal "finish".');
-  if (finish.id != null) registerId(finish.id, `${nodePath}.id`, reporter, idMap);
-  validateRichTextString(finish.title, `${nodePath}.title`, reporter, true);
-  validateRichTextString(finish.description, `${nodePath}.description`, reporter, false);
-  if (finish.media != null) validateMediaList(finish.media, `${nodePath}.media`, reporter);
-  return finish;
+function validateFinishNodes(finishRaw, reporter, idMap) {
+  const finishNodes = normalizeFinishNodes(finishRaw, reporter);
+  const normalized = [];
+  finishNodes.forEach((finish, index) => {
+    const nodePath = `finish[${index}]`;
+    if (!isPlainObject(finish)) {
+      reporter.error(nodePath, 'finish item must be an object.');
+      return;
+    }
+    assertAllowedKeys(finish, ['type', 'id', 'title', 'description', 'media'], nodePath, reporter);
+    if (finish.type !== 'finish') reporter.error(`${nodePath}.type`, 'finish.type must equal "finish".');
+    if (finish.id != null) registerId(finish.id, `${nodePath}.id`, reporter, idMap);
+    validateRichTextString(finish.title, `${nodePath}.title`, reporter, true);
+    validateRichTextString(finish.description, `${nodePath}.description`, reporter, false);
+    if (finish.media != null) validateMediaList(finish.media, `${nodePath}.media`, reporter);
+    normalized.push(finish);
+  });
+  return normalized;
 }
 
 function validateSurveySchema(schema) {
@@ -284,7 +298,7 @@ function validateSurveySchema(schema) {
     });
   }
 
-  const normalizedFinish = validateFinishNode(schema.finish, reporter, idMap);
+  const normalizedFinish = validateFinishNodes(schema.finish, reporter, idMap);
 
   return reporter.result({
     survey: schema.survey,

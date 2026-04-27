@@ -95,6 +95,15 @@
 - Pagination
 - finish
 
+## 当前支持的 toC 风格包
+
+- `consumer-minimal`
+- `consumer-polished`
+- `consumer-trust`
+- `consumer-editorial`
+- `consumer-utility`
+- `consumer-campaign`
+
 ---
 
 ## 当前支持的核心能力
@@ -119,6 +128,8 @@
   - jump_to_question
   - jump_to_page
   - end_survey
+- `end_survey` 可定向跳转到指定 `finish[].id`
+- 支持多结束页，用于不同用户分支的差异化结束态
 - 隐藏 / 跳过题目的 required 自动豁免
 - 逻辑冲突按“后触发覆盖前触发”执行
 
@@ -312,14 +323,18 @@ Cursor 没有和 Codex 一样统一的 skill 规范，但这个仓库依然适�
 
 ## examples 目录说明
 
-当前仓库里有两份示例输入：
+当前仓库里包含这些示例输入：
 
 - `examples/minimal-survey.json`：最小可运行问卷示例
 - `examples/ai-design-tool-demand-demo.json`：更完整的综合示例，覆盖 logic、Pagination、手动分页、一页多题、child input、score、nps
+- `examples/service-satisfaction-multi-finish.json`：更接近真实业务的双结束页满意度问卷示例
+- `examples/service-satisfaction-three-finish.json`：满意 / 中立 / 不满意三结束页分流示例
 
-同时仓库也附带了一份已生成的 HTML：
+仓库中也附带了可直接打开查看的生成 HTML：
 
 - `examples/ai-design-tool-demand-demo.html`
+- `examples/service-satisfaction-multi-finish.html`
+- `examples/service-satisfaction-three-finish.html`
 
 ---
 

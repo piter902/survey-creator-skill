@@ -87,7 +87,7 @@ def ensure_text_html(value):
 def fallback_title_for_path(path):
     if path == "survey.title":
         return "<p>问卷调查</p>"
-    if path == "finish.title":
+    if path == "finish.title" or path.startswith("finish["):
         return "<p>提交完成</p>"
     if path.startswith("questions["):
         return "<p>请完成本题</p>"
@@ -123,8 +123,9 @@ def repair_warning(schema, warning, applied):
             return True
 
     if code == "finish-looks-like-question-copy":
-        if set_value(schema, "finish.description", "<p>感谢你的填写，提交后我们会尽快处理你的反馈。</p>"):
-            applied.append({"code": code, "path": "finish.description", "action": "rewrote-finish-description"})
+        target_path = path if path and path.startswith("finish[") else "finish.description"
+        if set_value(schema, target_path, "<p>感谢你的填写，提交后我们会尽快处理你的反馈。</p>"):
+            applied.append({"code": code, "path": target_path, "action": "rewrote-finish-description"})
             return True
 
     if code == "redundant-option-random-override":

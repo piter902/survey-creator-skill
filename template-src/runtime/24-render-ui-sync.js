@@ -1,5 +1,5 @@
     function visibleChildWrapForInput(input) {
-      return input.closest('.option')?.querySelector(`[data-child-wrap="${input.value}"]`);
+      return input.closest('.option')?.querySelector(dataSelector('child-wrap', input.value));
     }
 
     function updateChildVisibility() {
@@ -24,7 +24,7 @@
       const optionId = button.dataset.scoreOptionId;
       const scoreValue = button.dataset.scoreValue;
       const screen = button.closest('[data-screen-id]');
-      screen.querySelectorAll(`[data-score-option-id="${optionId}"]`).forEach((el) => {
+      screen.querySelectorAll(dataSelector('score-option-id', optionId)).forEach((el) => {
         const active = el === button;
         el.classList.toggle('is-active', active);
         el.setAttribute('aria-pressed', active ? 'true' : 'false');
@@ -33,6 +33,6 @@
       const question = (candidateQuestions.length ? candidateQuestions : answerableQuestions).find((item) => (item.option || []).some((opt) => opt.id === optionId));
       const option = question?.option?.find((item) => item.id === optionId);
       const desc = scoreDescForValue(option?.attribute?.scoreDesc || {}, scoreValue);
-      const descEl = screen.querySelector(`[data-score-desc-for="${optionId}"]`);
+      const descEl = screen.querySelector(dataSelector('score-desc-for', optionId));
       if (descEl) descEl.textContent = desc;
     }

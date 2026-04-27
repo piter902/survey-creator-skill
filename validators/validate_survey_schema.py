@@ -426,6 +426,29 @@ def validate_pagination_node(question, question_path, reporter, id_map):
 
 
 
+def normalize_finish_nodes(finish, reporter=None):
+    if is_plain_object(finish):
+        if reporter:
+            reporter.warn(
+                "finish",
+                "finish object has been normalized to a one-item array; prefer finish: [{...}] as the canonical shape.",
+                "low",
+                "legacy-finish-object",
+                "Wrap the finish node in an array so future logic can target specific ending screens.",
+                'Change "finish": {...} to "finish": [{...}].',
+            )
+        return [finish]
+    if isinstance(finish, list):
+        if not finish:
+            if reporter:
+                reporter.error("finish", "finish must contain at least one finish object.")
+            return []
+        return finish
+    if reporter:
+        reporter.error("finish", "finish must be an array of finish objects.")
+    return []
+
+
 def collect_schema_maps(schema):
     question_map = {}
     option_map = {}
@@ -441,10 +464,14 @@ def collect_schema_maps(schema):
             if is_plain_object(option) and is_non_empty_string(option.get("id")):
                 per_question[option.get("id")] = option
         option_map[qid] = per_question
-    return question_map, option_map
+    finish_map = {}
+    for finish in normalize_finish_nodes(schema.get("finish")):
+        if is_plain_object(finish) and is_non_empty_string(finish.get("id")):
+            finish_map[finish.get("id")] = finish
+    return question_map, option_map, finish_map
 
 
-def validate_logic_rule(rule, rule_path, reporter, question_map, option_map):
+def validate_logic_rule(rule, rule_path, reporter, question_map, option_map, finish_map):
     if not is_plain_object(rule):
         reporter.error(rule_path, "logic rule must be an object.")
         return
@@ -521,9 +548,14 @@ def validate_logic_rule(rule, rule_path, reporter, question_map, option_map):
             if target_question.get("type") not in {"radio", "checkbox"}:
                 reporter.error(f"{rule_path}.action.targetQuestionId", "auto_select_option can only target radio or checkbox questions.")
     if action_type == "end_survey":
-        for extra_key in ["targetQuestionId", "targetOptionId"]:
-            if action.get(extra_key) is not None:
-                reporter.warn(f"{rule_path}.action.{extra_key}", "end_survey ignores target fields; remove them for clarity.", "low", "logic-extra-action-field", "Remove unused target fields for end_survey rules.", "Keep only action.type for end_survey.")
+        target_finish_id = action.get("targetQuestionId")
+        if target_finish_id is not None:
+            if not is_non_empty_string(target_finish_id):
+                reporter.error(f"{rule_path}.action.targetQuestionId", "end_survey targetQuestionId must be a non-empty finish id when provided.")
+            elif target_finish_id not in finish_map:
+                reporter.error(f"{rule_path}.action.targetQuestionId", f'end_survey target finish "{target_finish_id}" does not exist.')
+        if action.get("targetOptionId") is not None:
+            reporter.warn(f"{rule_path}.action.targetOptionId", "end_survey ignores targetOptionId; remove it for clarity.", "low", "logic-extra-action-field", "Remove unused targetOptionId for end_survey rules.", "Keep only action.type or optionally action.targetQuestionId pointing to a finish id.")
 
 
 def validate_logic_rules(schema, reporter):
@@ -533,11 +565,11 @@ def validate_logic_rules(schema, reporter):
     if not isinstance(logic, list):
         reporter.error("logic", "logic must be an array when present.")
         return
-    question_map, option_map = collect_schema_maps(schema)
+    question_map, option_map, finish_map = collect_schema_maps(schema)
     seen_ids = set()
     for idx, rule in enumerate(logic):
         path = f"logic[{idx}]"
-        validate_logic_rule(rule, path, reporter, question_map, option_map)
+        validate_logic_rule(rule, path, reporter, question_map, option_map, finish_map)
         if is_plain_object(rule) and is_non_empty_string(rule.get("id")):
             if rule.get("id") in seen_ids:
                 reporter.error(f"{path}.id", f'Duplicate logic rule id "{rule.get("id")}".')
@@ -568,34 +600,25 @@ def validate_survey_node(survey, reporter, id_map):
         validate_media_list(attr.get("media"), f"{path}.attribute.media", reporter)
 
 
-def normalize_finish(finish, reporter):
-    if isinstance(finish, list):
-        if len(finish) != 1:
-            reporter.error("finish", "finish array must contain exactly one item if array-wrapped.")
-            return None
-        reporter.warn("finish", "finish was array-wrapped and has been normalized to a single object.")
-        return finish[0]
-    return finish
-
-
-def validate_finish_node(finish_raw, reporter, id_map):
-    finish = normalize_finish(finish_raw, reporter)
-    if finish is None:
-        return None
-    path = "finish"
-    if not is_plain_object(finish):
-        reporter.error(path, "finish must be an object.")
-        return None
-    assert_allowed_keys(finish, ["type", "id", "title", "description", "media"], path, reporter)
-    if finish.get("type") != "finish":
-        reporter.error(f"{path}.type", 'finish.type must equal "finish".')
-    if finish.get("id") is not None:
-        register_id(finish.get("id"), f"{path}.id", reporter, id_map)
-    validate_rich_text_string(finish.get("title"), f"{path}.title", reporter, True)
-    validate_rich_text_string(finish.get("description"), f"{path}.description", reporter, False)
-    if finish.get("media") is not None:
-        validate_media_list(finish.get("media"), f"{path}.media", reporter)
-    return finish
+def validate_finish_nodes(finish_raw, reporter, id_map):
+    finish_nodes = normalize_finish_nodes(finish_raw, reporter)
+    normalized = []
+    for idx, finish in enumerate(finish_nodes):
+        path = f"finish[{idx}]"
+        if not is_plain_object(finish):
+            reporter.error(path, "finish item must be an object.")
+            continue
+        assert_allowed_keys(finish, ["type", "id", "title", "description", "media"], path, reporter)
+        if finish.get("type") != "finish":
+            reporter.error(f"{path}.type", 'finish.type must equal "finish".')
+        if finish.get("id") is not None:
+            register_id(finish.get("id"), f"{path}.id", reporter, id_map)
+        validate_rich_text_string(finish.get("title"), f"{path}.title", reporter, True)
+        validate_rich_text_string(finish.get("description"), f"{path}.description", reporter, False)
+        if finish.get("media") is not None:
+            validate_media_list(finish.get("media"), f"{path}.media", reporter)
+        normalized.append(finish)
+    return normalized
 
 
 def semantic_lint(schema, reporter):
@@ -613,15 +636,18 @@ def semantic_lint(schema, reporter):
         if survey.get("attribute", {}).get("allowBack") is True and survey.get("attribute", {}).get("onePageOneQuestion") is not True:
             reporter.warn("survey.attribute.allowBack", "allowBack is enabled while onePageOneQuestion is false; back navigation usually only matters in step mode.", "low", "allowback-without-step-mode", "Either enable onePageOneQuestion or disable allowBack.", "Keep allowBack=true only when each question is rendered as an individual step.")
 
-    normalized_finish = finish[0] if isinstance(finish, list) and len(finish) == 1 else finish
-    if is_plain_object(normalized_finish):
-        if not has_meaningful_rich_text(normalized_finish.get("title")):
-            reporter.warn("finish.title", "finish.title is structurally valid but semantically empty.", "high", "empty-finish-title", "Use a completion-oriented title such as thank-you, submitted, or next-step confirmation.", "Replace empty HTML with a meaningful finish heading.")
-        desc = normalized_finish.get("description")
+    finish_nodes = normalize_finish_nodes(finish)
+    for idx, finish_node in enumerate(finish_nodes):
+        if not is_plain_object(finish_node):
+            continue
+        finish_path = f"finish[{idx}]"
+        if not has_meaningful_rich_text(finish_node.get("title")):
+            reporter.warn(f"{finish_path}.title", "finish.title is structurally valid but semantically empty.", "high", "empty-finish-title", "Use a completion-oriented title such as thank-you, submitted, or next-step confirmation.", "Replace empty HTML with a meaningful finish heading.")
+        desc = finish_node.get("description")
         if isinstance(desc, str):
             lower = desc.lower()
             if any(token in lower for token in ["必填", "单选", "多选", "下一页", "question", "题目"]):
-                reporter.warn("finish.description", "finish.description may contain question-like or flow-control copy; finish should usually be end-state messaging.", "medium", "finish-looks-like-question-copy", "Rewrite the finish description as completion feedback or next-step guidance.", "Remove question instructions, pagination hints, and required-field wording from the finish block.")
+                reporter.warn(f"{finish_path}.description", "finish.description may contain question-like or flow-control copy; finish should usually be end-state messaging.", "medium", "finish-looks-like-question-copy", "Rewrite the finish description as completion feedback or next-step guidance.", "Remove question instructions, pagination hints, and required-field wording from the finish block.")
 
     pagination_indices = []
     for i, question in enumerate(questions):
@@ -799,7 +825,7 @@ def validate_survey_schema(schema):
                 validate_score_question(question, q_path, reporter, id_map)
             elif question.get("type") == "nps":
                 validate_nps_question(question, q_path, reporter, id_map)
-    normalized_finish = validate_finish_node(schema.get("finish"), reporter, id_map)
+    normalized_finish = validate_finish_nodes(schema.get("finish"), reporter, id_map)
     validate_logic_rules(schema, reporter)
     semantic_lint(schema, reporter)
     return reporter.result({

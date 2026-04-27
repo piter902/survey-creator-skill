@@ -1,6 +1,7 @@
 [
     {
         "type": "finish",
+        "id": "finish_complete_default",
         "title": "完成题标题",
         "description": "完成题描述",
         "media":[

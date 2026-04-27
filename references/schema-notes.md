@@ -58,8 +58,9 @@ These notes summarize the JSON reference files copied from the admin designer ma
 2. Checkbox option interaction fields have different semantics.
    - `exclusive: true` means this option excludes all other options in the same checkbox question
    - `mutual-exclusion: true` means this option only excludes other options that also have `mutual-exclusion: true`
-3. Finish example is wrapped in an array in the source file.
-   - Internally, the skill should still treat it as one semantic finish node.
+3. `finish` is canonically an array of one or more finish nodes.
+   - The legacy single-object shape may still be normalized for compatibility, but new schemas should always use an array.
+   - This is what enables future logic rules to target different ending pages.
 4. Media blocks are optional unless the prompt or scenario requires them.
 5. `Pagination` separators can be used to manually group multiple questions into one step only when `onePageOneQuestion === false`.
    - Consecutive or leading/trailing separators are allowed but usually redundant.
@@ -71,7 +72,7 @@ Use one top-level object like this internally:
 {
   "survey": { ... },
   "questions": [ ... ],
-  "finish": { ... }
+  "finish": [ { ... } ]
 }
 
 ## Option children

@@ -25,8 +25,8 @@ def load_schema(path_str):
 
 def normalize_finish(schema):
     finish = schema.get('finish')
-    if isinstance(finish, list) and len(finish) == 1:
-        schema['finish'] = finish[0]
+    if isinstance(finish, dict):
+        schema['finish'] = [finish]
     return schema
 
 

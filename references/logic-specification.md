@@ -221,7 +221,9 @@ For checkbox:
 - if one-page-one-question is enabled, it behaves like `jump_to_question`
 
 ### `end_survey`
-- jumps directly to finish
+- jumps directly to a finish screen
+- if `action.targetQuestionId` points to a `finish[].id`, that specific finish screen becomes the destination
+- otherwise the first finish screen is used
 - all later questions are considered skipped
 
 ### Final jump rule

@@ -8,7 +8,7 @@
 {
   "survey": { ... },
   "questions": [ ... ],
-  "finish": { ... },
+  "finish": [ { ... } ],
   "logic": [ ... ]
 }
 ```
@@ -99,6 +99,12 @@ Required for:
 - `show_option`
 - `hide_option`
 - `auto_select_option`
+
+Optional for:
+- `end_survey`
+
+When `action.type === "end_survey"` and `targetQuestionId` is provided, it must point to a `finish[].id`.
+If omitted, the runtime uses the first finish node.
 
 ### `action.targetOptionId`
 Required for:
@@ -195,8 +201,42 @@ To make `show_question` / `show_option` useful without adding extra hidden flags
 }
 ```
 
+### Route different users to different finish pages
+```json
+{
+  "id": "logic_end_to_negative_finish",
+  "when": {
+    "questionId": "question_satisfaction",
+    "operator": "selected",
+    "optionId": "option_not_satisfied"
+  },
+  "action": {
+    "type": "end_survey",
+    "targetQuestionId": "finish_negative_followup"
+  }
+}
+```
+
+## Multi-finish best practices
+
+- Keep `finish[0]` as the default finish for users who do not hit any special branch.
+- Use additional finish nodes only when the final tone or next-step guidance truly differs.
+- Typical finish splits:
+  - positive / promoter → thanks and referral-style copy
+  - neutral → standard completion copy
+  - negative / complaint → apology, comfort, and follow-up expectations
+- When a branch still needs more information, do **not** end immediately:
+  - first `show_question` for the follow-up fields
+  - then trigger `end_survey` from the final branch question
+- Recommended naming:
+  - `finish_default`
+  - `finish_positive`
+  - `finish_negative`
+  - `finish_followup_required`
+
 ## Validation notes
 - all referenced source / target question ids must exist
 - all referenced target option ids must exist under the target question
+- when `end_survey.targetQuestionId` is present, it must reference an existing `finish[].id`
 - `auto_select_option` may only target `radio` or `checkbox`
 - duplicate logic rule ids are forbidden when ids are provided

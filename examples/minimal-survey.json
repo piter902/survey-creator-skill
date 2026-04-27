@@ -39,11 +39,13 @@
       ]
     }
   ],
-  "finish": {
-    "type": "finish",
-    "id": "finish_example_minimal",
-    "title": "<h2>Thank you</h2>",
-    "description": "<p>Your response has been recorded.</p>",
-    "media": []
-  }
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_example_minimal",
+      "title": "<h2>Thank you</h2>",
+      "description": "<p>Your response has been recorded.</p>",
+      "media": []
+    }
+  ]
 }

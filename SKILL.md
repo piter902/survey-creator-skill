@@ -167,7 +167,7 @@ For a full survey, the internal shape should be:
 {
   "survey": { ... },
   "questions": [ ... ],
-  "finish": { ... }
+  "finish": [ { ... } ]
 }
 
 This internal schema is the planning source for the HTML.
@@ -179,8 +179,9 @@ Before rendering HTML, verify all of the following:
 #### Structure validation
 - top level contains `survey`, `questions`, `finish`
 - `questions` is an array
+- `finish` is an array of one or more finish objects
 - `survey.type === "survey"`
-- `finish.type === "finish"`
+- every `finish[i].type === "finish"`
 - every question uses only supported types
 - supported types include `radio`, `checkbox`, `input`, `score`, `nps`
 - score questions may carry media at both `attribute.media` and `option[].attribute.media`
@@ -265,6 +266,7 @@ Supported `--style-pack` values currently include:
 - `consumer-trust`
 - `consumer-editorial`
 - `consumer-utility`
+- `consumer-campaign`
 
 Only return the final HTML to the user after this automated chain succeeds, desktop/mobile E2E viewports pass, `htmlAccessibility.valid === true`, `payloadAgainstSchema.valid === true`, and the pipeline report says `releaseDecision.shipReady === true`.
 If the generated HTML fails runtime or E2E checks, run the HTML auto-repair pass before giving up.
@@ -276,8 +278,15 @@ Map the validated schema to page structure:
 - support only whitelisted display-oriented elements inside rich-text fields
 - `radio` → radio group
 - `checkbox` → checkbox group
-- `input` → text input or textarea block
-- `finish` → submit / thank-you / final action section
+- `input` → text input, textarea, or structured range input block
+- `score` → score / rating grid
+- `nps` → recommendation score scale
+- `finish` → one or more submit / thank-you / final action sections
+
+When multiple finish nodes exist:
+- treat `finish[0]` as the default finish
+- allow `logic.action.type === "end_survey"` to route to a specific `finish[].id` via `action.targetQuestionId`
+- use multiple finish nodes only when the final tone or next-step guidance truly differs between user branches
 
 ### Step 5: Build submission payload behavior
 Use `references/submission-contract.md` as the default submit serialization protocol.

@@ -353,13 +353,15 @@
       ]
     }
   ],
-  "finish": {
-    "type": "finish",
-    "id": "finish_ai_design_tool_demo",
-    "title": "<h2>感谢你的反馈</h2>",
-    "description": "<p>这份 demo 问卷已经覆盖了 <strong>radio / checkbox / input / score / nps / logic / Pagination</strong> 等主要能力。</p><p>提交后，页面会按默认 submission contract 组装 payload，并在浏览器中输出到 <code>console.log</code>。</p>",
-    "media": []
-  },
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_ai_design_tool_demo",
+      "title": "<h2>感谢你的反馈</h2>",
+      "description": "<p>这份 demo 问卷已经覆盖了 <strong>radio / checkbox / input / score / nps / logic / Pagination</strong> 等主要能力。</p><p>提交后，页面会按默认 submission contract 组装 payload，并在浏览器中输出到 <code>console.log</code>。</p>",
+      "media": []
+    }
+  ],
   "logic": [
     {
       "id": "logic_show_workflow_bottleneck",

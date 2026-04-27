@@ -160,6 +160,46 @@ Use these examples as composition templates when generating new schema.
 
 ---
 
+## 8.1. Route different users to different finish screens
+
+```json
+{
+  "id": "logic_satisfied_to_positive_finish",
+  "when": {
+    "questionId": "question_satisfaction",
+    "operator": "selected",
+    "optionId": "option_satisfied"
+  },
+  "action": {
+    "type": "end_survey",
+    "targetQuestionId": "finish_positive"
+  }
+}
+```
+
+```json
+{
+  "id": "logic_unsatisfied_to_care_finish",
+  "when": {
+    "questionId": "question_callback_permission",
+    "operator": "selected",
+    "optionId": "option_callback_no"
+  },
+  "action": {
+    "type": "end_survey",
+    "targetQuestionId": "finish_care"
+  }
+}
+```
+
+Best practice:
+- Keep the first `finish[]` item as the default/general finish.
+- Use `end_survey.targetQuestionId` only for finish ids, not normal question ids.
+- If a branch needs extra data first, collect those follow-up questions before firing `end_survey`.
+- Prefer one finish screen per emotional outcome, such as thank-you / qualification passed / apology and follow-up.
+
+---
+
 ## 9. Text contains
 
 ```json

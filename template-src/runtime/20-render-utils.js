@@ -74,6 +74,23 @@
         .replaceAll('>', '&gt;');
     }
 
+    function cssEscape(value) {
+      const input = String(value ?? '');
+      if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(input);
+      return input.replace(/[\0-\x1F\x7F]|^-?\d|^-$|[^\w-]/g, (token) => {
+        if (token === '\0') return '\uFFFD';
+        return `\\${token.codePointAt(0).toString(16)} `;
+      });
+    }
+
+    function selectorAttr(attrName, value) {
+      return `[${attrName}="${cssEscape(value)}"]`;
+    }
+
+    function dataSelector(name, value) {
+      return selectorAttr(`data-${name}`, value);
+    }
+
     function safeJsonAttr(value) {
       return escapeAttr(JSON.stringify(value || {}));
     }
@@ -100,18 +117,24 @@
       return `<a class="media-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeAttr(text)}</a>`;
     }
 
+    function renderMediaSourceAttr(url, attrName = 'src') {
+      return isSafeMediaUrl(url) ? ` ${attrName}="${escapeAttr(url)}"` : '';
+    }
+
     function renderMediaItem(m, context = 'question') {
       const label = `<small>${mediaTitle(m.type)}</small>`;
       const variantClass = context ? `media-card--${escapeAttr(context)}` : '';
-      const mediaUrl = isSafeMediaUrl(m.url) ? escapeAttr(m.url) : '';
+      if (!isSafeMediaUrl(m?.url)) {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">资源地址不安全或格式不合法，已跳过内嵌预览。</div></div>`;
+      }
       if (m.type === 'image') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img src="${mediaUrl}" alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img${renderMediaSourceAttr(m.url)} alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
       }
       if (m.type === 'audio') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata" src="${mediaUrl}"></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata"${renderMediaSourceAttr(m.url)}></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
       }
       if (m.type === 'video') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline src="${mediaUrl}"></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline${renderMediaSourceAttr(m.url)}></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
       }
       return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">当前资源类型暂不支持内嵌预览，请打开原始资源查看。</div>${renderMediaLink(m.url)}</div>`;
     }

@@ -39,11 +39,11 @@
     }
 
     function collectQuestion(question) {
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen || isQuestionUnavailable(question.id)) return null;
 
       if (question.type === 'radio') {
-        const checked = Array.from(screen.querySelectorAll(`input[name="${question.id}"]:checked`)).find((input) => !isOptionHidden(question.id, input.value));
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).find((input) => !isOptionHidden(question.id, input.value));
         if (!checked) return null;
         const optionEl = checked.closest('.option');
         const child = readChildAnswers(optionEl);
@@ -53,7 +53,7 @@
       }
 
       if (question.type === 'checkbox') {
-        const checked = Array.from(screen.querySelectorAll(`input[name="${question.id}"]:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
         if (!checked.length) return null;
         return {
           questionType: question.type,
@@ -69,7 +69,7 @@
 
       if (question.type === 'input') {
         const value = question.option.filter((opt) => !isOptionHidden(question.id, opt.id)).map((opt) => {
-          const field = screen.querySelector(`[data-option-id="${opt.id}"]`);
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
           const extracted = extractFieldValue(field);
           if (!extracted) return null;
           return { optionId: opt.id, dataType: opt.attribute?.dataType || 'text', value: extracted };
@@ -101,7 +101,7 @@
 
     function validateQuestion(question) {
       if (!question || isQuestionUnavailable(question.id)) return true;
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen) return true;
       screen.querySelectorAll('.error').forEach((el) => el.classList.remove('is-visible'));
       screen.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
@@ -114,7 +114,7 @@
 
       if (question.type === 'input') {
         for (const opt of question.option.filter((item) => !isOptionHidden(question.id, item.id))) {
-          const field = screen.querySelector(`[data-option-id="${opt.id}"]`);
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
           const msg = validateByDataType(field, opt.attribute || {});
           if (msg) {
             field.classList.add('is-invalid');
@@ -154,7 +154,7 @@
           const msg = validateByDataType(field, attr);
           if (msg) {
             field.classList.add('is-invalid');
-            const err = optionEl.querySelector(`[data-child-error="${field.dataset.childId}"]`);
+            const err = optionEl.querySelector(dataSelector('child-error', field.dataset.childId));
             if (err) {
               err.textContent = msg;
               err.classList.add('is-visible');
@@ -184,14 +184,14 @@
 
     function hydrateAll() {
       Object.entries(cache.answers || {}).forEach(([questionId, answer]) => {
-        const screen = document.querySelector(`[data-screen-id="${questionId}"]`);
+        const screen = document.querySelector(dataSelector('screen-id', questionId));
         if (!screen) return;
 
         if (answer.questionType === 'radio') {
-          const input = screen.querySelector(`input[value="${answer.value.optionId}"]`);
+          const input = screen.querySelector(`input${selectorAttr('value', answer.value.optionId)}`);
           if (input) input.checked = true;
           (answer.value.child || []).forEach((item) => {
-            const child = screen.querySelector(`[data-child-id="${item.childId}"]`);
+            const child = screen.querySelector(dataSelector('child-id', item.childId));
             if (!child) return;
             if (child.matches('[data-range-type]')) hydrateRangeField(child, item.value);
             else child.value = typeof item.value === 'object' ? '' : (item.value || '');
@@ -200,10 +200,10 @@
 
         if (answer.questionType === 'checkbox') {
           (answer.value || []).forEach((item) => {
-            const input = screen.querySelector(`input[value="${item.optionId}"]`);
+            const input = screen.querySelector(`input${selectorAttr('value', item.optionId)}`);
             if (input) input.checked = true;
             (item.child || []).forEach((childItem) => {
-              const child = screen.querySelector(`[data-child-id="${childItem.childId}"]`);
+              const child = screen.querySelector(dataSelector('child-id', childItem.childId));
               if (!child) return;
               if (child.matches('[data-range-type]')) hydrateRangeField(child, childItem.value);
               else child.value = typeof childItem.value === 'object' ? '' : (childItem.value || '');
@@ -213,7 +213,7 @@
 
         if (answer.questionType === 'input') {
           (answer.value || []).forEach((item) => {
-            const field = screen.querySelector(`[data-option-id="${item.optionId}"]`);
+            const field = screen.querySelector(dataSelector('option-id', item.optionId));
             if (!field) return;
             if (field.matches('[data-range-type]')) hydrateRangeField(field, item.value);
             else field.value = typeof item.value === 'object' ? '' : (item.value || '');
@@ -222,14 +222,14 @@
 
         if (answer.questionType === 'score') {
           (answer.value || []).forEach((item) => {
-            const button = screen.querySelector(`[data-score-option-id="${item.optionId}"][data-score-value="${formatScoreValue(item.score)}"]`);
+            const button = screen.querySelector(`${dataSelector('score-option-id', item.optionId)}${dataSelector('score-value', formatScoreValue(item.score))}`);
             if (button) updateScoreDisplay(button);
           });
         }
 
 
         if (answer.questionType === 'nps') {
-          const button = screen.querySelector(`[data-score-option-id="${answer.value.optionId}"][data-score-value="${formatScoreValue(answer.value.score)}"]`);
+          const button = screen.querySelector(`${dataSelector('score-option-id', answer.value.optionId)}${dataSelector('score-value', formatScoreValue(answer.value.score))}`);
           if (button) updateScoreDisplay(button);
         }
       });

@@ -1,9 +1,9 @@
 # Finish fields
 
-Use this reference for the ending / completion node.
+Use this reference for each ending / completion node inside the top-level `finish` array.
 
 ## Purpose
-The `finish` node represents the final section of the questionnaire.
+Each `finish` node represents a possible final section of the questionnaire.
 In HTML, it usually becomes the submit area, completion explanation, or final CTA section.
 
 ## Fields
@@ -27,11 +27,20 @@ In HTML, it usually becomes the submit area, completion explanation, or final CT
 - Supported media types: image, audio, video
 - Resource value: link or base64
 
-## Important source note
-The source example wraps the finish node in an array.
-For this skill:
-- treat the finish block as a single semantic node in the internal schema
-- preserve its field semantics even if the source example is array-wrapped
+## Top-level shape
+Canonical survey shape:
+
+```json
+{
+  "survey": { ... },
+  "questions": [ ... ],
+  "finish": [
+    { ... }
+  ]
+}
+```
+
+You may include multiple finish nodes when different logic branches should land on different ending pages.
 
 ## Rendering guidance
 - This section should contain or sit immediately adjacent to the submit action

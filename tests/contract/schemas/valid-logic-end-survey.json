@@ -56,13 +56,22 @@
       ]
     }
   ],
-  "finish": {
-    "type": "finish",
-    "id": "finish_logic_end_survey",
-    "title": "<h2>已结束</h2>",
-    "description": "<p>感谢参与。</p>",
-    "media": []
-  },
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_logic_end_survey_default",
+      "title": "<h2>感谢完成完整调研</h2>",
+      "description": "<p>你的反馈会进入后续分析。</p>",
+      "media": []
+    },
+    {
+      "type": "finish",
+      "id": "finish_logic_end_survey_comfort",
+      "title": "<h2>已提前结束</h2>",
+      "description": "<p>没关系，仍然感谢你的时间，祝你今天顺利。</p>",
+      "media": []
+    }
+  ],
   "logic": [
     {
       "id": "logic_end_survey_now",
@@ -72,7 +81,8 @@
         "optionId": "option_end_now"
       },
       "action": {
-        "type": "end_survey"
+        "type": "end_survey",
+        "targetQuestionId": "finish_logic_end_survey_comfort"
       }
     }
   ]
