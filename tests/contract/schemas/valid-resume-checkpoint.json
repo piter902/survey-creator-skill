@@ -1,0 +1,69 @@
+{
+  "survey": {
+    "type": "survey",
+    "id": "survey_resume_checkpoint",
+    "title": "<h1>断点续答测试问卷</h1>",
+    "description": "<p>用于验证重新访问问卷时可以重新开始或继续上次作答。</p>",
+    "attribute": {
+      "onePageOneQuestion": true,
+      "allowBack": true,
+      "media": []
+    }
+  },
+  "questions": [
+    {
+      "type": "radio",
+      "id": "question_resume_one",
+      "title": "<h2>第一题</h2>",
+      "description": "<p>请选择一项。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        { "id": "option_resume_one_a", "title": "<p>选项 A</p>", "attribute": { "media": [] } },
+        { "id": "option_resume_one_b", "title": "<p>选项 B</p>", "attribute": { "media": [] } }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "question_resume_two",
+      "title": "<h2>第二题</h2>",
+      "description": "<p>请选择一项。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        { "id": "option_resume_two_a", "title": "<p>选项 A</p>", "attribute": { "media": [] } },
+        { "id": "option_resume_two_b", "title": "<p>选项 B</p>", "attribute": { "media": [] } }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "question_resume_three",
+      "title": "<h2>第三题</h2>",
+      "description": "<p>请选择一项。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        { "id": "option_resume_three_a", "title": "<p>选项 A</p>", "attribute": { "media": [] } },
+        { "id": "option_resume_three_b", "title": "<p>选项 B</p>", "attribute": { "media": [] } }
+      ]
+    }
+  ],
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_resume_checkpoint",
+      "title": "<h2>提交前确认</h2>",
+      "description": "<p>提交后完成本次测试问卷。</p>",
+      "media": []
+    }
+  ]
+}

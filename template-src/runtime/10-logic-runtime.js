@@ -219,6 +219,7 @@
 
     function applyLogicRuntime(options = {}) {
       const preserveActiveId = options.preserveActiveId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+      const shouldSave = options.save !== false;
       logicState = computeLogicState();
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
@@ -258,6 +259,6 @@
       syncCacheFromDom(false);
       const visibleIds = visibleScreens().map((screen) => screen.dataset.screenId);
       const nextActiveId = preserveActiveId && visibleIds.includes(preserveActiveId) ? preserveActiveId : visibleIds[0] || null;
-      if (nextActiveId) showById(nextActiveId);
-      else saveCache();
+      if (nextActiveId) showById(nextActiveId, shouldSave);
+      else if (shouldSave) saveCache();
     }

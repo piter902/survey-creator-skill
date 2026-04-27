@@ -262,6 +262,64 @@
       return (visibleScreens()[current] || screens()[current])?.dataset.screenId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
     }
 
+    function hasResumeCandidate() {
+      const answerCount = Object.keys(cache.answers || {}).length;
+      if (!answerCount) return false;
+      const updatedAtMs = Date.parse(cache.updatedAt || '');
+      if (Number.isNaN(updatedAtMs)) return false;
+      return updatedAtMs <= pageLoadStartedAt;
+    }
+
+    function resetQuestionStates() {
+      answerableQuestions.forEach((question) => clearQuestionState(question));
+    }
+
+    function resetForFreshStart() {
+      localStorage.removeItem(cacheKey);
+      cache = emptyCache();
+      logicState = { hiddenQuestions: new Set(), hiddenOptions: new Set(), skippedQuestions: new Set(), jumpTargets: new Map(), autoSelects: [] };
+      form.reset();
+      resetQuestionStates();
+      updateChildVisibility();
+      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
+      showById(surveySchema.survey.id, false);
+      saveCache();
+    }
+
+    function dismissResumePrompt() {
+      document.querySelector('.resume-overlay')?.remove();
+    }
+
+    function openResumePrompt() {
+      dismissResumePrompt();
+      const overlay = document.createElement('div');
+      overlay.className = 'resume-overlay is-visible';
+      const lastSaved = formatResumeTime(cache.updatedAt);
+      overlay.innerHTML = `
+        <div class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeDialogTitle">
+          <div class="resume-dialog-kicker">断点续答</div>
+          <h2 class="resume-dialog-title" id="resumeDialogTitle">检测到你上次有未完成的作答</h2>
+          <p class="resume-dialog-desc">你可以继续上次离开的进度，也可以清空已有内容，重新开始本次问卷。</p>
+          <div class="resume-dialog-meta">${escapeHtml(lastSaved ? `上次保存时间：${lastSaved}` : '已为你保留上次的作答进度。')}</div>
+          <div class="resume-dialog-actions">
+            <button class="btn secondary" type="button" data-resume-restart>重新开始作答</button>
+            <button class="btn" type="button" data-resume-continue>继续上次作答</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.querySelector('[data-resume-restart]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        resetForFreshStart();
+      }, { once: true });
+      overlay.querySelector('[data-resume-continue]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        const resumeTarget = cache.meta?.lastScreenId || surveySchema.survey.id;
+        applyLogicRuntime({ preserveActiveId: resumeTarget });
+        showById(resumeTarget, false);
+      }, { once: true });
+    }
+
     function persistQuestions(questions, save = true) {
       questions.forEach((question) => persist(question, false));
       if (save) saveCache();

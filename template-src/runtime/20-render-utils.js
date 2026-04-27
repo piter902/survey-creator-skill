@@ -139,6 +139,22 @@
       return '提交成功后将立即跳转至下一步页面。';
     }
 
+    function formatResumeTime(isoString) {
+      if (!isoString) return '';
+      const value = new Date(isoString);
+      if (Number.isNaN(value.getTime())) return '';
+      try {
+        return new Intl.DateTimeFormat('zh-CN', {
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(value);
+      } catch {
+        return value.toLocaleString();
+      }
+    }
+
     function mediaTitle(type) {
       const map = {
         image: '图片素材',

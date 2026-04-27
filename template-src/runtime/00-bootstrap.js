@@ -97,6 +97,7 @@
     const stepCounter = document.getElementById('stepCounter');
     const progressCaption = document.getElementById('progressCaption');
     const surveyId = surveySchema.survey.id;
+    const pageLoadStartedAt = Date.now();
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
     const finishScreens = (() => {
@@ -140,15 +141,44 @@
     let current = 0;
     let cache = loadCache();
 
+    function emptyCache() {
+      return {
+        surveyId,
+        updatedAt: new Date().toISOString(),
+        answers: {},
+        meta: {
+          lastScreenId: surveySchema.survey.id
+        }
+      };
+    }
+
+    function normalizeCache(raw) {
+      const fallback = emptyCache();
+      if (!raw || typeof raw !== 'object') return fallback;
+      const answers = raw.answers && typeof raw.answers === 'object' && !Array.isArray(raw.answers) ? raw.answers : {};
+      const meta = raw.meta && typeof raw.meta === 'object' && !Array.isArray(raw.meta) ? raw.meta : {};
+      return {
+        surveyId,
+        updatedAt: typeof raw.updatedAt === 'string' && raw.updatedAt ? raw.updatedAt : fallback.updatedAt,
+        answers,
+        meta: {
+          lastScreenId: typeof meta.lastScreenId === 'string' && meta.lastScreenId ? meta.lastScreenId : fallback.meta.lastScreenId
+        }
+      };
+    }
+
     function loadCache() {
       try {
-        return JSON.parse(localStorage.getItem(cacheKey)) || { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return normalizeCache(JSON.parse(localStorage.getItem(cacheKey)));
       } catch {
-        return { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return emptyCache();
       }
     }
 
     function saveCache() {
+      const activeScreenId = document.querySelector('.screen.is-active')?.dataset?.screenId;
+      if (!cache.meta || typeof cache.meta !== 'object' || Array.isArray(cache.meta)) cache.meta = { lastScreenId: surveySchema.survey.id };
+      if (activeScreenId) cache.meta.lastScreenId = activeScreenId;
       cache.updatedAt = new Date().toISOString();
       localStorage.setItem(cacheKey, JSON.stringify(cache));
     }

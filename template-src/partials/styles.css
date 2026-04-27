@@ -286,6 +286,84 @@
       display: flex;
       justify-content: flex-start;
     }
+    .resume-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    .resume-overlay.is-visible {
+      display: flex;
+    }
+    .resume-dialog {
+      width: min(100%, 480px);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+    .resume-dialog-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0 12px;
+      min-height: 28px;
+      border-radius: 999px;
+      align-items: center;
+      background: rgba(91,124,255,.10);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .resume-dialog-title {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+      margin: 0;
+    }
+    .resume-dialog-desc {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-soft);
+      margin: 0;
+    }
+    .resume-dialog-meta {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .resume-dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .resume-dialog-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .dark .resume-dialog {
+      background: var(--panel);
+      color: var(--text-light);
+      border-color: var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+    }
+    .dark .resume-dialog-desc,
+    .dark .resume-dialog-meta {
+      color: var(--text-light-soft);
+    }
     .hero-grid, .finish-grid {
       grid-template-columns: 1fr;
       align-items: start;
@@ -898,6 +976,16 @@
         min-height: 48px;
         padding: 0 18px;
         font-size: 15px;
+      }
+      .resume-overlay {
+        padding: 16px;
+      }
+      .resume-dialog {
+        border-radius: 20px;
+        padding: 20px;
+      }
+      .resume-dialog-actions {
+        grid-template-columns: 1fr;
       }
       body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
         font-size: 32px;

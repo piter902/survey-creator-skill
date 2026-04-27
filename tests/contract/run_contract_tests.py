@@ -42,6 +42,7 @@ SCHEMA_CASES = {
     'valid-logic-input-operators.json': True,
     'valid-logic-selection-status-operators.json': True,
     'valid-pagination-manual-pages.json': True,
+    'valid-resume-checkpoint.json': True,
     'complete-score-media.json': True,
     'complete-nps-media.json': True,
     'full-all-types.json': True,
@@ -565,6 +566,90 @@ const { chromium } = require('playwright');
             pass
 
 
+def run_resume_checkpoint_browser_check(html_path: Path):
+    node = shutil.which("node")
+    if not node:
+        raise RuntimeError("Node.js is required for resume checkpoint browser validation.")
+    script = r"""
+const path = require('path');
+const { chromium } = require('playwright');
+
+(async () => {
+  const htmlPath = process.argv[2];
+  const url = 'file://' + path.resolve(htmlPath);
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const pageErrors = [];
+  page.on('pageerror', err => pageErrors.push(String(err && err.message ? err.message : err)));
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('__resume_checkpoint_initialized')) {
+      localStorage.clear();
+      sessionStorage.setItem('__resume_checkpoint_initialized', '1');
+    }
+    window.alert = () => {};
+  });
+  await page.goto(url, { waitUntil: 'load', timeout: 15000 });
+  await page.waitForTimeout(200);
+  const initialResumePromptVisible = await page.locator('.resume-overlay.is-visible').count();
+  await page.locator('.screen.is-active [data-next]').click();
+  await page.locator('input[value="option_resume_one_a"]').check();
+  await page.locator('.screen.is-active [data-next]').click();
+  await page.locator('input[value="option_resume_two_a"]').check();
+  await page.locator('.screen.is-active [data-next]').click();
+  await page.waitForTimeout(150);
+  const cacheBeforeReload = await page.evaluate(() => {
+    const key = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).find((item) => item && item.startsWith('survey_step_cache_'));
+    return key ? JSON.parse(localStorage.getItem(key)) : null;
+  });
+
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(200);
+  const resumePromptVisible = await page.locator('.resume-overlay.is-visible').count();
+  const resumePromptText = resumePromptVisible ? await page.locator('.resume-dialog').innerText() : '';
+  const activeScreenBeforeDecision = await page.evaluate(() => document.querySelector('.screen.is-active')?.dataset?.screenId || null);
+  await page.locator('[data-resume-continue]').click();
+  await page.waitForTimeout(200);
+  const resumedScreenId = await page.evaluate(() => document.querySelector('.screen.is-active')?.dataset?.screenId || null);
+
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(200);
+  await page.locator('[data-resume-restart]').click();
+  await page.waitForTimeout(200);
+  const restartedScreenId = await page.evaluate(() => document.querySelector('.screen.is-active')?.dataset?.screenId || null);
+  const cacheAfterRestart = await page.evaluate(() => {
+    const key = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).find((item) => item && item.startsWith('survey_step_cache_'));
+    return key ? JSON.parse(localStorage.getItem(key)) : null;
+  });
+
+  await browser.close();
+  process.stdout.write(JSON.stringify({ pageErrors, initialResumePromptVisible, cacheBeforeReload, resumePromptVisible, resumePromptText, activeScreenBeforeDecision, resumedScreenId, restartedScreenId, cacheAfterRestart }));
+})().catch(err => {
+  process.stdout.write(JSON.stringify({ error: String(err && err.message ? err.message : err) }));
+  process.exit(1);
+});
+"""
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as tmp:
+        tmp.write(script)
+        tmp_path = Path(tmp.name)
+    try:
+        env = os.environ.copy()
+        validators_node_modules = ROOT / 'validators' / 'node_modules'
+        env["NODE_PATH"] = str(validators_node_modules) + (os.pathsep + env["NODE_PATH"] if env.get("NODE_PATH") else "")
+        proc = subprocess.run([node, str(tmp_path), str(html_path)], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+        try:
+            data = json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            print(proc.stdout)
+            print(proc.stderr, file=sys.stderr)
+            raise
+        return proc.returncode, data, proc.stderr
+    finally:
+        try:
+            tmp_path.unlink()
+        except OSError:
+            pass
+
+
 def test_logic_cache_hidden_cleanup_browser_interaction():
     with tempfile.TemporaryDirectory(prefix='survey-creator-contract-logic-cache-cleanup.') as tmp:
         tmp_path = Path(tmp)
@@ -596,6 +681,41 @@ def test_logic_cache_hidden_cleanup_browser_interaction():
         assert_case('logic-cache-cleanup-gate-submitted', 'question_cleanup_gate' in answer_ids, True, answers)
         assert_case('logic-cache-cleanup-hidden-detail-omitted', 'question_cleanup_detail' in answer_ids, False, answers)
         assert_case('logic-cache-cleanup-cache-removed-after-submit', (browser_data.get('finalState') or {}).get('cacheKeys'), [], browser_data)
+
+
+def test_resume_checkpoint_browser_interaction():
+    with tempfile.TemporaryDirectory(prefix='survey-creator-contract-resume-checkpoint.') as tmp:
+        tmp_path = Path(tmp)
+        proc = subprocess.run([
+            'python3', str(PIPELINE),
+            '--schema', str(SCHEMAS / 'valid-resume-checkpoint.json'),
+            '--output-dir', str(tmp_path),
+            '--auto-repair',
+            '--fail-on-high-warning',
+            '--json',
+        ], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if proc.returncode != 0:
+            print(proc.stdout)
+            print(proc.stderr, file=sys.stderr)
+            raise AssertionError('resume checkpoint pipeline returned non-zero')
+        data = json.loads(proc.stdout)
+        assert_case('resume-checkpoint-pipeline-valid', data.get('valid'), True)
+        assert_case('resume-checkpoint-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
+        code, browser_data, stderr = run_resume_checkpoint_browser_check(tmp_path / 'valid-resume-checkpoint.html')
+        assert_case('resume-checkpoint-browser-exit', code == 0, True, stderr)
+        assert_case('resume-checkpoint-no-page-errors', browser_data.get('pageErrors'), [], browser_data)
+        assert_case('resume-checkpoint-no-prompt-first-visit', browser_data.get('initialResumePromptVisible') == 0, True, browser_data)
+        assert_case('resume-checkpoint-cache-created', isinstance(browser_data.get('cacheBeforeReload'), dict), True, browser_data)
+        assert_case('resume-checkpoint-last-screen-cached', (browser_data.get('cacheBeforeReload') or {}).get('meta', {}).get('lastScreenId'), 'question_resume_three', browser_data)
+        assert_case('resume-checkpoint-prompt-visible', browser_data.get('resumePromptVisible') == 1, True, browser_data)
+        assert_case('resume-checkpoint-stays-on-survey-before-decision', browser_data.get('activeScreenBeforeDecision'), 'survey_resume_checkpoint', browser_data)
+        prompt_text = browser_data.get('resumePromptText') or ''
+        assert_case('resume-checkpoint-prompt-copy-continue', '继续上次作答' in prompt_text, True, prompt_text)
+        assert_case('resume-checkpoint-prompt-copy-restart', '重新开始作答' in prompt_text, True, prompt_text)
+        assert_case('resume-checkpoint-resumed-screen', browser_data.get('resumedScreenId'), 'question_resume_three', browser_data)
+        assert_case('resume-checkpoint-restart-screen', browser_data.get('restartedScreenId'), 'survey_resume_checkpoint', browser_data)
+        answers_after_restart = (browser_data.get('cacheAfterRestart') or {}).get('answers') or {}
+        assert_case('resume-checkpoint-restart-clears-answers', answers_after_restart, {}, browser_data)
 
 
 def test_logic_input_operators_pipeline_and_interaction():
@@ -926,6 +1046,7 @@ def main():
     test_logic_conflict_option_last_hide_pipeline_and_interaction()
     test_logic_conflict_jump_last_end_pipeline_and_interaction()
     test_logic_cache_hidden_cleanup_browser_interaction()
+    test_resume_checkpoint_browser_interaction()
     test_logic_input_operators_pipeline_and_interaction()
     test_logic_selection_status_operators_pipeline_and_interaction()
     test_pagination_pipeline_and_interaction()

@@ -34,6 +34,9 @@
       rebuildQuestionScreenMap();
       bindEvents();
       hydrateAll();
-      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
-      if (!document.querySelector('.screen.is-active')) show(0);
+      const resumePending = hasResumeCandidate();
+      const initialScreenId = surveySchema.survey.id;
+      applyLogicRuntime({ preserveActiveId: initialScreenId, save: false });
+      if (!document.querySelector('.screen.is-active')) showById(initialScreenId, false);
+      if (resumePending) openResumePrompt();
     }

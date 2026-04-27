@@ -293,6 +293,84 @@
       display: flex;
       justify-content: flex-start;
     }
+    .resume-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    .resume-overlay.is-visible {
+      display: flex;
+    }
+    .resume-dialog {
+      width: min(100%, 480px);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+    .resume-dialog-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0 12px;
+      min-height: 28px;
+      border-radius: 999px;
+      align-items: center;
+      background: rgba(91,124,255,.10);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .resume-dialog-title {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+      margin: 0;
+    }
+    .resume-dialog-desc {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-soft);
+      margin: 0;
+    }
+    .resume-dialog-meta {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .resume-dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .resume-dialog-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .dark .resume-dialog {
+      background: var(--panel);
+      color: var(--text-light);
+      border-color: var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+    }
+    .dark .resume-dialog-desc,
+    .dark .resume-dialog-meta {
+      color: var(--text-light-soft);
+    }
     .hero-grid, .finish-grid {
       grid-template-columns: 1fr;
       align-items: start;
@@ -906,6 +984,16 @@
         padding: 0 18px;
         font-size: 15px;
       }
+      .resume-overlay {
+        padding: 16px;
+      }
+      .resume-dialog {
+        border-radius: 20px;
+        padding: 20px;
+      }
+      .resume-dialog-actions {
+        grid-template-columns: 1fr;
+      }
       body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
         font-size: 32px;
       }
@@ -1028,6 +1116,7 @@
     const stepCounter = document.getElementById('stepCounter');
     const progressCaption = document.getElementById('progressCaption');
     const surveyId = surveySchema.survey.id;
+    const pageLoadStartedAt = Date.now();
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
     const finishScreens = (() => {
@@ -1071,15 +1160,44 @@
     let current = 0;
     let cache = loadCache();
 
+    function emptyCache() {
+      return {
+        surveyId,
+        updatedAt: new Date().toISOString(),
+        answers: {},
+        meta: {
+          lastScreenId: surveySchema.survey.id
+        }
+      };
+    }
+
+    function normalizeCache(raw) {
+      const fallback = emptyCache();
+      if (!raw || typeof raw !== 'object') return fallback;
+      const answers = raw.answers && typeof raw.answers === 'object' && !Array.isArray(raw.answers) ? raw.answers : {};
+      const meta = raw.meta && typeof raw.meta === 'object' && !Array.isArray(raw.meta) ? raw.meta : {};
+      return {
+        surveyId,
+        updatedAt: typeof raw.updatedAt === 'string' && raw.updatedAt ? raw.updatedAt : fallback.updatedAt,
+        answers,
+        meta: {
+          lastScreenId: typeof meta.lastScreenId === 'string' && meta.lastScreenId ? meta.lastScreenId : fallback.meta.lastScreenId
+        }
+      };
+    }
+
     function loadCache() {
       try {
-        return JSON.parse(localStorage.getItem(cacheKey)) || { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return normalizeCache(JSON.parse(localStorage.getItem(cacheKey)));
       } catch {
-        return { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return emptyCache();
       }
     }
 
     function saveCache() {
+      const activeScreenId = document.querySelector('.screen.is-active')?.dataset?.screenId;
+      if (!cache.meta || typeof cache.meta !== 'object' || Array.isArray(cache.meta)) cache.meta = { lastScreenId: surveySchema.survey.id };
+      if (activeScreenId) cache.meta.lastScreenId = activeScreenId;
       cache.updatedAt = new Date().toISOString();
       localStorage.setItem(cacheKey, JSON.stringify(cache));
     }
@@ -1320,6 +1438,7 @@
 
     function applyLogicRuntime(options = {}) {
       const preserveActiveId = options.preserveActiveId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+      const shouldSave = options.save !== false;
       logicState = computeLogicState();
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
@@ -1359,8 +1478,8 @@
       syncCacheFromDom(false);
       const visibleIds = visibleScreens().map((screen) => screen.dataset.screenId);
       const nextActiveId = preserveActiveId && visibleIds.includes(preserveActiveId) ? preserveActiveId : visibleIds[0] || null;
-      if (nextActiveId) showById(nextActiveId);
-      else saveCache();
+      if (nextActiveId) showById(nextActiveId, shouldSave);
+      else if (shouldSave) saveCache();
     }
     function shuffleIfNeeded(items, shouldRandom) {
       const list = [...items];
@@ -1501,6 +1620,22 @@
         return `提交成功后将展示结束提示，并在 ${seconds} 秒后跳转至下一步。`;
       }
       return '提交成功后将立即跳转至下一步页面。';
+    }
+
+    function formatResumeTime(isoString) {
+      if (!isoString) return '';
+      const value = new Date(isoString);
+      if (Number.isNaN(value.getTime())) return '';
+      try {
+        return new Intl.DateTimeFormat('zh-CN', {
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(value);
+      } catch {
+        return value.toLocaleString();
+      }
     }
 
     function mediaTitle(type) {
@@ -1701,8 +1836,11 @@
       rebuildQuestionScreenMap();
       bindEvents();
       hydrateAll();
-      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
-      if (!document.querySelector('.screen.is-active')) show(0);
+      const resumePending = hasResumeCandidate();
+      const initialScreenId = surveySchema.survey.id;
+      applyLogicRuntime({ preserveActiveId: initialScreenId, save: false });
+      if (!document.querySelector('.screen.is-active')) showById(initialScreenId, false);
+      if (resumePending) openResumePrompt();
     }
     function screens() {
       return Array.from(document.querySelectorAll('.screen'));
@@ -2068,6 +2206,64 @@
 
     function currentScreenId() {
       return (visibleScreens()[current] || screens()[current])?.dataset.screenId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+    }
+
+    function hasResumeCandidate() {
+      const answerCount = Object.keys(cache.answers || {}).length;
+      if (!answerCount) return false;
+      const updatedAtMs = Date.parse(cache.updatedAt || '');
+      if (Number.isNaN(updatedAtMs)) return false;
+      return updatedAtMs <= pageLoadStartedAt;
+    }
+
+    function resetQuestionStates() {
+      answerableQuestions.forEach((question) => clearQuestionState(question));
+    }
+
+    function resetForFreshStart() {
+      localStorage.removeItem(cacheKey);
+      cache = emptyCache();
+      logicState = { hiddenQuestions: new Set(), hiddenOptions: new Set(), skippedQuestions: new Set(), jumpTargets: new Map(), autoSelects: [] };
+      form.reset();
+      resetQuestionStates();
+      updateChildVisibility();
+      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
+      showById(surveySchema.survey.id, false);
+      saveCache();
+    }
+
+    function dismissResumePrompt() {
+      document.querySelector('.resume-overlay')?.remove();
+    }
+
+    function openResumePrompt() {
+      dismissResumePrompt();
+      const overlay = document.createElement('div');
+      overlay.className = 'resume-overlay is-visible';
+      const lastSaved = formatResumeTime(cache.updatedAt);
+      overlay.innerHTML = `
+        <div class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeDialogTitle">
+          <div class="resume-dialog-kicker">断点续答</div>
+          <h2 class="resume-dialog-title" id="resumeDialogTitle">检测到你上次有未完成的作答</h2>
+          <p class="resume-dialog-desc">你可以继续上次离开的进度，也可以清空已有内容，重新开始本次问卷。</p>
+          <div class="resume-dialog-meta">${escapeHtml(lastSaved ? `上次保存时间：${lastSaved}` : '已为你保留上次的作答进度。')}</div>
+          <div class="resume-dialog-actions">
+            <button class="btn secondary" type="button" data-resume-restart>重新开始作答</button>
+            <button class="btn" type="button" data-resume-continue>继续上次作答</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.querySelector('[data-resume-restart]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        resetForFreshStart();
+      }, { once: true });
+      overlay.querySelector('[data-resume-continue]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        const resumeTarget = cache.meta?.lastScreenId || surveySchema.survey.id;
+        applyLogicRuntime({ preserveActiveId: resumeTarget });
+        showById(resumeTarget, false);
+      }, { once: true });
     }
 
     function persistQuestions(questions, save = true) {

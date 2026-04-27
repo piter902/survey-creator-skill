@@ -63,6 +63,7 @@ function validateHtmlRuntime(html) {
   checkPattern(html, reporter, 'runtime.childVisibility', 'HTML should manage child visibility.', 'function updateChildVisibility()');
   checkPattern(html, reporter, 'runtime.localStorageSet', 'HTML should persist step cache with localStorage.setItem.', 'localStorage.setItem(');
   checkPattern(html, reporter, 'runtime.localStorageRemove', 'HTML should clear cache with localStorage.removeItem after submit.', 'localStorage.removeItem(');
+  checkPattern(html, reporter, 'runtime.resumePrompt', 'HTML should support checkpoint resume prompt from localStorage cache.', 'function openResumePrompt(');
   checkPattern(html, reporter, 'runtime.consoleLog', 'HTML should output payload with console.log.', /console\.log\((payload|assemblePayload\(\))\)/);
   checkPattern(html, reporter, 'runtime.optionId', 'HTML should preserve option ids in DOM using data-option-id.', 'data-option-id');
   checkPattern(html, reporter, 'runtime.childId', 'HTML should preserve child ids in DOM using data-child-id.', 'data-child-id');
@@ -116,6 +117,7 @@ function validateHtmlRuntime(html) {
       schema: has(html, 'const surveySchema ='),
       assemblePayload: has(html, 'function assemblePayload()'),
       localStorage: has(html, 'localStorage.setItem(') && has(html, 'localStorage.removeItem('),
+      resumePrompt: has(html, 'function openResumePrompt('),
       exclusive: has(html, 'dataset.exclusive'),
       mutualExclusion: has(html, 'dataset.mutualExclusion'),
       childVisibility: has(html, 'function updateChildVisibility()'),

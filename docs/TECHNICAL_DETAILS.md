@@ -74,6 +74,20 @@ This project already enforces these runtime rules:
 
 ---
 
+## Resume and restart behavior
+
+When a user refreshes or revisits the survey and local step cache from a previous page lifecycle exists, the generated HTML supports survey checkpoint resume:
+
+- on a first-ever visit, no resume prompt is shown
+- on refresh/revisit with saved progress, users see two choices:
+  - **Restart from the beginning**
+  - **Continue where I left off**
+- continue resumes from the last active survey screen
+- restart clears cached answers and returns to the start of the survey
+- this behavior is built on top of the existing localStorage step cache
+
+---
+
 ## Skill repository structure
 
 ```text
