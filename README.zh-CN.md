@@ -332,6 +332,7 @@ Cursor 没有和 Codex 一样统一的 skill 规范，但这个仓库依然适�
 - `examples/service-satisfaction-multi-finish.json`：更接近真实业务的双结束页满意度问卷示例
 - `examples/service-satisfaction-three-finish.json`：满意 / 中立 / 不满意三结束页分流示例
 - `examples/service-satisfaction-post-submit-redirect.json`：更贴近真实投放的服务回访示例，覆盖多结束页 + 提交后差异化跳转
+- `examples/lead-qualification-sales-conversion.json`：线索筛选 / 销售转化型示例，覆盖热线索、咨询、培育、自助资源四类分流
 
 仓库中也附带了可直接打开查看的生成 HTML：
 
@@ -339,6 +340,7 @@ Cursor 没有和 Codex 一样统一的 skill 规范，但这个仓库依然适�
 - `examples/service-satisfaction-multi-finish.html`
 - `examples/service-satisfaction-three-finish.html`
 - `examples/service-satisfaction-post-submit-redirect.html`
+- `examples/lead-qualification-sales-conversion.html`
 
 ---
 

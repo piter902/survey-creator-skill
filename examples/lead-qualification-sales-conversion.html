@@ -1,0 +1,2586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>问卷填写</title>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --bg-soft: #ffffff;
+      --panel: #ffffff;
+      --panel-dark: #ffffff;
+      --text: #1f2329;
+      --text-soft: #646a73;
+      --text-light: #1f2329;
+      --text-light-soft: #646a73;
+      --line: #e5e6eb;
+      --line-dark: #e5e6eb;
+      --brand: #2f6bff;
+      --brand-2: #2f6bff;
+      --danger: #e25270;
+      --radius-xl: 16px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --shadow: 0 8px 24px rgba(31, 35, 41, 0.06);
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      --app-max-width: 760px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: var(--font); }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px 16px 48px;
+    }
+    body[data-style-pack="consumer-polished"] {
+      --bg: #f6f7fb;
+      --bg-soft: #ffffff;
+      --panel: #ffffff;
+      --text: #181c25;
+      --text-soft: #5f6778;
+      --text-light: #181c25;
+      --text-light-soft: #5f6778;
+      --line: #e7eaf1;
+      --line-dark: #e7eaf1;
+      --brand: #4b6bff;
+      --brand-2: #7a8fff;
+      --radius-xl: 18px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow: 0 12px 30px rgba(20, 28, 45, 0.08);
+      --app-max-width: 820px;
+    }
+    body[data-style-pack="consumer-trust"] {
+      --bg: #f5f7fa;
+      --bg-soft: #f9fbfe;
+      --panel: #ffffff;
+      --text: #1d2433;
+      --text-soft: #667085;
+      --text-light: #1d2433;
+      --text-light-soft: #667085;
+      --line: #e7ecf3;
+      --line-dark: #e7ecf3;
+      --brand: #2f6bff;
+      --brand-2: #4f8bff;
+      --radius-xl: 16px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+      --app-max-width: 820px;
+    }
+    body[data-style-pack="consumer-editorial"] {
+      --bg: #f8f7f5;
+      --bg-soft: #fffdfa;
+      --panel: #ffffff;
+      --text: #22201d;
+      --text-soft: #6f675f;
+      --text-light: #22201d;
+      --text-light-soft: #6f675f;
+      --line: #eee8df;
+      --line-dark: #eee8df;
+      --brand: #eb5b6a;
+      --brand-2: #f08b76;
+      --radius-xl: 20px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow: 0 8px 24px rgba(54, 38, 24, 0.06);
+      --app-max-width: 760px;
+    }
+    body[data-style-pack="consumer-utility"] {
+      --bg: #f9f9f9;
+      --bg-soft: #ffffff;
+      --panel: #ffffff;
+      --text: #0f0f0f;
+      --text-soft: #606060;
+      --text-light: #0f0f0f;
+      --text-light-soft: #606060;
+      --line: #e5e5e5;
+      --line-dark: #e5e5e5;
+      --brand: #111111;
+      --brand-2: #2d2d2d;
+      --radius-xl: 14px;
+      --radius-lg: 12px;
+      --radius-md: 10px;
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      --app-max-width: 780px;
+    }
+    body[data-style-pack="consumer-campaign"] {
+      --bg: #ffffff;
+      --bg-soft: #f8f7fb;
+      --panel: #ffffff;
+      --panel-dark: #ffffff;
+      --text: #000000;
+      --text-soft: #595566;
+      --text-light: #000000;
+      --text-light-soft: #595566;
+      --line: #ece9f3;
+      --line-dark: #ece9f3;
+      --brand: #000000;
+      --brand-2: #863dfb;
+      --danger: #db2f57;
+      --radius-xl: 26px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow: 0 20px 48px rgba(20, 10, 40, 0.08);
+      --app-max-width: 860px;
+    }
+    .app { width: 100%; max-width: var(--app-max-width); margin: 0 auto; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fff;
+      color: var(--text-soft);
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+    .progress {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(47,107,255,.10);
+      overflow: hidden;
+    }
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--brand);
+      transition: width .24s ease;
+    }
+    .progress-caption {
+      margin: 6px 0 18px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-soft);
+    }
+    .screen { display: none; }
+    .screen.is-active { display: block; }
+    .card {
+      width: 100%;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card.dark {
+      background: var(--panel);
+      color: var(--text);
+      border-color: var(--line);
+    }
+    .card-body {
+      padding: 24px 20px;
+      display: grid;
+      gap: 16px;
+    }
+    .survey-hero,
+    .finish-state {
+      display: grid;
+      gap: 18px;
+    }
+    .survey-kicker,
+    .finish-kicker {
+      display: inline-flex;
+      width: fit-content;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(47,107,255,.10);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .finish-badge {
+      display: inline-flex;
+      width: fit-content;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(46, 160, 67, 0.10);
+      color: #1c7c38;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .survey-hero-copy,
+    .finish-copy,
+    .question-main {
+      display: grid;
+      gap: 8px;
+    }
+    .trust-meta-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .survey-reason-list {
+      display: grid;
+      gap: 10px;
+    }
+    .survey-reason-item {
+      position: relative;
+      padding-left: 18px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .survey-reason-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--brand);
+    }
+    .trust-meta-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--bg-soft);
+      padding: 14px 16px;
+      display: grid;
+      gap: 6px;
+    }
+    .trust-meta-item strong {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .trust-meta-item span,
+    .finish-note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .finish-submit-status {
+      display: none;
+    }
+    .finish-submit-status.is-visible {
+      display: block;
+    }
+    .submit-status-card {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid rgba(46, 160, 67, 0.24);
+      border-radius: 16px;
+      background: rgba(46, 160, 67, 0.08);
+    }
+    .submit-status-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .dark .submit-status-text {
+      color: var(--text-light);
+    }
+    .submit-status-actions {
+      display: flex;
+      justify-content: flex-start;
+    }
+    .hero-grid, .finish-grid {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    .question-head,
+    .question-stage-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .question-index {
+      margin-bottom: 8px;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--brand);
+    }
+    .rich h1, .rich h2, .rich h3, .rich h4, .rich p, .rich ul, .rich ol, .rich blockquote { margin-top: 0; }
+    .rich h1 { font-size: 28px; line-height: 1.25; letter-spacing: -.02em; margin-bottom: 10px; }
+    .rich h2 { font-size: 22px; line-height: 1.35; letter-spacing: -.01em; margin-bottom: 10px; }
+    .rich h3 { font-size: 22px; line-height: 1.24; margin-bottom: 10px; }
+    .rich p, .rich li, .rich blockquote { font-size: 14px; line-height: 1.75; color: var(--text-soft); }
+    .dark .rich p, .dark .rich li, .dark .rich blockquote { color: var(--text-light-soft); }
+    .rich a { color: var(--brand); text-decoration: none; border-bottom: 1px solid rgba(91,124,255,.35); }
+    .rich code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(91,124,255,.1);
+      color: inherit;
+      font-size: 13px;
+    }
+    .meta-grid,
+    .question-content { display: grid; gap: 12px; }
+    .meta {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: #fafbfc;
+      padding: 16px;
+    }
+    .dark .meta {
+      border-color: var(--line-dark);
+      background: rgba(255,255,255,.04);
+    }
+    .meta strong { display: block; margin-bottom: 8px; }
+    .meta span { display: block; font-size: 13px; line-height: 1.7; opacity: .76; }
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .chip {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #f2f3f5;
+      color: var(--text-soft);
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+    .chip.warn {
+      color: #b96f15;
+      background: rgba(217,156,50,.1);
+    }
+    .required { color: var(--danger); margin-left: 4px; }
+    .media-stack {
+      display: grid;
+      gap: 10px;
+    }
+    .media-stack--survey,
+    .media-stack--finish {
+      grid-template-columns: 1fr;
+    }
+    .media-stack--question,
+    .media-stack--option {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .hero-media-wrap,
+    .question-media-wrap,
+    .finish-media-wrap,
+    .option-media-wrap {
+      display: grid;
+      gap: 10px;
+    }
+    .media-card {
+      min-width: 0;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fafbfc;
+      padding: 12px;
+    }
+    .media-card--survey {
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+    }
+    .media-card--finish {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
+    }
+    .dark .media-card {
+      border-color: var(--line-dark);
+      background: rgba(255,255,255,.04);
+    }
+    .media-card small {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 600;
+    }
+    .dark .media-card small { color: var(--text-light-soft); }
+    .media-frame {
+      overflow: hidden;
+      border-radius: 12px;
+      background: #eef3fb;
+      border: 1px solid rgba(47,107,255,.08);
+    }
+    .media-frame--image img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+    .hero-media-wrap .media-frame--image img {
+      height: 240px;
+    }
+    .option-media-wrap .media-frame--image img {
+      height: 132px;
+    }
+    .media-card audio, .media-card video {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+    }
+    .media-card video {
+      max-height: 220px;
+      object-fit: cover;
+    }
+    .media-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .media-fallback {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .options, .fields, .score-list { display: grid; gap: 12px; }
+    .score-item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fafbfc;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .score-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+    .score-scale {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .score-pill {
+      min-width: 44px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    .score-pill--card {
+      display: inline-grid;
+      place-items: center;
+      gap: 1px;
+      min-width: 52px;
+      height: 48px;
+      border-radius: 14px;
+    }
+    .score-pill-value {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .score-pill-hint {
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+      opacity: .72;
+    }
+    .score-pill.is-active {
+      background: var(--brand);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 24px rgba(91,124,255,.22);
+    }
+    .score-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fafbfc;
+      transition: border-color .18s ease, transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+    }
+    .option:hover {
+      border-color: rgba(47,107,255,.22);
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(31, 35, 41, 0.05);
+    }
+    .option-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .option-card input {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      accent-color: var(--brand);
+    }
+    .option-card-indicator {
+      display: none;
+    }
+    .option-card-body {
+      min-width: 0;
+      flex: 1;
+      display: grid;
+      gap: 12px;
+    }
+    .option-card-arrow {
+      align-self: center;
+      color: var(--text-soft);
+      font-size: 20px;
+      line-height: 1;
+      transition: transform .18s ease, color .18s ease;
+    }
+    .option-copy {
+      display: grid;
+      gap: 6px;
+    }
+    .option--media .option-card {
+      align-items: flex-start;
+    }
+    .option:has(input:checked) {
+      border-color: rgba(47,107,255,.38);
+      background: #f7faff;
+      box-shadow: 0 10px 28px rgba(47,107,255,.10);
+    }
+    .option:has(input:checked) .option-card-arrow {
+      color: var(--brand);
+      transform: translateX(2px);
+    }
+    .option--media .option-copy .rich p {
+      color: var(--text);
+    }
+    .option--media .option-media-wrap {
+      margin-top: 2px;
+    }
+    .child-list {
+      display: none;
+      padding: 0 16px 16px 48px;
+      gap: 12px;
+    }
+    .child-list.is-visible { display: grid; }
+    .field { display: grid; gap: 8px; }
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .field-label { font-weight: 700; }
+    .input, .textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--text);
+      padding: 14px 16px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+    .textarea {
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.75;
+    }
+    .input:focus, .textarea:focus {
+      border-color: rgba(91,124,255,.45);
+      box-shadow: 0 0 0 4px rgba(91,124,255,.12);
+    }
+    .error {
+      display: none;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--danger);
+    }
+    .error.is-visible { display: block; }
+    .is-hidden-by-logic { display: none !important; }
+    .is-invalid {
+      border-color: rgba(226,82,112,.5) !important;
+      box-shadow: 0 0 0 4px rgba(226,82,112,.08) !important;
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .actions-right {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--brand);
+      box-shadow: 0 12px 32px rgba(91,124,255,.26);
+      cursor: pointer;
+    }
+    .btn.secondary {
+      background: #f2f3f5;
+      color: var(--text-soft);
+      box-shadow: none;
+      border: 1px solid rgba(91,124,255,.12);
+    }
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    body[data-style-pack="consumer-campaign"] .topbar .badge:first-child {
+      background: #ffffff;
+      border-color: rgba(134,61,251,.18);
+      color: #111111;
+      font-weight: 700;
+      box-shadow: 0 10px 22px rgba(134, 61, 251, .08);
+    }
+    body[data-style-pack="consumer-campaign"] .progress {
+      height: 10px;
+      background: #f1edf9;
+    }
+    body[data-style-pack="consumer-campaign"] .progress-bar {
+      background: linear-gradient(90deg, #000000 0%, #863dfb 100%);
+      box-shadow: 0 10px 22px rgba(134, 61, 251, .20);
+    }
+    body[data-style-pack="consumer-campaign"] .card {
+      border-color: rgba(134, 61, 251, .10);
+      box-shadow: 0 24px 56px rgba(20, 10, 40, 0.08);
+    }
+    body[data-style-pack="consumer-campaign"] .card.dark {
+      background:
+        radial-gradient(circle at top right, rgba(134,61,251,.10), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(134,61,251,.05), transparent 22%),
+        linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+    }
+    body[data-style-pack="consumer-campaign"] .survey-kicker,
+    body[data-style-pack="consumer-campaign"] .finish-kicker {
+      background: #f4efff;
+      color: #5d23bd;
+    }
+    body[data-style-pack="consumer-campaign"] .survey-hero,
+    body[data-style-pack="consumer-campaign"] .finish-state {
+      gap: 18px;
+    }
+    body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
+      font-size: 40px;
+      line-height: 1.08;
+      margin-bottom: 12px;
+      max-width: 11ch;
+      letter-spacing: -.04em;
+    }
+    body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich p {
+      font-size: 15px;
+      line-height: 1.78;
+      max-width: 56ch;
+    }
+    body[data-style-pack="consumer-campaign"] .trust-meta-item {
+      background: #fcfbff;
+      border-color: rgba(134,61,251,.12);
+    }
+    body[data-style-pack="consumer-campaign"] .survey-reason-item::before {
+      width: 8px;
+      height: 8px;
+      top: 7px;
+      background: #863dfb;
+      box-shadow: 0 4px 10px rgba(134, 61, 251, .24);
+    }
+    body[data-style-pack="consumer-campaign"] .hero-media-wrap,
+    body[data-style-pack="consumer-campaign"] .finish-media-wrap {
+      width: 100%;
+      max-width: 100%;
+      margin: 4px auto 0;
+    }
+    body[data-style-pack="consumer-campaign"] .hero-media-wrap .media-card--survey {
+      padding: 14px;
+      background: #ffffff;
+      border-color: rgba(134,61,251,.12);
+    }
+    body[data-style-pack="consumer-campaign"] .hero-media-wrap .media-frame {
+      border-radius: 18px;
+      border-color: rgba(134,61,251,.12);
+    }
+    body[data-style-pack="consumer-campaign"] .hero-media-wrap .media-frame--image img {
+      height: 220px;
+    }
+    body[data-style-pack="consumer-campaign"] .question-index {
+      color: #5d23bd;
+    }
+    body[data-style-pack="consumer-campaign"] .question-stage-meta .chip.warn {
+      background: rgba(255, 184, 78, .18);
+      color: #b96f15;
+    }
+    body[data-style-pack="consumer-campaign"] .option {
+      background: linear-gradient(180deg, #ffffff 0%, #fcfbff 100%);
+      border-color: rgba(134,61,251,.10);
+    }
+    body[data-style-pack="consumer-campaign"] .option:hover {
+      border-color: rgba(134,61,251,.28);
+      box-shadow: 0 16px 36px rgba(134, 61, 251, 0.10);
+      transform: translateY(-1px);
+    }
+    body[data-style-pack="consumer-campaign"] .option:has(input:checked) {
+      background: linear-gradient(180deg, rgba(134,61,251,.08) 0%, rgba(134,61,251,.03) 100%);
+      border-color: rgba(134,61,251,.36);
+      box-shadow: 0 18px 40px rgba(134, 61, 251, .12);
+    }
+    body[data-style-pack="consumer-campaign"] .option-card-arrow {
+      color: #6e56a6;
+    }
+    body[data-style-pack="consumer-campaign"] .option--media .option-media-wrap .media-card {
+      background: #fff;
+      border-color: rgba(134,61,251,.10);
+    }
+    body[data-style-pack="consumer-campaign"] .score-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fcfbff 100%);
+      border-color: rgba(134,61,251,.10);
+    }
+    body[data-style-pack="consumer-campaign"] .score-pill--card {
+      border-radius: 16px;
+    }
+    body[data-style-pack="consumer-campaign"] .score-pill.is-active {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      box-shadow: 0 16px 32px rgba(134, 61, 251, .22);
+    }
+    body[data-style-pack="consumer-campaign"] .finish-badge {
+      background: rgba(134,61,251,.08);
+      color: #5d23bd;
+    }
+    body[data-style-pack="consumer-campaign"] .btn {
+      background: linear-gradient(135deg, #000000 0%, #863dfb 100%);
+      box-shadow: 0 18px 36px rgba(134, 61, 251, .20);
+    }
+    body[data-style-pack="consumer-campaign"] .btn.secondary {
+      background: rgba(255,255,255,.90);
+      border-color: rgba(134,61,251,.10);
+      color: #6e6e79;
+    }
+    @media (max-width: 900px) {
+      .hero-grid, .finish-grid { grid-template-columns: 1fr; }
+      .media-stack--question,
+      .media-stack--option,
+      .trust-meta-list { grid-template-columns: 1fr; }
+      .hero-media-wrap .media-frame--image img {
+        height: 220px;
+      }
+      body[data-style-pack="consumer-campaign"] .hero-media-wrap .media-frame--image img {
+        height: 210px;
+      }
+    }
+    @media (max-width: 640px) {
+      body { padding: 16px 12px 32px; }
+      .topbar {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+      }
+      .progress-caption {
+        margin: 4px 2px 16px;
+        font-size: 12px;
+      }
+      .card-body { padding: 22px 16px; gap: 14px; }
+      .rich h1 { font-size: 24px; }
+      .rich h2 { font-size: 20px; }
+      .rich p, .rich li, .rich blockquote { font-size: 15px; line-height: 1.72; }
+      .survey-hero,
+      .finish-state,
+      .survey-hero-copy,
+      .finish-copy,
+      .question-main,
+      .question-content { gap: 14px; }
+      .trust-meta-item {
+        padding: 12px 14px;
+      }
+      .survey-reason-item {
+        font-size: 12px;
+      }
+      .question-stage-meta {
+        gap: 10px;
+      }
+      .question-index {
+        margin-bottom: 0;
+        font-size: 11px;
+        letter-spacing: .12em;
+      }
+      .media-card {
+        padding: 10px;
+      }
+      .media-frame--image img,
+      .option-media-wrap .media-frame--image img {
+        height: 168px;
+      }
+      .hero-media-wrap .media-frame--image img {
+        height: 196px;
+      }
+      .score-item {
+        padding: 14px;
+        gap: 10px;
+      }
+      .score-scale {
+        gap: 6px;
+      }
+      .score-pill {
+        min-width: 42px;
+        height: 38px;
+      }
+      .score-pill--card {
+        min-width: 46px;
+        height: 42px;
+      }
+      .option {
+        border-radius: 16px;
+      }
+      .option-card {
+        gap: 12px;
+        padding: 14px;
+      }
+      .option-card input {
+        width: 20px;
+        min-width: 20px;
+        height: 20px;
+      }
+      .option-card-body {
+        gap: 10px;
+      }
+      .option-card-arrow {
+        font-size: 18px;
+      }
+      .child-list {
+        padding: 0 14px 14px 46px;
+      }
+      .field-row { grid-template-columns: 1fr; }
+      .input, .textarea {
+        font-size: 16px;
+        padding: 13px 14px;
+      }
+      .textarea {
+        min-height: 124px;
+      }
+      .actions, .actions-right { width: 100%; }
+      .actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 3;
+        padding-top: 8px;
+        background: linear-gradient(180deg, rgba(245,247,250,0) 0%, var(--bg) 32%);
+      }
+      .actions-right > *,
+      .actions > .btn.secondary {
+        flex: 1;
+      }
+      .btn {
+        min-height: 48px;
+        padding: 0 18px;
+        font-size: 15px;
+      }
+      body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
+        font-size: 32px;
+      }
+      body[data-style-pack="consumer-campaign"] .hero-media-wrap .media-frame--image img {
+        height: 188px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="badge">问卷填写</div>
+      <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="badge" id="stepCounter">1 / 1</div>
+    </div>
+    <div class="progress-caption" id="progressCaption">当前正在开始填写</div>
+
+    <form id="surveyForm" action="#">
+      <!-- screens rendered by schema -->
+    </form>
+  </div>
+  <script>
+    const richMediaImg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDcyMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0MDAiIHJ4PSIzMiIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjEyNSIgY3k9IjExNSIgcj0iNjAiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik02MCAzMjBDMTQ1IDI1NSAyNTUgMjI1IDM2MCAyNDVDNDU1IDI2MyA1NTIgMzQwIDY2MCAyNzVWNDAwSDYwVjMyMFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9Ii4xMiIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iNzIwIiB5Mj0iNDAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzVCN0NGRiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzI1QzJBMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==';
+
+    const surveySchema = {
+  "survey": {
+    "type": "survey",
+    "id": "survey_lead_qualification_sales_conversion",
+    "title": "<h1>企业版产品需求评估</h1>",
+    "description": "<p>这是一份更贴近真实销售转化场景的线索筛选问卷示例。系统会根据你的采购阶段、预算区间和后续偏好，把你带到不同的结束页，并在<strong>提交成功后</strong>跳转到对应的下一步页面。</p>",
+    "attribute": {
+      "onePageOneQuestion": true,
+      "allowBack": true,
+      "media": []
+    }
+  },
+  "questions": [
+    {
+      "type": "radio",
+      "id": "question_role",
+      "title": "<h2>你当前在采购决策中扮演什么角色？</h2>",
+      "description": "<p>用于帮助我们判断后续更适合给你演示、资料还是自助方案。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_role_decision_maker",
+          "title": "<p>最终决策者 / 负责人</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_role_evaluator",
+          "title": "<p>调研评估 / 项目推进人</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_role_executor",
+          "title": "<p>实际使用者 / 执行同学</p>",
+          "attribute": {
+            "media": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "question_core_needs",
+      "title": "<h2>你当前最关注哪些能力？</h2>",
+      "description": "<p>可多选，帮助我们快速判断更适合给你哪类解决方案。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_need_lead_capture",
+          "title": "<p>线索收集与表单转化</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_need_automation",
+          "title": "<p>自动化跟进与分配</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_need_crm",
+          "title": "<p>客户管理与销售协同</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_need_ai_assistant",
+          "title": "<p>AI 助手 / 智能客服 / 话术辅助</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_need_other",
+          "title": "<p>其他，请说明</p>",
+          "attribute": {
+            "media": []
+          },
+          "child": [
+            {
+              "type": "input",
+              "id": "child_need_other_text",
+              "title": "<p>补充需求</p>",
+              "attribute": {
+                "required": true,
+                "dataType": "text",
+                "placeholder": "请补充你最核心的业务目标",
+                "maxLength": 200
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "question_timeline",
+      "title": "<h2>你预计什么时候启动采购或上线？</h2>",
+      "description": "<p>这是最关键的分流题，我们会根据你的时间窗口安排不同的后续动作。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_timeline_urgent",
+          "title": "<p>2 周内，希望尽快推进</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_timeline_this_quarter",
+          "title": "<p>1-3 个月内，正在评估中</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_timeline_research",
+          "title": "<p>先了解方案，还没到决策阶段</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_timeline_no_plan",
+          "title": "<p>暂无明确计划，先看看</p>",
+          "attribute": {
+            "media": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "input",
+      "id": "question_contact_hot",
+      "title": "<h2>请留下你的联系方式，方便我们尽快安排演示</h2>",
+      "description": "<p>适合已经有明确推进计划的团队，提交后我们会优先安排产品顾问联系你。</p>",
+      "attribute": {
+        "required": true,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_contact_hot_name",
+          "title": "<p>姓名</p>",
+          "attribute": {
+            "dataType": "text",
+            "required": true,
+            "placeholder": "请输入你的姓名",
+            "maxLength": 40
+          }
+        },
+        {
+          "id": "option_contact_hot_company",
+          "title": "<p>公司名称</p>",
+          "attribute": {
+            "dataType": "text",
+            "required": true,
+            "placeholder": "请输入公司名称",
+            "maxLength": 80
+          }
+        },
+        {
+          "id": "option_contact_hot_phone",
+          "title": "<p>手机号</p>",
+          "attribute": {
+            "dataType": "tel",
+            "required": true,
+            "placeholder": "请输入方便联系的手机号",
+            "maxLength": 20
+          }
+        }
+      ]
+    },
+    {
+      "type": "input",
+      "id": "question_contact_consult",
+      "title": "<h2>请留下你的联系方式，方便顾问结合你的阶段给出建议</h2>",
+      "description": "<p>如果你还在评估期，我们会根据你的业务目标，安排更适合的方案沟通。</p>",
+      "attribute": {
+        "required": true,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_contact_consult_name",
+          "title": "<p>姓名</p>",
+          "attribute": {
+            "dataType": "text",
+            "required": true,
+            "placeholder": "请输入你的姓名",
+            "maxLength": 40
+          }
+        },
+        {
+          "id": "option_contact_consult_company",
+          "title": "<p>公司名称</p>",
+          "attribute": {
+            "dataType": "text",
+            "required": true,
+            "placeholder": "请输入公司名称",
+            "maxLength": 80
+          }
+        },
+        {
+          "id": "option_contact_consult_phone",
+          "title": "<p>手机号</p>",
+          "attribute": {
+            "dataType": "tel",
+            "required": true,
+            "placeholder": "请输入方便联系的手机号",
+            "maxLength": 20
+          }
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "question_nurture_content",
+      "title": "<h2>如果你还在调研阶段，更希望先获取哪些内容？</h2>",
+      "description": "<p>可多选，我们会把你带到更匹配的资料页。</p>",
+      "attribute": {
+        "required": true,
+        "random": false,
+        "media": []
+      },
+      "option": [
+        {
+          "id": "option_nurture_case_study",
+          "title": "<p>客户案例 / 行业最佳实践</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_nurture_pricing",
+          "title": "<p>价格方案 / 套餐说明</p>",
+          "attribute": {
+            "media": []
+          }
+        },
+        {
+          "id": "option_nurture_product_tour",
+          "title": "<p>产品功能介绍 / Demo 视频</p>",
+          "attribute": {
+            "media": []
+          }
+        }
+      ]
+    }
+  ],
+  "finish": [
+    {
+      "type": "finish",
+      "id": "finish_hot_demo",
+      "title": "<h2>非常适合直接安排产品演示</h2>",
+      "description": "<p>我们已经记录你的需求与时间窗口。提交成功后，页面会带你进入预约演示入口，方便你直接锁定演示时间。</p>",
+      "media": [],
+      "postSubmit": {
+        "type": "redirect",
+        "url": "https://example.com/book-demo",
+        "mode": "immediate",
+        "openIn": "blank"
+      }
+    },
+    {
+      "type": "finish",
+      "id": "finish_sales_consult",
+      "title": "<h2>更适合先安排一场顾问咨询</h2>",
+      "description": "<p>你已经进入明确评估阶段。提交成功后，页面会带你进入方案咨询入口，方便你继续了解适合的落地路径。</p>",
+      "media": [],
+      "postSubmit": {
+        "type": "redirect",
+        "url": "https://example.com/sales-consult",
+        "mode": "delay",
+        "delayMs": 2500,
+        "openIn": "self"
+      }
+    },
+    {
+      "type": "finish",
+      "id": "finish_nurture_content",
+      "title": "<h2>我们先把最适合你的资料准备好</h2>",
+      "description": "<p>提交成功后，页面会带你进入内容资料页，你可以先系统了解方案，再决定是否进入下一步。</p>",
+      "media": [],
+      "postSubmit": {
+        "type": "redirect",
+        "url": "https://example.com/case-studies",
+        "mode": "delay",
+        "delayMs": 2200,
+        "openIn": "self"
+      }
+    },
+    {
+      "type": "finish",
+      "id": "finish_self_serve_resources",
+      "title": "<h2>先从公开资料开始也没问题</h2>",
+      "description": "<p>如果你还没有明确计划，我们建议你先从产品总览、价格和案例开始。提交成功后，页面会带你进入自助资源中心。</p>",
+      "media": [],
+      "postSubmit": {
+        "type": "redirect",
+        "url": "https://example.com/resource-center",
+        "mode": "immediate",
+        "openIn": "self"
+      }
+    }
+  ],
+  "logic": [
+    {
+      "id": "logic_show_hot_contact",
+      "when": {
+        "questionId": "question_timeline",
+        "operator": "selected",
+        "optionId": "option_timeline_urgent"
+      },
+      "action": {
+        "type": "show_question",
+        "targetQuestionId": "question_contact_hot"
+      }
+    },
+    {
+      "id": "logic_hot_contact_to_demo",
+      "when": {
+        "questionId": "question_contact_hot",
+        "operator": "answered"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_hot_demo"
+      }
+    },
+    {
+      "id": "logic_show_consult_contact",
+      "when": {
+        "questionId": "question_timeline",
+        "operator": "selected",
+        "optionId": "option_timeline_this_quarter"
+      },
+      "action": {
+        "type": "show_question",
+        "targetQuestionId": "question_contact_consult"
+      }
+    },
+    {
+      "id": "logic_consult_contact_to_finish",
+      "when": {
+        "questionId": "question_contact_consult",
+        "operator": "answered"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_sales_consult"
+      }
+    },
+    {
+      "id": "logic_show_nurture_content",
+      "when": {
+        "questionId": "question_timeline",
+        "operator": "selected",
+        "optionId": "option_timeline_research"
+      },
+      "action": {
+        "type": "show_question",
+        "targetQuestionId": "question_nurture_content"
+      }
+    },
+    {
+      "id": "logic_research_to_finish",
+      "when": {
+        "questionId": "question_nurture_content",
+        "operator": "answered"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_nurture_content"
+      }
+    },
+    {
+      "id": "logic_no_plan_to_self_serve",
+      "when": {
+        "questionId": "question_timeline",
+        "operator": "selected",
+        "optionId": "option_timeline_no_plan"
+      },
+      "action": {
+        "type": "end_survey",
+        "targetQuestionId": "finish_self_serve_resources"
+      }
+    }
+  ]
+};
+
+    const surveyStylePack = "consumer-trust";
+
+    const form = document.getElementById('surveyForm');
+    const progressBar = document.getElementById('progressBar');
+    const stepCounter = document.getElementById('stepCounter');
+    const progressCaption = document.getElementById('progressCaption');
+    const surveyId = surveySchema.survey.id;
+    const cacheKey = `survey_step_cache_${surveyId}`;
+    const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
+    const finishScreens = (() => {
+      const rawFinish = Array.isArray(surveySchema.finish)
+        ? surveySchema.finish
+        : surveySchema.finish && typeof surveySchema.finish === 'object'
+        ? [surveySchema.finish]
+        : [];
+      const normalized = rawFinish
+        .filter((item) => item && typeof item === 'object')
+        .map((item, index) => ({
+          ...item,
+          type: 'finish',
+          id: item.id || `finish_${index + 1}`,
+          media: Array.isArray(item.media) ? item.media : []
+        }));
+      if (!normalized.length) {
+        normalized.push({
+          type: 'finish',
+          id: 'finish_fallback',
+          title: '<h2>提交完成</h2>',
+          description: '<p>感谢你的填写。</p>',
+          media: []
+        });
+      }
+      return normalized;
+    })();
+    surveySchema.finish = finishScreens;
+    const defaultFinishScreen = finishScreens[0];
+    const finishScreenIds = new Set(finishScreens.map((item) => item.id).filter(Boolean));
+    const rawQuestions = Array.isArray(surveySchema.questions) ? surveySchema.questions : [];
+    const answerableQuestions = rawQuestions.filter((question) => question?.type !== 'Pagination');
+    document.body.dataset.stylePack = surveyStylePack || 'consumer-minimal';
+    const hasManualPagination = rawQuestions.some((question) => question?.type === 'Pagination');
+    const manualPages = buildManualPagesFromSeparators(rawQuestions);
+    const questionOrder = new Map(answerableQuestions.map((question, index) => [question.id, index]));
+    const questionToScreenId = new Map();
+    const logicShowQuestionTargets = new Set(logicRules.filter((rule) => rule?.action?.type === 'show_question' && rule?.action?.targetQuestionId).map((rule) => rule.action.targetQuestionId));
+    const logicShowOptionTargets = new Set(logicRules.filter((rule) => rule?.action?.type === 'show_option' && rule?.action?.targetQuestionId && rule?.action?.targetOptionId).map((rule) => `${rule.action.targetQuestionId}::${rule.action.targetOptionId}`));
+    let logicState = { hiddenQuestions: new Set(), hiddenOptions: new Set(), skippedQuestions: new Set(), jumpTargets: new Map(), autoSelects: [] };
+    let current = 0;
+    let cache = loadCache();
+
+    function loadCache() {
+      try {
+        return JSON.parse(localStorage.getItem(cacheKey)) || { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+      } catch {
+        return { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+      }
+    }
+
+    function saveCache() {
+      cache.updatedAt = new Date().toISOString();
+      localStorage.setItem(cacheKey, JSON.stringify(cache));
+    }
+
+    function buildManualPagesFromSeparators(questions) {
+      const pages = [];
+      let group = [];
+      questions.forEach((question) => {
+        if (!question || question.type === 'Pagination') {
+          if (group.length) pages.push(group);
+          group = [];
+          return;
+        }
+        group.push(question);
+      });
+      if (group.length) pages.push(group);
+      if (!pages.length && answerableQuestions.length) pages.push([...answerableQuestions]);
+      return pages;
+    }
+    function questionNumber(questionId) {
+      return (questionOrder.get(questionId) ?? 0) + 1;
+    }
+
+    function questionById(questionId) {
+      return answerableQuestions.find((question) => question.id === questionId) || null;
+    }
+
+
+    function flattenAnswerValue(value) {
+      if (value == null) return [];
+      if (typeof value === 'object') {
+        const start = value.start != null ? String(value.start) : '';
+        const end = value.end != null ? String(value.end) : '';
+        return [start, end, `${start} ${end}`.trim()].filter(Boolean);
+      }
+      return [String(value)];
+    }
+
+    function selectedOptionIds(answer) {
+      if (!answer) return [];
+      if (answer.questionType === 'radio' && answer.value?.optionId) return [answer.value.optionId];
+      if (answer.questionType === 'checkbox') return (answer.value || []).map((item) => item.optionId).filter(Boolean);
+      return [];
+    }
+
+    function scalarAnswerValues(answer) {
+      if (!answer) return [];
+      const values = [];
+      if (answer.questionType === 'radio') {
+        values.push(...selectedOptionIds(answer));
+        (answer.value?.child || []).forEach((item) => values.push(...flattenAnswerValue(item.value)));
+      } else if (answer.questionType === 'checkbox') {
+        (answer.value || []).forEach((item) => {
+          if (item.optionId) values.push(String(item.optionId));
+          (item.child || []).forEach((child) => values.push(...flattenAnswerValue(child.value)));
+        });
+      } else if (answer.questionType === 'input') {
+        (answer.value || []).forEach((item) => values.push(...flattenAnswerValue(item.value)));
+      } else if (answer.questionType === 'score') {
+        (answer.value || []).forEach((item) => values.push(String(item.score)));
+      } else if (answer.questionType === 'nps') {
+        if (answer.value?.score != null) values.push(String(answer.value.score));
+      }
+      return values.filter(Boolean);
+    }
+
+    function compareLogicValue(actual, expected) {
+      if (expected == null) return false;
+      return String(actual) === String(expected);
+    }
+
+    function evaluateLogicCondition(condition) {
+      const answer = cache.answers?.[condition.questionId];
+      const operator = condition.operator;
+      const optionIds = selectedOptionIds(answer);
+      const scalarValues = scalarAnswerValues(answer);
+      if (operator === 'answered') return !!answer;
+      if (operator === 'not_answered') return !answer;
+      if (operator === 'selected') return optionIds.includes(condition.optionId);
+      if (operator === 'not_selected') return !optionIds.includes(condition.optionId);
+      if (operator === 'exists') return optionIds.some((id) => (condition.optionIds || []).includes(id));
+      if (operator === 'not_exists') return optionIds.every((id) => !(condition.optionIds || []).includes(id));
+      if (operator === 'contains') {
+        if (condition.optionId) return optionIds.includes(condition.optionId);
+        return scalarValues.some((value) => String(value).includes(String(condition.value ?? '')));
+      }
+      if (operator === 'not_contains') {
+        if (condition.optionId) return !optionIds.includes(condition.optionId);
+        return scalarValues.every((value) => !String(value).includes(String(condition.value ?? '')));
+      }
+      if (operator === 'eq') return scalarValues.some((value) => compareLogicValue(value, condition.value));
+      if (operator === 'neq') return !!answer && scalarValues.every((value) => !compareLogicValue(value, condition.value));
+      if (operator === 'gt') return scalarValues.some((value) => Number(value) > Number(condition.value));
+      if (operator === 'lt') return scalarValues.some((value) => Number(value) < Number(condition.value));
+      return false;
+    }
+
+    function computeLogicState() {
+      const hiddenQuestions = new Set(logicShowQuestionTargets);
+      const hiddenOptions = new Set(logicShowOptionTargets);
+      const jumpTargets = new Map();
+      const autoSelects = [];
+      let activeFinishId = defaultFinishScreen.id;
+      logicRules.forEach((rule) => {
+        if (!rule?.when || !rule?.action) return;
+        if (!evaluateLogicCondition(rule.when)) return;
+        const action = rule.action;
+        const optionKey = action.targetQuestionId && action.targetOptionId ? `${action.targetQuestionId}::${action.targetOptionId}` : null;
+        if (action.type === 'show_question' && action.targetQuestionId) hiddenQuestions.delete(action.targetQuestionId);
+        if (action.type === 'hide_question' && action.targetQuestionId) hiddenQuestions.add(action.targetQuestionId);
+        if (action.type === 'show_option' && optionKey) hiddenOptions.delete(optionKey);
+        if (action.type === 'hide_option' && optionKey) hiddenOptions.add(optionKey);
+        if ((action.type === 'jump_to_question' || action.type === 'jump_to_page') && action.targetQuestionId && rule.when.questionId) {
+          jumpTargets.set(rule.when.questionId, action.targetQuestionId);
+        }
+        if (action.type === 'end_survey' && rule.when.questionId) {
+          const targetFinishId = finishScreenIds.has(action.targetQuestionId) ? action.targetQuestionId : defaultFinishScreen.id;
+          jumpTargets.set(rule.when.questionId, targetFinishId);
+          activeFinishId = targetFinishId;
+        }
+        if (action.type === 'auto_select_option' && optionKey) autoSelects.push({ questionId: action.targetQuestionId, optionId: action.targetOptionId });
+      });
+      return { hiddenQuestions, hiddenOptions, jumpTargets, autoSelects, activeFinishId };
+    }
+
+    function isQuestionHidden(questionId) {
+      return logicState.hiddenQuestions.has(questionId);
+    }
+
+    function isQuestionSkipped(questionId) {
+      return logicState.skippedQuestions.has(questionId);
+    }
+
+    function isQuestionUnavailable(questionId) {
+      return isQuestionHidden(questionId) || isQuestionSkipped(questionId);
+    }
+
+    function isOptionHidden(questionId, optionId) {
+      return logicState.hiddenOptions.has(`${questionId}::${optionId}`);
+    }
+
+    function clearQuestionState(question) {
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
+      if (!screen) return;
+      screen.querySelectorAll('input, textarea').forEach((input) => {
+        input.value = '';
+        input.checked = false;
+      });
+      screen.querySelectorAll('.score-pill').forEach((pill) => {
+        pill.classList.remove('is-active');
+        pill.setAttribute('aria-pressed', 'false');
+      });
+      screen.querySelectorAll('.error').forEach((el) => el.classList.remove('is-visible'));
+      screen.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
+    }
+
+    function clearFieldValue(field) {
+      if (!field) return;
+      if (field.matches('[data-range-type]')) {
+        field.querySelectorAll('input').forEach((input) => { input.value = ''; });
+        return;
+      }
+      if (field.matches('input, textarea')) field.value = '';
+      field.querySelectorAll('input, textarea').forEach((input) => { input.value = ''; input.checked = false; });
+    }
+
+    function clearUnavailableState() {
+      answerableQuestions.forEach((question) => {
+        if (isQuestionUnavailable(question.id)) {
+          delete cache.answers[question.id];
+          clearQuestionState(question);
+        }
+        (question.option || []).forEach((option) => {
+          if (!isOptionHidden(question.id, option.id)) return;
+          const selectors = [
+            `.option${dataSelector('option-id', option.id)} input`,
+            `${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}`,
+            `${dataSelector('score-option', option.id)} .score-pill`,
+            `${dataSelector('nps-option', option.id)} .score-pill`
+          ];
+          document.querySelectorAll(selectors.join(',')).forEach((node) => {
+            if (node.matches('input')) node.checked = false;
+            if (node.matches('.score-pill')) {
+              node.classList.remove('is-active');
+              node.setAttribute('aria-pressed', 'false');
+            }
+          });
+          document.querySelectorAll(`${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}, ${dataSelector('child-wrap', option.id)} [data-child-id]`).forEach(clearFieldValue);
+        });
+      });
+    }
+
+    function applyAutoSelects() {
+      logicState.autoSelects.forEach(({ questionId, optionId }) => {
+        if (isQuestionUnavailable(questionId) || isOptionHidden(questionId, optionId)) return;
+        const input = document.querySelector(`.option${dataSelector('option-id', optionId)} input${selectorAttr('name', questionId)}`);
+        if (!input) return;
+        if (input.type === 'radio') {
+          document.querySelectorAll(`input${selectorAttr('name', questionId)}`).forEach((node) => { if (node !== input) node.checked = false; });
+        }
+        input.checked = true;
+      });
+    }
+
+    function syncCacheFromDom(save = true) {
+      answerableQuestions.forEach((question) => {
+        if (isQuestionUnavailable(question.id)) {
+          delete cache.answers[question.id];
+          return;
+        }
+        const collected = collectQuestion(question);
+        if (collected) cache.answers[question.id] = collected;
+        else delete cache.answers[question.id];
+      });
+      if (save) saveCache();
+    }
+
+    function computeSkippedQuestions(jumpTargets) {
+      const skippedQuestions = new Set();
+      const orderedScreens = screens().filter((screen) => !['survey', 'finish', 'survey-all'].includes(screen.dataset.schemaType));
+      const screenIndexMap = new Map(orderedScreens.map((screen, index) => [screen.dataset.screenId, index]));
+      jumpTargets.forEach((targetId, sourceQuestionId) => {
+        const sourceScreenId = resolveScreenId(sourceQuestionId) || sourceQuestionId;
+        const targetScreenId = resolveScreenId(targetId) || targetId;
+        const sourceIndex = screenIndexMap.get(sourceScreenId);
+        const targetIndex = screenIndexMap.get(targetScreenId);
+        if (sourceIndex == null) return;
+        const endExclusive = finishScreenIds.has(targetId)
+          ? orderedScreens.length
+          : targetIndex;
+        if (endExclusive == null || endExclusive <= sourceIndex + 1) return;
+        for (let index = sourceIndex + 1; index < endExclusive; index += 1) {
+          questionsOnScreen(orderedScreens[index]).forEach((question) => skippedQuestions.add(question.id));
+        }
+      });
+      return skippedQuestions;
+    }
+
+    function applyLogicRuntime(options = {}) {
+      const preserveActiveId = options.preserveActiveId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+      logicState = computeLogicState();
+      logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
+      document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
+        let hidden = false;
+        if (node.dataset.schemaType === 'finish') {
+          hidden = node.dataset.screenId !== logicState.activeFinishId;
+        } else if (!['survey', 'finish', 'survey-all'].includes(node.dataset.schemaType)) {
+          if (node.dataset.schemaType === 'page') {
+            const pageQuestions = questionsOnScreen(node);
+            hidden = pageQuestions.length > 0 ? pageQuestions.every((question) => isQuestionUnavailable(question.id)) : false;
+          } else {
+            hidden = isQuestionUnavailable(node.dataset.screenId);
+          }
+        }
+        node.classList.toggle('is-hidden-by-logic', hidden);
+        node.dataset.logicHidden = hidden ? 'true' : 'false';
+        if (hidden) node.classList.remove('is-active');
+      });
+      answerableQuestions.forEach((question) => {
+        (question.option || []).forEach((option) => {
+          const hidden = isOptionHidden(question.id, option.id);
+          const selector = [
+            `.option${dataSelector('option-id', option.id)}`,
+            dataSelector('option-field', option.id),
+            dataSelector('score-option', option.id),
+            dataSelector('nps-option', option.id)
+          ].join(',');
+          document.querySelectorAll(selector).forEach((node) => {
+            node.classList.toggle('is-hidden-by-logic', hidden);
+            node.dataset.logicHidden = hidden ? 'true' : 'false';
+          });
+        });
+      });
+      clearUnavailableState();
+      applyAutoSelects();
+      updateChildVisibility();
+      syncCacheFromDom(false);
+      const visibleIds = visibleScreens().map((screen) => screen.dataset.screenId);
+      const nextActiveId = preserveActiveId && visibleIds.includes(preserveActiveId) ? preserveActiveId : visibleIds[0] || null;
+      if (nextActiveId) showById(nextActiveId);
+      else saveCache();
+    }
+    function shuffleIfNeeded(items, shouldRandom) {
+      const list = [...items];
+      if (!shouldRandom || list.length <= 1) return list;
+      const fixed = [];
+      const movable = [];
+      list.forEach((item, index) => {
+        if (item.attribute?.random === false) fixed.push({ index, item });
+        else movable.push(item);
+      });
+      for (let i = movable.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [movable[i], movable[j]] = [movable[j], movable[i]];
+      }
+      const next = new Array(list.length);
+      fixed.forEach(({ index, item }) => { next[index] = item; });
+      let cursor = 0;
+      for (let i = 0; i < next.length; i++) if (!next[i]) next[i] = movable[cursor++];
+      return next;
+    }
+
+    function sanitizeRichText(html) {
+      const input = typeof html === 'string' ? html : '';
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${input}</div>`, 'text/html');
+      const root = doc.body.firstElementChild;
+      const allowedTags = new Set(['DIV', 'P', 'SPAN', 'STRONG', 'B', 'EM', 'I', 'U', 'BR', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'CODE', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'A']);
+      const allowedAttrs = { A: new Set(['href', 'target', 'rel']) };
+      const isSafeHref = (value) => /^(https?:|mailto:|tel:|#|\/)/i.test(value);
+
+      function clean(node) {
+        const children = Array.from(node.childNodes);
+        for (const child of children) {
+          if (child.nodeType === Node.TEXT_NODE) continue;
+          if (child.nodeType !== Node.ELEMENT_NODE) {
+            child.remove();
+            continue;
+          }
+          const tag = child.tagName.toUpperCase();
+          if (!allowedTags.has(tag)) {
+            const fragment = doc.createDocumentFragment();
+            while (child.firstChild) fragment.appendChild(child.firstChild);
+            child.replaceWith(fragment);
+            clean(node);
+            continue;
+          }
+          Array.from(child.attributes).forEach((attr) => {
+            const attrName = attr.name.toLowerCase();
+            const allowSet = allowedAttrs[tag] || new Set();
+            if (!allowSet.has(attr.name) && !allowSet.has(attrName)) child.removeAttribute(attr.name);
+          });
+          if (tag === 'A') {
+            const href = child.getAttribute('href') || '';
+            if (!isSafeHref(href)) child.removeAttribute('href');
+            if (child.getAttribute('target') === '_blank') child.setAttribute('rel', 'noopener noreferrer');
+          }
+          clean(child);
+        }
+      }
+
+      clean(root);
+      return root.innerHTML;
+    }
+
+    function renderRich(html) {
+      return `<div class="rich">${sanitizeRichText(html || '')}</div>`;
+    }
+
+    function escapeAttr(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
+
+    function cssEscape(value) {
+      const input = String(value ?? '');
+      if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(input);
+      return input.replace(/[\0-\x1F\x7F]|^-?\d|^-$|[^\w-]/g, (token) => {
+        if (token === '\0') return '\uFFFD';
+        return `\\${token.codePointAt(0).toString(16)} `;
+      });
+    }
+
+    function selectorAttr(attrName, value) {
+      return `[${attrName}="${cssEscape(value)}"]`;
+    }
+
+    function dataSelector(name, value) {
+      return selectorAttr(`data-${name}`, value);
+    }
+
+    function safeJsonAttr(value) {
+      return escapeAttr(JSON.stringify(value || {}));
+    }
+
+    function isDataUrl(value) {
+      return typeof value === 'string' && value.startsWith('data:');
+    }
+
+    function isSafeMediaUrl(value) {
+      return typeof value === 'string' && /^(https?:\/\/|data:(image|audio|video)\/)/i.test(value);
+    }
+
+    function isSafeRedirectUrl(value) {
+      return typeof value === 'string' && /^(https?:\/\/|\/|\.\/|\.\.\/|#)/i.test(value.trim());
+    }
+
+    function normalizePostSubmitAction(postSubmit) {
+      if (!postSubmit || typeof postSubmit !== 'object') return null;
+      if (postSubmit.type !== 'redirect' || !isSafeRedirectUrl(postSubmit.url || '')) return null;
+      const mode = postSubmit.mode === 'delay' ? 'delay' : 'immediate';
+      const delayValue = Number(postSubmit.delayMs);
+      const delayMs = mode === 'delay' && Number.isFinite(delayValue) && delayValue >= 0 ? delayValue : 3000;
+      const openIn = postSubmit.openIn === 'blank' ? 'blank' : 'self';
+      return {
+        type: 'redirect',
+        url: String(postSubmit.url).trim(),
+        mode,
+        delayMs,
+        openIn
+      };
+    }
+
+    function finishSubmitButtonLabel(finish) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      if (!action) return '确认并提交';
+      return action.mode === 'delay' ? '提交并进入下一步' : '提交并前往';
+    }
+
+    function finishSubmitNote(finish) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      if (!action) return '提交后将立即完成本次问卷，页面不会再要求额外填写内容。';
+      if (action.mode === 'delay') {
+        const seconds = Math.max(1, Math.ceil(action.delayMs / 1000));
+        return `提交成功后将展示结束提示，并在 ${seconds} 秒后跳转至下一步。`;
+      }
+      return '提交成功后将立即跳转至下一步页面。';
+    }
+
+    function mediaTitle(type) {
+      const map = {
+        image: '图片素材',
+        audio: '音频素材',
+        video: '视频素材',
+      };
+      return map[type] || '媒体素材';
+    }
+
+    function renderMediaLink(url, text = '查看原始资源') {
+      if (!url || isDataUrl(url) || !isSafeMediaUrl(url)) return '';
+      return `<a class="media-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeAttr(text)}</a>`;
+    }
+
+    function renderMediaSourceAttr(url, attrName = 'src') {
+      return isSafeMediaUrl(url) ? ` ${attrName}="${escapeAttr(url)}"` : '';
+    }
+
+    function renderMediaItem(m, context = 'question') {
+      const label = `<small>${mediaTitle(m.type)}</small>`;
+      const variantClass = context ? `media-card--${escapeAttr(context)}` : '';
+      if (!isSafeMediaUrl(m?.url)) {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">资源地址不安全或格式不合法，已跳过内嵌预览。</div></div>`;
+      }
+      if (m.type === 'image') {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img${renderMediaSourceAttr(m.url)} alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
+      }
+      if (m.type === 'audio') {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata"${renderMediaSourceAttr(m.url)}></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
+      }
+      if (m.type === 'video') {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline${renderMediaSourceAttr(m.url)}></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
+      }
+      return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">当前资源类型暂不支持内嵌预览，请打开原始资源查看。</div>${renderMediaLink(m.url)}</div>`;
+    }
+
+    function renderMedia(media = [], context = 'question') {
+      if (!media.length) return '';
+      const containerClass = context === 'survey'
+        ? 'hero-media-wrap'
+        : context === 'finish'
+        ? 'finish-media-wrap'
+        : context === 'option'
+        ? 'option-media-wrap'
+        : 'question-media-wrap';
+      return `<div class="${containerClass}"><div class="media-stack media-stack--${context}">${media.map((m) => renderMediaItem(m, context)).join('')}</div></div>`;
+    }
+
+    function renderHeroVisual(media = [], context = 'survey') {
+      if (Array.isArray(media) && media.length) return renderMedia(media, context);
+      return '';
+    }
+
+    function createInputControl(dataType, attrs, name = '', dataOptionId = '', dataChildId = '') {
+      const placeholder = escapeAttr(attrs?.placeholder || '');
+      const maxLength = escapeAttr(attrs?.maxLength ?? '');
+      const safeName = escapeAttr(name);
+      const safeOptionId = escapeAttr(dataOptionId);
+      const safeChildId = escapeAttr(dataChildId);
+      const dt = dataType || 'text';
+      if (dt === 'text' && Number(attrs?.maxLength || 0) > 100) {
+        return `<textarea class="textarea" ${safeName ? `name="${safeName}"` : ''} ${safeOptionId ? `data-option-id="${safeOptionId}"` : ''} ${safeChildId ? `data-child-id="${safeChildId}"` : ''} data-input-attribute='${safeJsonAttr(attrs)}' placeholder="${placeholder}" maxlength="${maxLength}"></textarea>`;
+      }
+      if (dt === 'dateRange' || dt === 'timeRange' || dt === 'dateTimeRange') {
+        const type = dt === 'dateRange' ? 'date' : dt === 'timeRange' ? 'time' : 'datetime-local';
+        const startName = name ? escapeAttr(`${name}__start`) : '';
+        const endName = name ? escapeAttr(`${name}__end`) : '';
+        return `<div class="field-row" data-range-type="${escapeAttr(dt)}" ${safeOptionId ? `data-option-id="${safeOptionId}"` : ''} ${safeChildId ? `data-child-id="${safeChildId}"` : ''} data-input-attribute='${safeJsonAttr(attrs)}'><input class="input" type="${type}" ${startName ? `name="${startName}"` : ''} data-range-role="start" /><input class="input" type="${type}" ${endName ? `name="${endName}"` : ''} data-range-role="end" /></div>`;
+      }
+      const typeMap = { text: 'text', email: 'email', tel: 'tel', number: 'number', date: 'date', time: 'time', dateTime: 'datetime-local' };
+      const htmlType = typeMap[dt] || 'text';
+      return `<input class="input" type="${htmlType}" ${safeName ? `name="${safeName}"` : ''} ${safeOptionId ? `data-option-id="${safeOptionId}"` : ''} ${safeChildId ? `data-child-id="${safeChildId}"` : ''} data-input-attribute='${safeJsonAttr(attrs)}' placeholder="${placeholder}" maxlength="${maxLength}" />`;
+    }
+
+    function scoreValues(option) {
+      const attr = option.attribute || {};
+      const scope = Array.isArray(attr.scope) && attr.scope.length === 2 ? attr.scope : [1, 5];
+      const step = attr.step === 0.5 ? 0.5 : 1;
+      const values = [];
+      let cur = Number(scope[0]);
+      const max = Number(scope[1]);
+      while (cur <= max + 1e-9) {
+        values.push(Number(cur.toFixed(1)));
+        cur += step;
+      }
+      return values;
+    }
+
+    function formatScoreValue(value) {
+      return Number(value) % 1 === 0 ? String(Number(value).toFixed(0)) : String(Number(value).toFixed(1));
+    }
+    function renderScoreQuestion(question) {
+      return `<div class="score-list">${(question.option || []).map((opt) => {
+        const descMap = opt.attribute?.scoreDesc || {};
+        const values = scoreValues(opt);
+        const safeOptionId = escapeAttr(opt.id);
+        return `<div class="score-item score-card" data-score-option="${safeOptionId}" data-option-field="${safeOptionId}"><div class="field-label">${renderRich(opt.title)}</div>${renderMedia(opt.attribute?.media || [], 'option')}<div class="score-scale">${values.map((value) => {
+          const display = formatScoreValue(value);
+          return `<button class="score-pill score-pill--card" type="button" aria-pressed="false" aria-label="评分 ${escapeAttr(display)}" data-score-option-id="${safeOptionId}" data-score-value="${escapeAttr(display)}"><span class="score-pill-value">${escapeAttr(display)}</span><span class="score-pill-hint">分</span></button>`;
+        }).join('')}</div><div class="score-desc" data-score-desc-for="${safeOptionId}"></div></div>`;
+      }).join('')}</div><div class="error" role="alert" data-error>请完成当前评分题。</div>`;
+    }
+
+
+    function npsValues(option) {
+      const scope = Array.isArray(option?.attribute?.scope) && option.attribute.scope.length === 2 ? option.attribute.scope : [0, 10];
+      const min = Number(scope[0]);
+      const max = Number(scope[1]);
+      const values = [];
+      for (let cur = min; cur <= max; cur += 1) values.push(cur);
+      return values;
+    }
+
+    function renderNpsQuestion(question) {
+      const opt = (question.option || [])[0] || { id: `${question.id}_nps`, attribute: { scope: [0, 10] } };
+      const values = npsValues(opt);
+      const safeOptionId = escapeAttr(opt.id);
+      return `<div class="score-list nps-list"><div class="score-item nps-item score-card" data-nps-option="${safeOptionId}" data-option-field="${safeOptionId}">${renderMedia(opt.attribute?.media || [], 'option')}<div class="score-scale nps-scale">${values.map((value) => {
+        const display = formatScoreValue(value);
+        return `<button class="score-pill nps-pill score-pill--card" type="button" aria-pressed="false" aria-label="NPS ${escapeAttr(display)} 分" data-score-option-id="${safeOptionId}" data-score-value="${escapeAttr(display)}"><span class="score-pill-value">${escapeAttr(display)}</span><span class="score-pill-hint">分</span></button>`;
+      }).join('')}</div><div class="score-desc" data-score-desc-for="${safeOptionId}"></div></div></div><div class="error" role="alert" data-error>请选择一个 NPS 分值。</div>`;
+    }
+
+
+    function renderOption(question, option) {
+      const children = option.child || [];
+      const safeQuestionId = escapeAttr(question.id);
+      const safeOptionId = escapeAttr(option.id);
+      const childHtml = children.length
+        ? `<div class="child-list" data-child-wrap="${safeOptionId}">${children.map((child) => `<div class="field"><div class="field-label">${renderRich(child.title)}</div>${createInputControl(child.attribute?.dataType || 'text', child.attribute || {}, `${question.id}__${option.id}__${child.id}`, '', child.id)}<div class="error" role="alert" data-child-error="${escapeAttr(child.id)}">请完善该补充内容。</div></div>`).join('')}</div>`
+        : '';
+      const exclusive = option.attribute?.exclusive === true;
+      const mutual = option.attribute?.['mutual-exclusion'] === true;
+      const hasMedia = Array.isArray(option.attribute?.media) && option.attribute.media.length > 0;
+      return `<div class="option ${hasMedia ? 'option--media' : 'option--plain'}" data-option-id="${safeOptionId}" data-exclusive="${exclusive}" data-mutual-exclusion="${mutual}"><label class="option-card"><input type="${question.type === 'radio' ? 'radio' : 'checkbox'}" name="${safeQuestionId}" value="${safeOptionId}" data-option-id="${safeOptionId}" ${children.length ? 'data-has-child="true"' : ''} /><span class="option-card-indicator" aria-hidden="true"></span><div class="option-card-body"><div class="option-copy">${renderRich(option.title)}</div>${hasMedia ? renderMedia(option.attribute?.media || [], 'option') : ''}</div><span class="option-card-arrow" aria-hidden="true">›</span></label>${childHtml}</div>`;
+    }
+
+    function renderQuestion(question) {
+      const options = question.option ? shuffleIfNeeded(question.option, question.attribute?.random === true) : [];
+      const content = question.type === 'input'
+        ? `<div class="fields">${question.option.map((opt) => `<div class="field" data-option-field="${escapeAttr(opt.id)}"><div class="field-label">${renderRich(opt.title)}</div>${createInputControl(opt.attribute?.dataType || 'text', opt.attribute || {}, question.id, opt.id, '')}</div>`).join('')}<div class="error" role="alert" data-error>请按输入题规则完成填写。</div></div>`
+        : question.type === 'score'
+        ? renderScoreQuestion(question)
+        : question.type === 'nps'
+        ? renderNpsQuestion(question)
+        : `<div class="options">${options.map((opt) => renderOption(question, opt)).join('')}</div><div class="error" role="alert" data-error>请完成当前题目。</div>`;
+      const allowBack = surveySchema.survey.attribute?.allowBack === true;
+      return screenShell(question.id, question.type, `<div class="question-stage-meta" style="grid-column:1 / -1;"><div class="question-index">第 ${String(questionNumber(question.id)).padStart(2, '0')} 题</div>${question.attribute?.required ? '<div class="chip-row"><span class="chip warn">必填</span></div>' : ''}</div><div class="question-main" style="grid-column:1 / -1;">${renderRich(question.title)}${renderRich(question.description)}</div><div class="question-content" style="grid-column:1 / -1;">${renderMedia(question.attribute?.media || [], 'question')}${content}</div><div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="button" data-next>下一页</button></div></div>`);
+    }
+
+
+    function renderQuestionBlock(question) {
+      const options = question.option ? shuffleIfNeeded(question.option, question.attribute?.random === true) : [];
+      const content = question.type === 'input'
+        ? `<div class="fields">${question.option.map((opt) => `<div class="field" data-option-field="${escapeAttr(opt.id)}"><div class="field-label">${renderRich(opt.title)}</div>${createInputControl(opt.attribute?.dataType || 'text', opt.attribute || {}, question.id, opt.id, '')}</div>`).join('')}<div class="error" role="alert" data-error>请按输入题规则完成填写。</div></div>`
+        : question.type === 'score'
+        ? renderScoreQuestion(question)
+        : question.type === 'nps'
+        ? renderNpsQuestion(question)
+        : `<div class="options">${options.map((opt) => renderOption(question, opt)).join('')}</div><div class="error" role="alert" data-error>请完成当前题目。</div>`;
+      return `<section class="field" data-screen-id="${escapeAttr(question.id)}" data-schema-type="${escapeAttr(question.type)}"><div class="question-stage-meta"><div class="question-index">第 ${String(questionNumber(question.id)).padStart(2, '0')} 题</div>${question.attribute?.required ? '<div class="chip-row"><span class="chip warn">必填</span></div>' : ''}</div><div class="question-main">${renderRich(question.title)}${renderRich(question.description)}</div><div class="question-content">${renderMedia(question.attribute?.media || [], 'question')}${content}</div></section>`;
+    }
+    function renderSurvey() {
+      const s = surveySchema.survey;
+      return screenShell(s.id, 'survey', `<section class="survey-hero"><div class="survey-hero-copy"><div class="survey-kicker">问卷邀请</div>${renderRich(s.title)}${renderRich(s.description)}<div class="trust-meta-list"><div class="trust-meta-item"><strong>填写体验</strong><span>单步作答，过程轻量清晰。</span></div><div class="trust-meta-item"><strong>信息说明</strong><span>你的反馈仅用于服务优化与体验改进。</span></div></div><div class="survey-reason-list"><div class="survey-reason-item">预计耗时较短，可随时完成</div><div class="survey-reason-item">问题聚焦，填写过程更轻松</div><div class="survey-reason-item">提交后将直接完成，不会重复打扰</div></div></div>${renderHeroVisual(s.attribute.media || [], 'survey')}</section><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="button" data-next>开始填写</button></div></div>`, true);
+    }
+
+
+    function renderManualPage(group, pageIndex) {
+      const allowBack = surveySchema.survey.attribute?.allowBack === true;
+      const blocks = group.map((question) => renderQuestionBlock(question)).join('');
+      return screenShell(`page_${String(pageIndex + 1).padStart(2, '0')}`, 'page', `${blocks}<div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="button" data-next>下一页</button></div></div>`);
+    }
+
+    function renderFinish(f) {
+      const allowBack = surveySchema.survey.attribute?.allowBack === true;
+      return screenShell(f.id, 'finish', `<section class="finish-state"><div class="finish-kicker">反馈确认</div><div class="finish-badge">✓ 即将完成提交</div>${renderHeroVisual(f.media || [], 'finish')}<div class="finish-copy">${renderRich(f.title)}${renderRich(f.description)}</div><div class="finish-note">${escapeHtml(finishSubmitNote(f))}</div><div class="finish-submit-status" data-submit-status aria-live="polite"></div></section><div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="submit">${escapeHtml(finishSubmitButtonLabel(f))}</button></div></div>`, true);
+    }
+
+    function screenShell(id, type, inner, dark = false) {
+      return `<section class="screen" data-screen-id="${escapeAttr(id)}" data-schema-type="${escapeAttr(type)}"><article class="card ${dark ? 'dark' : ''}"><div class="card-body ${type === 'survey' ? 'hero-grid' : type === 'finish' ? 'finish-grid' : ''}">${inner}</div></article></section>`;
+    }
+
+
+    function render() {
+      const onePageOneQuestion = surveySchema.survey.attribute?.onePageOneQuestion === true;
+      const defaultFinish = defaultFinishScreen;
+      const renderedFinishes = finishScreens.map((finish) => renderFinish(finish));
+      if (hasManualPagination && !onePageOneQuestion) {
+        form.innerHTML = [renderSurvey(), ...manualPages.map((group, index) => renderManualPage(group, index)), ...renderedFinishes].join('');
+      } else if (onePageOneQuestion) {
+        form.innerHTML = [renderSurvey(), ...answerableQuestions.map(renderQuestion), ...renderedFinishes].join('');
+      } else {
+        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(defaultFinish.title)}${renderRich(defaultFinish.description)}<div class="finish-note">${escapeHtml(finishSubmitNote(defaultFinish))}</div><div class="finish-submit-status" data-submit-status aria-live="polite"></div></div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">${escapeHtml(finishSubmitButtonLabel(defaultFinish))}</button></div></div>`);
+      }
+      rebuildQuestionScreenMap();
+      bindEvents();
+      hydrateAll();
+      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
+      if (!document.querySelector('.screen.is-active')) show(0);
+    }
+    function screens() {
+      return Array.from(document.querySelectorAll('.screen'));
+    }
+
+    function questionsOnScreen(screen) {
+      if (!screen) return [];
+      if (screen.dataset.schemaType === 'page') {
+        return Array.from(screen.querySelectorAll('.field[data-screen-id]')).map((field) => questionById(field.dataset.screenId)).filter(Boolean);
+      }
+      if (['survey', 'finish', 'survey-all'].includes(screen.dataset.schemaType)) return [];
+      const question = questionById(screen.dataset.screenId);
+      return question ? [question] : [];
+    }
+
+    function rebuildQuestionScreenMap() {
+      questionToScreenId.clear();
+      screens().forEach((screen) => {
+        const screenId = screen.dataset.screenId;
+        const schemaType = screen.dataset.schemaType;
+        if (schemaType === 'page') {
+          screen.querySelectorAll('.field[data-screen-id]').forEach((field) => {
+            if (field.dataset.screenId) questionToScreenId.set(field.dataset.screenId, screenId);
+          });
+          return;
+        }
+        if (!['survey', 'finish', 'survey-all'].includes(schemaType)) {
+          questionToScreenId.set(screenId, screenId);
+        }
+      });
+    }
+
+    function visibleScreens() {
+      return screens().filter((screen) => !screen.classList.contains('is-hidden-by-logic') && screen.dataset.logicHidden !== 'true');
+    }
+
+    function show(index, save = true) {
+      const list = visibleScreens();
+      if (!list.length) return;
+      current = Math.max(0, Math.min(index, list.length - 1));
+      const active = list[current];
+      const activeType = active?.dataset?.schemaType;
+      screens().forEach((screen) => screen.classList.toggle('is-active', screen === active));
+      progressBar.style.width = `${list.length <= 1 ? 100 : (current / (list.length - 1)) * 100}%`;
+      stepCounter.textContent = `${current + 1} / ${list.length}`;
+      if (progressCaption) {
+        if (activeType === 'survey') progressCaption.textContent = '当前正在开始填写';
+        else if (activeType === 'finish') progressCaption.textContent = '最后一步，确认并提交';
+        else progressCaption.textContent = `还有 ${Math.max(list.length - current - 1, 0)} 步完成`;
+      }
+      if (save) saveCache();
+    }
+
+    function resolveScreenId(screenOrQuestionId) {
+      if (!screenOrQuestionId) return null;
+      if (screens().some((screen) => screen.dataset.screenId === screenOrQuestionId)) return screenOrQuestionId;
+      return questionToScreenId.get(screenOrQuestionId) || null;
+    }
+
+    function showById(screenId, save = true) {
+      const resolvedId = resolveScreenId(screenId) || screenId;
+      const list = visibleScreens();
+      const index = list.findIndex((screen) => screen.dataset.screenId === resolvedId);
+      show(index >= 0 ? index : 0, save);
+    }
+    function visibleChildWrapForInput(input) {
+      return input.closest('.option')?.querySelector(dataSelector('child-wrap', input.value));
+    }
+
+    function updateChildVisibility() {
+      document.querySelectorAll('.option input[data-has-child]').forEach((input) => {
+        const wrap = visibleChildWrapForInput(input);
+        if (wrap) wrap.classList.toggle('is-visible', input.checked && !input.closest('.option')?.classList.contains('is-hidden-by-logic'));
+      });
+    }
+
+    function scoreDescForValue(scoreDesc = {}, scoreValue) {
+      if (scoreDesc[scoreValue]) return scoreDesc[scoreValue];
+      const numeric = Number(scoreValue);
+      for (const [range, label] of Object.entries(scoreDesc)) {
+        if (!range.includes('-')) continue;
+        const [start, end] = range.split('-').map(Number);
+        if (!Number.isNaN(start) && !Number.isNaN(end) && numeric >= start && numeric <= end) return label;
+      }
+      return '';
+    }
+
+    function updateScoreDisplay(button) {
+      const optionId = button.dataset.scoreOptionId;
+      const scoreValue = button.dataset.scoreValue;
+      const screen = button.closest('[data-screen-id]');
+      screen.querySelectorAll(dataSelector('score-option-id', optionId)).forEach((el) => {
+        const active = el === button;
+        el.classList.toggle('is-active', active);
+        el.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      const candidateQuestions = questionsOnScreen(screen);
+      const question = (candidateQuestions.length ? candidateQuestions : answerableQuestions).find((item) => (item.option || []).some((opt) => opt.id === optionId));
+      const option = question?.option?.find((item) => item.id === optionId);
+      const desc = scoreDescForValue(option?.attribute?.scoreDesc || {}, scoreValue);
+      const descEl = screen.querySelector(dataSelector('score-desc-for', optionId));
+      if (descEl) descEl.textContent = desc;
+    }
+    function extractFieldValue(field) {
+      if (!field) return null;
+      if (field.matches('[data-range-type]')) {
+        const start = field.querySelector('[data-range-role="start"]')?.value || '';
+        const end = field.querySelector('[data-range-role="end"]')?.value || '';
+        return start || end ? { start, end } : null;
+      }
+      const value = (field.value || '').trim();
+      return value || null;
+    }
+
+    function validateByDataType(field, attr = {}) {
+      const type = attr.dataType || 'text';
+      const value = extractFieldValue(field);
+      const empty = !value || (typeof value === 'object' && !value.start && !value.end);
+      if (attr.required && empty) return '该字段必填';
+      if (empty) return '';
+      const scalar = typeof value === 'object' ? `${value.start || ''}${value.end || ''}` : value;
+      if (attr.minLength && scalar.length < Number(attr.minLength)) return `至少 ${attr.minLength} 字`;
+      if (attr.maxLength && scalar.length > Number(attr.maxLength)) return `最多 ${attr.maxLength} 字`;
+      if (type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return '邮箱格式不正确';
+      if (type === 'tel' && !/^[+()\-\s\d]{6,20}$/.test(value)) return '请输入有效电话';
+      if (type === 'number' && Number.isNaN(Number(value))) return '请输入有效数字';
+      if (type === 'date' && !/^\d{4}-\d{2}-\d{2}$/.test(value)) return '请输入有效日期';
+      if (type === 'time' && !/^\d{2}:\d{2}$/.test(value)) return '请输入有效时间';
+      if (type === 'dateTime' && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value)) return '请输入有效日期时间';
+      if ((type === 'dateRange' || type === 'timeRange' || type === 'dateTimeRange') && (!value.start || !value.end)) return '请完整填写开始和结束';
+      return '';
+    }
+
+    function readChildAnswers(optionEl) {
+      const wrap = optionEl.querySelector('.child-list');
+      if (!wrap || !wrap.classList.contains('is-visible')) return [];
+      return Array.from(wrap.querySelectorAll('[data-child-id]')).map((field) => ({
+        childId: field.dataset.childId,
+        dataType: JSON.parse(field.dataset.inputAttribute || '{}').dataType || 'text',
+        value: extractFieldValue(field)
+      })).filter((item) => item.value);
+    }
+
+    function collectQuestion(question) {
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
+      if (!screen || isQuestionUnavailable(question.id)) return null;
+
+      if (question.type === 'radio') {
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).find((input) => !isOptionHidden(question.id, input.value));
+        if (!checked) return null;
+        const optionEl = checked.closest('.option');
+        const child = readChildAnswers(optionEl);
+        const value = { optionId: checked.value };
+        if (child.length) value.child = child;
+        return { questionType: question.type, value };
+      }
+
+      if (question.type === 'checkbox') {
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
+        if (!checked.length) return null;
+        return {
+          questionType: question.type,
+          value: checked.map((input) => {
+            const optionEl = input.closest('.option');
+            const item = { optionId: input.value };
+            const child = readChildAnswers(optionEl);
+            if (child.length) item.child = child;
+            return item;
+          })
+        };
+      }
+
+      if (question.type === 'input') {
+        const value = question.option.filter((opt) => !isOptionHidden(question.id, opt.id)).map((opt) => {
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
+          const extracted = extractFieldValue(field);
+          if (!extracted) return null;
+          return { optionId: opt.id, dataType: opt.attribute?.dataType || 'text', value: extracted };
+        }).filter(Boolean);
+        if (!value.length) return null;
+        return { questionType: question.type, value };
+      }
+
+      if (question.type === 'score') {
+        const value = Array.from(screen.querySelectorAll('[data-score-option]')).filter((row) => !row.classList.contains('is-hidden-by-logic')).map((row) => {
+          const optionId = row.dataset.scoreOption;
+          const active = row.querySelector('.score-pill.is-active');
+          if (!active) return null;
+          return { optionId, score: Number(active.dataset.scoreValue) };
+        }).filter(Boolean);
+        if (!value.length) return null;
+        return { questionType: question.type, value };
+      }
+
+      if (question.type === 'nps') {
+        const row = Array.from(screen.querySelectorAll('[data-nps-option]')).find((node) => !node.classList.contains('is-hidden-by-logic'));
+        const active = row?.querySelector('.score-pill.is-active');
+        if (!row || !active) return null;
+        return { questionType: question.type, value: { optionId: row.dataset.npsOption, score: Number(active.dataset.scoreValue) } };
+      }
+
+      return null;
+    }
+
+    function validateQuestion(question) {
+      if (!question || isQuestionUnavailable(question.id)) return true;
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
+      if (!screen) return true;
+      screen.querySelectorAll('.error').forEach((el) => el.classList.remove('is-visible'));
+      screen.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
+
+      const collected = collectQuestion(question);
+      if (question.attribute?.required && !collected) {
+        screen.querySelector('[data-error]')?.classList.add('is-visible');
+        return false;
+      }
+
+      if (question.type === 'input') {
+        for (const opt of question.option.filter((item) => !isOptionHidden(question.id, item.id))) {
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
+          const msg = validateByDataType(field, opt.attribute || {});
+          if (msg) {
+            field.classList.add('is-invalid');
+            const err = screen.querySelector('[data-error]');
+            if (err) {
+              err.textContent = msg;
+              err.classList.add('is-visible');
+            }
+            return false;
+          }
+        }
+      }
+
+      if (question.type === 'score' && question.attribute?.required) {
+        const rows = Array.from(screen.querySelectorAll('[data-score-option]')).filter((row) => !row.classList.contains('is-hidden-by-logic'));
+        const complete = rows.every((row) => row.querySelector('.score-pill.is-active'));
+        if (!complete) {
+          screen.querySelector('[data-error]')?.classList.add('is-visible');
+          return false;
+        }
+      }
+
+      if (question.type === 'nps' && question.attribute?.required) {
+        const row = Array.from(screen.querySelectorAll('[data-nps-option]')).find((node) => !node.classList.contains('is-hidden-by-logic'));
+        if (!row?.querySelector('.score-pill.is-active')) {
+          screen.querySelector('[data-error]')?.classList.add('is-visible');
+          return false;
+        }
+      }
+
+      for (const optionEl of screen.querySelectorAll('.option')) {
+        const checked = optionEl.querySelector('input:checked');
+        if (!checked) continue;
+        const childFields = optionEl.querySelectorAll('[data-child-id]');
+        for (const field of childFields) {
+          const attr = JSON.parse(field.dataset.inputAttribute || '{}');
+          const msg = validateByDataType(field, attr);
+          if (msg) {
+            field.classList.add('is-invalid');
+            const err = optionEl.querySelector(dataSelector('child-error', field.dataset.childId));
+            if (err) {
+              err.textContent = msg;
+              err.classList.add('is-visible');
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function persist(question, save = true) {
+      if (!question) return;
+      const collected = collectQuestion(question);
+      if (collected) cache.answers[question.id] = collected;
+      else delete cache.answers[question.id];
+      if (save) saveCache();
+    }
+
+    function hydrateRangeField(field, value) {
+      if (!field || !value || typeof value !== 'object') return;
+      const start = field.querySelector('[data-range-role="start"]');
+      const end = field.querySelector('[data-range-role="end"]');
+      if (start) start.value = value.start || '';
+      if (end) end.value = value.end || '';
+    }
+
+    function hydrateAll() {
+      Object.entries(cache.answers || {}).forEach(([questionId, answer]) => {
+        const screen = document.querySelector(dataSelector('screen-id', questionId));
+        if (!screen) return;
+
+        if (answer.questionType === 'radio') {
+          const input = screen.querySelector(`input${selectorAttr('value', answer.value.optionId)}`);
+          if (input) input.checked = true;
+          (answer.value.child || []).forEach((item) => {
+            const child = screen.querySelector(dataSelector('child-id', item.childId));
+            if (!child) return;
+            if (child.matches('[data-range-type]')) hydrateRangeField(child, item.value);
+            else child.value = typeof item.value === 'object' ? '' : (item.value || '');
+          });
+        }
+
+        if (answer.questionType === 'checkbox') {
+          (answer.value || []).forEach((item) => {
+            const input = screen.querySelector(`input${selectorAttr('value', item.optionId)}`);
+            if (input) input.checked = true;
+            (item.child || []).forEach((childItem) => {
+              const child = screen.querySelector(dataSelector('child-id', childItem.childId));
+              if (!child) return;
+              if (child.matches('[data-range-type]')) hydrateRangeField(child, childItem.value);
+              else child.value = typeof childItem.value === 'object' ? '' : (childItem.value || '');
+            });
+          });
+        }
+
+        if (answer.questionType === 'input') {
+          (answer.value || []).forEach((item) => {
+            const field = screen.querySelector(dataSelector('option-id', item.optionId));
+            if (!field) return;
+            if (field.matches('[data-range-type]')) hydrateRangeField(field, item.value);
+            else field.value = typeof item.value === 'object' ? '' : (item.value || '');
+          });
+        }
+
+        if (answer.questionType === 'score') {
+          (answer.value || []).forEach((item) => {
+            const button = screen.querySelector(`${dataSelector('score-option-id', item.optionId)}${dataSelector('score-value', formatScoreValue(item.score))}`);
+            if (button) updateScoreDisplay(button);
+          });
+        }
+
+
+        if (answer.questionType === 'nps') {
+          const button = screen.querySelector(`${dataSelector('score-option-id', answer.value.optionId)}${dataSelector('score-value', formatScoreValue(answer.value.score))}`);
+          if (button) updateScoreDisplay(button);
+        }
+      });
+      updateChildVisibility();
+    }
+
+    function assemblePayload() {
+      answerableQuestions.forEach((q) => persist(q));
+      return {
+        surveyId,
+        submittedAt: new Date().toISOString(),
+        answers: Object.entries(cache.answers).filter(([questionId]) => !isQuestionHidden(questionId)).map(([questionId, answer]) => ({
+          questionId,
+          questionType: answer.questionType,
+          value: answer.value
+        })).filter((item) => !isQuestionUnavailable(item.questionId))
+      };
+    }
+
+    function currentQuestion() {
+      return currentScreenQuestions()[0] || null;
+    }
+
+    function currentScreenQuestions() {
+      const screen = visibleScreens()[current] || screens()[current];
+      return questionsOnScreen(screen);
+    }
+
+    function currentScreenId() {
+      return (visibleScreens()[current] || screens()[current])?.dataset.screenId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+    }
+
+    function persistQuestions(questions, save = true) {
+      questions.forEach((question) => persist(question, false));
+      if (save) saveCache();
+    }
+
+    function validateQuestions(questions) {
+      for (const question of questions) {
+        if (!validateQuestion(question)) return false;
+      }
+      return true;
+    }
+
+    function activeFinishScreen() {
+      const activeId = logicState.activeFinishId || currentScreenId();
+      return finishScreens.find((item) => item.id === activeId)
+        || finishScreens.find((item) => item.id === currentScreenId())
+        || defaultFinishScreen;
+    }
+
+    function submitStatusNode() {
+      return document.querySelector('.screen.is-active [data-submit-status]') || form.querySelector('[data-submit-status]');
+    }
+
+    function setSubmitStatus(message, actionsHtml = '') {
+      const node = submitStatusNode();
+      if (!node) return;
+      node.innerHTML = `<div class="submit-status-card"><div class="submit-status-text">${escapeHtml(message)}</div>${actionsHtml}</div>`;
+      node.classList.add('is-visible');
+    }
+
+    function resetAfterSubmit() {
+      cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+      form.reset();
+      updateChildVisibility();
+      show(0, false);
+    }
+
+    function navigateAfterSubmit(action) {
+      const record = {
+        type: action.type,
+        url: action.url,
+        mode: action.mode,
+        delayMs: action.delayMs,
+        openIn: action.openIn,
+        surveyId,
+        triggeredAt: new Date().toISOString()
+      };
+      window.__surveyRedirects = Array.isArray(window.__surveyRedirects) ? window.__surveyRedirects : [];
+      window.__surveyRedirects.push(record);
+      if (typeof window.__surveyNavigate === 'function') {
+        window.__surveyNavigate(record);
+        return;
+      }
+      if (action.openIn === 'blank') {
+        const opened = window.open(action.url, '_blank', 'noopener,noreferrer');
+        if (!opened) window.location.assign(action.url);
+        return;
+      }
+      window.location.assign(action.url);
+    }
+
+    function runPostSubmitAction(finish, payload) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      window.__surveySubmitEvents = Array.isArray(window.__surveySubmitEvents) ? window.__surveySubmitEvents : [];
+      window.__surveySubmitEvents.push({
+        surveyId,
+        finishId: finish?.id || defaultFinishScreen.id,
+        submittedAt: payload?.submittedAt || new Date().toISOString(),
+        postSubmit: action
+      });
+
+      if (!action) {
+        resetAfterSubmit();
+        alert('提交成功，感谢你的填写。');
+        return;
+      }
+
+      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = true; });
+      const immediateActionHtml = action.mode === 'delay'
+        ? `<div class="submit-status-actions"><button class="btn secondary" type="button" data-submit-go-now>立即前往</button></div>`
+        : '';
+
+      if (action.mode === 'delay') {
+        const renderCountdown = () => {
+          const seconds = Math.max(1, Math.ceil(action.delayMs / 1000));
+          setSubmitStatus(`提交成功，${seconds} 秒后将跳转至下一步。`, immediateActionHtml);
+          submitStatusNode()?.querySelector('[data-submit-go-now]')?.addEventListener('click', () => navigateAfterSubmit(action), { once: true });
+        };
+        renderCountdown();
+        const startedAt = Date.now();
+        const timer = window.setInterval(() => {
+          const remaining = Math.max(0, action.delayMs - (Date.now() - startedAt));
+          const seconds = Math.max(1, Math.ceil(remaining / 1000));
+          setSubmitStatus(`提交成功，${seconds} 秒后将跳转至下一步。`, immediateActionHtml);
+          submitStatusNode()?.querySelector('[data-submit-go-now]')?.addEventListener('click', () => navigateAfterSubmit(action), { once: true });
+          if (remaining <= 0) {
+            window.clearInterval(timer);
+            navigateAfterSubmit(action);
+          }
+        }, 250);
+        return;
+      }
+
+      setSubmitStatus('提交成功，正在前往下一步...');
+      navigateAfterSubmit(action);
+    }
+
+    function bindEvents() {
+      form.addEventListener('click', (e) => {
+        if (e.target.matches('[data-next]')) {
+          const questions = currentScreenQuestions();
+          if (!validateQuestions(questions)) return;
+          persistQuestions(questions, false);
+          const preserveId = currentScreenId();
+          applyLogicRuntime({ preserveActiveId: preserveId });
+          const nextTarget = questions.map((question) => logicState.jumpTargets.get(question.id)).find(Boolean);
+          if (nextTarget) showById(nextTarget);
+          else show(current + 1);
+        }
+        if (e.target.matches('[data-prev]')) {
+          persistQuestions(currentScreenQuestions(), false);
+          applyLogicRuntime({ preserveActiveId: currentScreenId() });
+          show(current - 1);
+        }
+        const scoreBtn = e.target.closest('.score-pill');
+        if (scoreBtn) {
+          updateScoreDisplay(scoreBtn);
+          const questions = currentScreenQuestions();
+          if (questions.length) {
+            persistQuestions(questions, false);
+            applyLogicRuntime({ preserveActiveId: currentScreenId() });
+          }
+        }
+      });
+
+      form.addEventListener('change', (e) => {
+        if (e.target.matches('input[type="checkbox"]')) {
+          const option = e.target.closest('.option');
+          const all = Array.from(e.target.closest('.options').querySelectorAll('input[type="checkbox"]'));
+          const exclusive = option?.dataset.exclusive === 'true';
+          const mutual = option?.dataset.mutualExclusion === 'true';
+          if (e.target.checked && exclusive) {
+            all.forEach((item) => { if (item !== e.target) item.checked = false; });
+          } else if (e.target.checked) {
+            all.forEach((item) => { if (item.closest('.option')?.dataset.exclusive === 'true') item.checked = false; });
+          }
+          if (e.target.checked && mutual) {
+            all.forEach((item) => {
+              const otherMutual = item.closest('.option')?.dataset.mutualExclusion === 'true';
+              if (item !== e.target && otherMutual) item.checked = false;
+            });
+          }
+        }
+        updateChildVisibility();
+        persistQuestions(currentScreenQuestions(), false);
+        applyLogicRuntime({ preserveActiveId: currentScreenId() });
+      });
+
+      form.addEventListener('input', () => {
+        persistQuestions(currentScreenQuestions(), false);
+        applyLogicRuntime({ preserveActiveId: currentScreenId() });
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        applyLogicRuntime({ preserveActiveId: currentScreenId() });
+        for (let i = 0; i < answerableQuestions.length; i++) {
+          const question = answerableQuestions[i];
+          if (isQuestionUnavailable(question.id)) continue;
+          if (!validateQuestion(question)) {
+            if (surveySchema.survey.attribute?.onePageOneQuestion === true) showById(question.id);
+            return;
+          }
+          persist(question, false);
+        }
+        saveCache();
+        const payload = assemblePayload();
+        console.log(payload);
+        localStorage.removeItem(cacheKey);
+        runPostSubmitAction(activeFinishScreen(), payload);
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+    render();
+  </script>
+</body>
+</html>

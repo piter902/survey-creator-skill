@@ -354,6 +354,7 @@ The repository currently includes these example inputs in `examples/`:
 - `service-satisfaction-multi-finish.json` — a more production-like satisfaction flow with branch-specific ending pages
 - `service-satisfaction-three-finish.json` — a three-ending example for positive / neutral / negative user branches
 - `service-satisfaction-post-submit-redirect.json` — a real-world service callback demo with branch-specific finish pages and different post-submit redirects
+- `lead-qualification-sales-conversion.json` — a real-world sales qualification demo with hot / consult / nurture / self-serve branches
 
 Generated HTML examples are also checked in for direct inspection and browser testing, including:
 
@@ -361,6 +362,7 @@ Generated HTML examples are also checked in for direct inspection and browser te
 - `examples/service-satisfaction-multi-finish.html`
 - `examples/service-satisfaction-three-finish.html`
 - `examples/service-satisfaction-post-submit-redirect.html`
+- `examples/lead-qualification-sales-conversion.html`
 
 ---
 
