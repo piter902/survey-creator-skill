@@ -4,7 +4,7 @@
 
 **An AI-agent-ready survey generation skill for teams that want fully custom UI, independent deployment, and validated HTML output.**
 
-`survey-creator-skill` is an open-source skill repository for **Claude Code, Codex, Cursor, Trae, and similar AI coding agent workflows**.
+`survey-creator-skill` is an open-source skill repository for **Claude Code, Codex, OpenCode, and similar AI coding agent workflows**.
 
 It was created for one very specific reason:
 
@@ -173,10 +173,25 @@ This repository is primarily meant to be used as a **skill** inside agent produc
 
 Recommended environments:
 
+- Claude Code
 - Codex
-- Claude / Claude Code style local skills
-- Trae
-- Cursor
+- OpenCode
+
+### Install via skills.sh / `npx skills`
+
+The recommended installation flow is to install directly from GitHub with `npx skills add`, instead of manually cloning the repository into a local skills directory.
+
+```bash
+npx skills add piter902/survey-creator-skill
+```
+
+You can also target a specific agent app:
+
+```bash
+npx skills add piter902/survey-creator-skill -a claude-code
+npx skills add piter902/survey-creator-skill -a codex
+npx skills add piter902/survey-creator-skill -a opencode
+```
 
 Typical prompt:
 

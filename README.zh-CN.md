@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-**一个面向 Codex、Claude Code、Cursor、Trae 等 AI Agent 工作流的问卷生成 skill：支持完全自定义 UI、独立部署、以及可校验的 HTML 交付。**
+**一个面向 Codex、Claude Code、OpenCode 等 AI Agent 工作流的问卷生成 skill：支持完全自定义 UI、独立部署、以及可校验的 HTML 交付。**
 
 `survey-creator-skill` 是一个开源的 **agent skill 仓库**，目标不是再做一个传统问卷平台，而是让 AI Agent 可以把自然语言需求，转成：
 
@@ -179,14 +179,29 @@
 
 ## 如何在 AI Agent 中快速使用
 
-这个仓库的主定位是：**作为 skill 给 Codex、Claude、Trae、Cursor 等 Agent 使用**，而不是优先面向“手工执行脚本”的独立工具。
+这个仓库的主定位是：**作为 skill 给 Codex、Claude Code、OpenCode 等 Agent 使用**，而不是优先面向“手工执行脚本”的独立工具。
 
 推荐环境：
 
+- Claude Code
 - Codex
-- Claude / Claude Code 类本地 skill 工作流
-- Trae
-- Cursor
+- OpenCode
+
+### 通过 skills.sh / `npx skills` 安装
+
+推荐的安装方式，是直接通过 `npx skills add` 从 GitHub 安装，而不是手动 clone 到本地 skills 目录。
+
+```bash
+npx skills add piter902/survey-creator-skill
+```
+
+也可以指定目标 Agent：
+
+```bash
+npx skills add piter902/survey-creator-skill -a claude-code
+npx skills add piter902/survey-creator-skill -a codex
+npx skills add piter902/survey-creator-skill -a opencode
+```
 
 推荐 prompt：
 

@@ -172,20 +172,28 @@ This repository is primarily meant to be used as a **skill** inside agent produc
 
 Recommended environments:
 
+- Claude Code
 - Codex
-- Claude / Claude Code style local skills
-- Trae
-- Cursor
+- OpenCode
 
 ### Codex
 
 Recommended setup:
 
-1. place the repository in a local skills directory
-   - `~/.codex/skills/survey-creator-skill`
-   - or `~/.agents/skills/survey-creator-skill`
-2. keep the repository structure unchanged
+1. publish the repository to a public GitHub repo
+2. install it with:
+
+```bash
+npx skills add piter902/survey-creator-skill -a codex
+```
+
 3. let Codex load `SKILL.md` and retrieve from `references/`
+
+Discovery check:
+
+```bash
+npx skills add https://github.com/piter902/survey-creator-skill --list
+```
 
 Typical prompt:
 
@@ -198,44 +206,39 @@ Best practice:
 
 ### Claude / Claude Code style usage
 
-If your workflow supports local prompt toolkits or markdown-based skills:
+Recommended setup:
 
-1. keep this repository as a standalone repo or local dependency
-2. use `SKILL.md` as the skill/system instruction body
-3. use `references/` as retrieval material
-4. use `templates/` and `validators/` as implementation support
+```bash
+npx skills add piter902/survey-creator-skill -a claude-code
+```
+
+Then:
+
+1. use `SKILL.md` as the skill/system instruction body
+2. use `references/` as retrieval material
+3. use `templates/` and `validators/` as implementation support
 
 Recommended prompt pattern:
 
 > Read `SKILL.md`, generate an internal survey schema from my request, validate legality, render HTML, and only return the result if the survey is safe to deliver.
 
-### Trae
+### OpenCode
 
-For Trae-style agent workflows, the recommended approach is:
+Recommended setup:
 
-1. keep this repo as a local knowledge/skill package
-2. point the agent to `SKILL.md`
-3. allow retrieval from `references/`
-4. tell the agent to follow the legality-first workflow instead of directly generating HTML from raw prompt text
+```bash
+npx skills add piter902/survey-creator-skill -a opencode
+```
+
+Then:
+
+1. point the agent to `SKILL.md`
+2. allow retrieval from `references/`
+3. tell the agent to follow the legality-first workflow instead of directly generating HTML from raw prompt text
 
 Recommended usage:
 
 > Use the local skill in `SKILL.md`. Build the survey from references, validate the schema and logic, then generate the final HTML only after checks pass.
-
-### Cursor
-
-Cursor does not use a universal built-in skill standard in the same way as Codex, but this repository still works well as an agent companion package.
-
-Recommended usage:
-
-1. open the repository alongside your working project
-2. reference `SKILL.md` in your chat context
-3. tell Cursor to treat `references/` as the source of truth for schema and logic constraints
-4. ask Cursor to generate survey HTML through the skill workflow, not directly from UI description alone
-
-Recommended prompt:
-
-> Follow `SKILL.md` in this repository. Use the reference files to construct a legal survey schema, validate logic and payload constraints, then output the final HTML.
 
 ---
 

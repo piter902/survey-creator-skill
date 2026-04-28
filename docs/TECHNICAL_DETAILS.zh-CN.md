@@ -170,24 +170,32 @@ python3 tools/build_template.py
 
 ## 在 AI Agent / IDE 中使用
 
-这个仓库的主定位是：**作为 skill 给 Codex、Claude、Trae、Cursor 等 Agent 使用**，而不是优先面向“手工执行脚本”的独立工具。
+这个仓库的主定位是：**作为 skill 给 Codex、Claude Code、OpenCode 等 Agent 使用**，而不是优先面向“手工执行脚本”的独立工具。
 
 推荐环境：
 
+- Claude Code
 - Codex
-- Claude / Claude Code 类本地 skill 工作流
-- Trae
-- Cursor
+- OpenCode
 
 ### Codex
 
 推荐方式：
 
-1. 把仓库放到本地 skills 目录
-   - `~/.codex/skills/survey-creator-skill`
-   - 或 `~/.agents/skills/survey-creator-skill`
-2. 保持目录结构不变
+1. 先把仓库发布到公开 GitHub
+2. 使用下面的方式安装：
+
+```bash
+npx skills add piter902/survey-creator-skill -a codex
+```
+
 3. 让 Codex 读取 `SKILL.md`，并从 `references/` 中取约束
+
+如果你想先验证仓库能否被正确识别：
+
+```bash
+npx skills add https://github.com/piter902/survey-creator-skill --list
+```
 
 推荐 prompt：
 
@@ -200,44 +208,39 @@ python3 tools/build_template.py
 
 ### Claude / Claude Code 类工作流
 
-如果你的工作流支持本地 markdown skill / prompt toolkit：
+推荐方式：
 
-1. 保留这个仓库作为独立 repo 或本地依赖
-2. 把 `SKILL.md` 当作 skill / system instruction 主体
-3. 把 `references/` 当作检索材料
-4. 把 `templates/` 与 `validators/` 当作辅助实现层
+```bash
+npx skills add piter902/survey-creator-skill -a claude-code
+```
+
+然后：
+
+1. 把 `SKILL.md` 当作 skill / system instruction 主体
+2. 把 `references/` 当作检索材料
+3. 把 `templates/` 与 `validators/` 当作辅助实现层
 
 推荐 prompt：
 
 > Read `SKILL.md`, generate an internal survey schema from my request, validate legality, render HTML, and only return the result if the survey is safe to deliver.
 
-### Trae
+### OpenCode
 
-对于 Trae 这类 Agent 工作流，推荐方式是：
+推荐方式：
 
-1. 把仓库作为本地 skill / knowledge package
-2. 明确让 Agent 读取 `SKILL.md`
-3. 明确让 Agent 从 `references/` 获取 schema 与 logic 约束
-4. 要求 Agent 先走 legality-first 流程，而不是直接根据 UI 描述吐 HTML
+```bash
+npx skills add piter902/survey-creator-skill -a opencode
+```
+
+然后：
+
+1. 明确让 Agent 读取 `SKILL.md`
+2. 明确让 Agent 从 `references/` 获取 schema 与 logic 约束
+3. 要求 Agent 先走 legality-first 流程，而不是直接根据 UI 描述吐 HTML
 
 推荐 prompt：
 
 > Use the local skill in `SKILL.md`. Build the survey from references, validate the schema and logic, then generate the final HTML only after checks pass.
-
-### Cursor
-
-Cursor 没有和 Codex 一样统一的 skill 规范，但这个仓库依然适合作为 Agent 辅助包使用。
-
-推荐方式：
-
-1. 把这个仓库和你的项目一起打开
-2. 在对话里明确引用 `SKILL.md`
-3. 告诉 Cursor：`references/` 是 schema / logic 的唯一约束来源
-4. 不要让 Cursor 只根据 UI 描述直接出 HTML，而是先走 skill 定义的 schema → validate → render 流程
-
-推荐 prompt：
-
-> Follow `SKILL.md` in this repository. Use the reference files to construct a legal survey schema, validate logic and payload constraints, then output the final HTML.
 
 ---
 
