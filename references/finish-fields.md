@@ -12,6 +12,11 @@ In HTML, it usually becomes the submit area, completion explanation, or final CT
 - Expected value: `finish`
 - Meaning: identifies the end-of-survey node
 
+### `id`
+- Meaning: unique identifier for this finish node
+- Rule: must use `finish-xxxxxx`, with the `finish` prefix plus a 6-digit snowflake-style numeric suffix
+- Rule: must remain unique within the questionnaire
+
 ### `title`
 - Type: `string`
 - Meaning: the closing heading

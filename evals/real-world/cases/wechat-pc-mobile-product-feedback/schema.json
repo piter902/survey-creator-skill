@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_wechat_feedback_4p8s",
+    "id": "survey-310991634624106496",
     "title": "<h1>产品使用反馈</h1>",
     "description": "<p>感谢你在微信内完成这份简短反馈，我们会根据结果持续优化体验。</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_usage_freq",
+      "id": "radio-406656",
       "title": "<h2>你最近使用产品的频率是？</h2>",
       "description": "<p>请选择最符合的一项。</p>",
       "attribute": {
@@ -23,21 +23,21 @@
       },
       "option": [
         {
-          "id": "option_freq_daily",
+          "id": "radio-406657",
           "title": "<p>每天都用</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_freq_weekly",
+          "id": "radio-406658",
           "title": "<p>每周几次</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_freq_rare",
+          "id": "radio-406659",
           "title": "<p>偶尔使用</p>",
           "attribute": {
             "media": []
@@ -47,7 +47,7 @@
     },
     {
       "type": "score",
-      "id": "question_product_score",
+      "id": "score-406660",
       "title": "<h2>请为整体体验评分</h2>",
       "description": "<p>请按你的真实体验评分，1 分最低，5 分最高。</p>",
       "attribute": {
@@ -56,7 +56,7 @@
       },
       "option": [
         {
-          "id": "option_score_ease",
+          "id": "score-406661",
           "title": "<p>易用性</p>",
           "attribute": {
             "scope": [
@@ -75,7 +75,7 @@
           }
         },
         {
-          "id": "option_score_stability",
+          "id": "score-406662",
           "title": "<p>稳定性</p>",
           "attribute": {
             "scope": [
@@ -94,7 +94,7 @@
           }
         },
         {
-          "id": "option_score_value",
+          "id": "score-406663",
           "title": "<p>价值感</p>",
           "attribute": {
             "scope": [
@@ -116,7 +116,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_product_problem",
+      "id": "checkbox-406664",
       "title": "<h2>你遇到过哪些问题？</h2>",
       "description": "<p>可多选，请按实际情况选择。</p>",
       "attribute": {
@@ -126,28 +126,28 @@
       },
       "option": [
         {
-          "id": "option_problem_slow",
+          "id": "checkbox-406665",
           "title": "<p>加载慢</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_problem_complex",
+          "id": "checkbox-406666",
           "title": "<p>操作复杂</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_problem_bug",
+          "id": "checkbox-406667",
           "title": "<p>遇到报错或异常</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_problem_none",
+          "id": "checkbox-406668",
           "title": "<p>没有明显问题</p>",
           "attribute": {
             "exclusive": true,
@@ -158,7 +158,7 @@
     },
     {
       "type": "input",
-      "id": "question_feedback_text",
+      "id": "input-406669",
       "title": "<h2>请留下具体反馈</h2>",
       "description": "<p>补充信息将帮助我们更好理解你的需求。</p>",
       "attribute": {
@@ -167,7 +167,7 @@
       },
       "option": [
         {
-          "id": "option_feedback_text",
+          "id": "input-406670",
           "title": "<p>意见或建议</p>",
           "attribute": {
             "dataType": "text",
@@ -180,7 +180,7 @@
     },
     {
       "type": "input",
-      "id": "question_feedback_contact",
+      "id": "input-406671",
       "title": "<h2>联系方式（可选）</h2>",
       "description": "<p>补充信息将帮助我们更好理解你的需求。</p>",
       "attribute": {
@@ -189,7 +189,7 @@
       },
       "option": [
         {
-          "id": "option_feedback_email",
+          "id": "input-406672",
           "title": "<p>邮箱</p>",
           "attribute": {
             "dataType": "email",
@@ -203,7 +203,7 @@
   ],
   "finish": {
     "type": "finish",
-    "id": "finish_wechat",
+    "id": "finish-406673",
     "title": "<h1>提交成功</h1>",
     "description": "<p>感谢填写，提交后将只在控制台输出 payload，并清空本地缓存。</p>",
     "media": []

@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_n4w8k2qp",
+    "id": "survey-310991633843965952",
     "title": "<h1>问卷欢迎页</h1>",
     "description": "<p>这是一个包含评分题的验证器样例。</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_t9m2x1qp",
+      "id": "radio-247872",
       "title": "<h2>请选择一个场景</h2>",
       "description": "<p>单选题样例</p>",
       "attribute": {
@@ -24,7 +24,7 @@
       "option": [
         {
           "title": "<p>满意度调研</p>",
-          "id": "option_a1m9x2qp",
+          "id": "radio-247873",
           "attribute": {
             "random": false,
             "media": []
@@ -32,11 +32,11 @@
         },
         {
           "title": "<p>其他，请说明</p>",
-          "id": "option_b2m9x3qp",
+          "id": "radio-247874",
           "child": [
             {
               "type": "input",
-              "id": "child_c3m9x4qp",
+              "id": "input-247875",
               "title": "<p>补充说明</p>",
               "attribute": {
                 "dataType": "text",
@@ -55,7 +55,7 @@
     },
     {
       "type": "score",
-      "id": "question_score_k5m1p2rt",
+      "id": "score-247876",
       "title": "<h2>请为以下维度评分</h2>",
       "description": "<p>1 分最低，5 分最高。</p>",
       "attribute": {
@@ -77,7 +77,7 @@
       },
       "option": [
         {
-          "id": "option_score_appearance",
+          "id": "score-247877",
           "title": "<p>外观</p>",
           "attribute": {
             "scope": [
@@ -109,7 +109,7 @@
           }
         },
         {
-          "id": "option_score_warm",
+          "id": "score-247878",
           "title": "<p>保温时长</p>",
           "attribute": {
             "scope": [
@@ -144,7 +144,7 @@
     },
     {
       "type": "input",
-      "id": "question_i6m9x7qp",
+      "id": "input-247879",
       "title": "<h2>请输入联系信息</h2>",
       "description": "<p>输入题样例</p>",
       "attribute": {
@@ -154,7 +154,7 @@
       "option": [
         {
           "title": "<p>邮箱</p>",
-          "id": "option_j7m9x8qp",
+          "id": "input-247880",
           "attribute": {
             "dataType": "email",
             "placeholder": "name@example.com",
@@ -164,7 +164,7 @@
         },
         {
           "title": "<p>使用时间范围</p>",
-          "id": "option_range_demo",
+          "id": "input-247881",
           "attribute": {
             "dataType": "dateRange",
             "placeholder": "请选择开始与结束日期"
@@ -174,7 +174,7 @@
     },
     {
       "type": "nps",
-      "id": "question_nps_z8m2k4qp",
+      "id": "nps-247882",
       "title": "<h2>你愿意向朋友推荐这款产品吗？</h2>",
       "description": "<p>0 表示完全不愿意，10 表示非常愿意。</p>",
       "attribute": {
@@ -196,7 +196,7 @@
       },
       "option": [
         {
-          "id": "option_nps_scale_1",
+          "id": "nps-247883",
           "attribute": {
             "scope": [
               0,
@@ -229,7 +229,7 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_sample_default",
+      "id": "finish-247884",
       "title": "<h2>感谢填写</h2>",
       "description": "<p>可以提交了。</p>",
       "media": []

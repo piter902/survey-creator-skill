@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_lead_qualification_sales_conversion",
+    "id": "survey-310991633986572288",
     "title": "<h1>企业版产品需求评估</h1>",
     "description": "<p>这是一份更贴近真实销售转化场景的线索筛选问卷示例。系统会根据你的采购阶段、预算区间和后续偏好，把你带到不同的结束页，并在<strong>提交成功后</strong>跳转到对应的下一步页面。</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_role",
+      "id": "radio-160768",
       "title": "<h2>你当前在采购决策中扮演什么角色？</h2>",
       "description": "<p>用于帮助我们判断后续更适合给你演示、资料还是自助方案。</p>",
       "attribute": {
@@ -23,21 +23,21 @@
       },
       "option": [
         {
-          "id": "option_role_decision_maker",
+          "id": "radio-160769",
           "title": "<p>最终决策者 / 负责人</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_role_evaluator",
+          "id": "radio-160770",
           "title": "<p>调研评估 / 项目推进人</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_role_executor",
+          "id": "radio-160771",
           "title": "<p>实际使用者 / 执行同学</p>",
           "attribute": {
             "media": []
@@ -47,7 +47,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_core_needs",
+      "id": "checkbox-160772",
       "title": "<h2>你当前最关注哪些能力？</h2>",
       "description": "<p>可多选，帮助我们快速判断更适合给你哪类解决方案。</p>",
       "attribute": {
@@ -57,35 +57,35 @@
       },
       "option": [
         {
-          "id": "option_need_lead_capture",
+          "id": "checkbox-160773",
           "title": "<p>线索收集与表单转化</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_automation",
+          "id": "checkbox-160774",
           "title": "<p>自动化跟进与分配</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_crm",
+          "id": "checkbox-160775",
           "title": "<p>客户管理与销售协同</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_ai_assistant",
+          "id": "checkbox-160776",
           "title": "<p>AI 助手 / 智能客服 / 话术辅助</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_other",
+          "id": "checkbox-160777",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -93,7 +93,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_need_other_text",
+              "id": "input-160778",
               "title": "<p>补充需求</p>",
               "attribute": {
                 "required": true,
@@ -108,7 +108,7 @@
     },
     {
       "type": "radio",
-      "id": "question_timeline",
+      "id": "radio-160779",
       "title": "<h2>你预计什么时候启动采购或上线？</h2>",
       "description": "<p>这是最关键的分流题，我们会根据你的时间窗口安排不同的后续动作。</p>",
       "attribute": {
@@ -118,28 +118,28 @@
       },
       "option": [
         {
-          "id": "option_timeline_urgent",
+          "id": "radio-160780",
           "title": "<p>2 周内，希望尽快推进</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_timeline_this_quarter",
+          "id": "radio-160781",
           "title": "<p>1-3 个月内，正在评估中</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_timeline_research",
+          "id": "radio-160782",
           "title": "<p>先了解方案，还没到决策阶段</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_timeline_no_plan",
+          "id": "radio-160783",
           "title": "<p>暂无明确计划，先看看</p>",
           "attribute": {
             "media": []
@@ -149,7 +149,7 @@
     },
     {
       "type": "input",
-      "id": "question_contact_hot",
+      "id": "input-160784",
       "title": "<h2>请留下你的联系方式，方便我们尽快安排演示</h2>",
       "description": "<p>适合已经有明确推进计划的团队，提交后我们会优先安排产品顾问联系你。</p>",
       "attribute": {
@@ -158,7 +158,7 @@
       },
       "option": [
         {
-          "id": "option_contact_hot_name",
+          "id": "input-160785",
           "title": "<p>姓名</p>",
           "attribute": {
             "dataType": "text",
@@ -168,7 +168,7 @@
           }
         },
         {
-          "id": "option_contact_hot_company",
+          "id": "input-160786",
           "title": "<p>公司名称</p>",
           "attribute": {
             "dataType": "text",
@@ -178,7 +178,7 @@
           }
         },
         {
-          "id": "option_contact_hot_phone",
+          "id": "input-160787",
           "title": "<p>手机号</p>",
           "attribute": {
             "dataType": "tel",
@@ -191,7 +191,7 @@
     },
     {
       "type": "input",
-      "id": "question_contact_consult",
+      "id": "input-160788",
       "title": "<h2>请留下你的联系方式，方便顾问结合你的阶段给出建议</h2>",
       "description": "<p>如果你还在评估期，我们会根据你的业务目标，安排更适合的方案沟通。</p>",
       "attribute": {
@@ -200,7 +200,7 @@
       },
       "option": [
         {
-          "id": "option_contact_consult_name",
+          "id": "input-160789",
           "title": "<p>姓名</p>",
           "attribute": {
             "dataType": "text",
@@ -210,7 +210,7 @@
           }
         },
         {
-          "id": "option_contact_consult_company",
+          "id": "input-160790",
           "title": "<p>公司名称</p>",
           "attribute": {
             "dataType": "text",
@@ -220,7 +220,7 @@
           }
         },
         {
-          "id": "option_contact_consult_phone",
+          "id": "input-160791",
           "title": "<p>手机号</p>",
           "attribute": {
             "dataType": "tel",
@@ -233,7 +233,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_nurture_content",
+      "id": "checkbox-160792",
       "title": "<h2>如果你还在调研阶段，更希望先获取哪些内容？</h2>",
       "description": "<p>可多选，我们会把你带到更匹配的资料页。</p>",
       "attribute": {
@@ -243,21 +243,21 @@
       },
       "option": [
         {
-          "id": "option_nurture_case_study",
+          "id": "checkbox-160793",
           "title": "<p>客户案例 / 行业最佳实践</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_nurture_pricing",
+          "id": "checkbox-160794",
           "title": "<p>价格方案 / 套餐说明</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_nurture_product_tour",
+          "id": "checkbox-160795",
           "title": "<p>产品功能介绍 / Demo 视频</p>",
           "attribute": {
             "media": []
@@ -269,7 +269,7 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_hot_demo",
+      "id": "finish-160796",
       "title": "<h2>非常适合直接安排产品演示</h2>",
       "description": "<p>我们已经记录你的需求与时间窗口。提交成功后，页面会带你进入预约演示入口，方便你直接锁定演示时间。</p>",
       "media": [],
@@ -282,7 +282,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_sales_consult",
+      "id": "finish-160797",
       "title": "<h2>更适合先安排一场顾问咨询</h2>",
       "description": "<p>你已经进入明确评估阶段。提交成功后，页面会带你进入方案咨询入口，方便你继续了解适合的落地路径。</p>",
       "media": [],
@@ -296,7 +296,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_nurture_content",
+      "id": "finish-160798",
       "title": "<h2>我们先把最适合你的资料准备好</h2>",
       "description": "<p>提交成功后，页面会带你进入内容资料页，你可以先系统了解方案，再决定是否进入下一步。</p>",
       "media": [],
@@ -310,7 +310,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_self_serve_resources",
+      "id": "finish-160799",
       "title": "<h2>先从公开资料开始也没问题</h2>",
       "description": "<p>如果你还没有明确计划，我们建议你先从产品总览、价格和案例开始。提交成功后，页面会带你进入自助资源中心。</p>",
       "media": [],
@@ -326,82 +326,82 @@
     {
       "id": "logic_show_hot_contact",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_urgent"
+        "optionId": "radio-160780"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_contact_hot"
+        "targetQuestionId": "input-160784"
       }
     },
     {
       "id": "logic_hot_contact_to_demo",
       "when": {
-        "questionId": "question_contact_hot",
+        "questionId": "input-160784",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_hot_demo"
+        "targetQuestionId": "finish-160796"
       }
     },
     {
       "id": "logic_show_consult_contact",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_this_quarter"
+        "optionId": "radio-160781"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_contact_consult"
+        "targetQuestionId": "input-160788"
       }
     },
     {
       "id": "logic_consult_contact_to_finish",
       "when": {
-        "questionId": "question_contact_consult",
+        "questionId": "input-160788",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_sales_consult"
+        "targetQuestionId": "finish-160797"
       }
     },
     {
       "id": "logic_show_nurture_content",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_research"
+        "optionId": "radio-160782"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_nurture_content"
+        "targetQuestionId": "checkbox-160792"
       }
     },
     {
       "id": "logic_research_to_finish",
       "when": {
-        "questionId": "question_nurture_content",
+        "questionId": "checkbox-160792",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_nurture_content"
+        "targetQuestionId": "finish-160798"
       }
     },
     {
       "id": "logic_no_plan_to_self_serve",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_no_plan"
+        "optionId": "radio-160783"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_self_serve_resources"
+        "targetQuestionId": "finish-160799"
       }
     }
   ]

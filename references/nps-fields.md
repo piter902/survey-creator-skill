@@ -13,7 +13,8 @@ The `nps` node represents a single 0-10 style recommendation score question.
 
 ### `id`
 - Meaning: unique identifier for the question
-- Rule: random and non-repeating within the questionnaire
+- Rule: must use `nps-xxxxxx`, with the `nps` prefix plus a 6-digit snowflake-style numeric suffix
+- Rule: must remain unique within the questionnaire
 
 ### `title`
 - Type: `string`
@@ -45,6 +46,8 @@ The `nps` node represents a single 0-10 style recommendation score question.
 
 ### `option[].id`
 - Meaning: unique identifier for the NPS scale configuration
+- Rule: NPS option ids also use `nps-xxxxxx`
+- Rule: must remain unique within the questionnaire
 
 ### `option[].attribute.scope`
 - Type: `array`

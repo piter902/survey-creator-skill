@@ -11,6 +11,7 @@ This folder now contains two layers of references:
 
 When using this skill:
 - Read `schema-notes.md` first.
+- Read `id-rules.md` early whenever you need to generate or review ids.
 - Then read the relevant `*-fields.md` files for every node type you plan to generate.
 - Use the JSON examples to confirm structure.
 - Use the field guides to validate semantics and field intent.
@@ -26,6 +27,7 @@ When using this skill:
 
 ## Why this matters
 The JSON examples alone are not enough because some fields require interpretation:
+- `survey.id` must use a global long snowflake format, while all other ids follow the canonical local type-prefixed 6-digit format
 - whether `description` should be concise or instructional
 - when `child` is appropriate
 - when `exclusive` vs `mutual-exclusion` makes sense

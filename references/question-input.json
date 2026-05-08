@@ -1,6 +1,6 @@
 {
     "type": "input",
-    "id": "question-id",
+    "id": "input-123456",
     "title": "输入题标题",
     "description": "输入题描述",
     "attribute": {
@@ -23,7 +23,7 @@
     "option": [
         {
             "title": "选项描述",
-            "id": "option-id",
+            "id": "input-123457",
             "attribute": {
                 "dataType": "text",
                 "placeholder": "请输入内容",

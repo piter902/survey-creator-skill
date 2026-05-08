@@ -13,7 +13,8 @@ The `radio` node represents a question where the respondent may choose exactly o
 
 ### `id`
 - Meaning: unique identifier for the question
-- Rule: must be random, non-repeating, and unique within the whole questionnaire
+- Rule: must use `radio-xxxxxx`, with the `radio` prefix plus a 6-digit snowflake-style numeric suffix
+- Rule: must remain unique within the whole questionnaire
 - HTML note: should map cleanly to `data-question-id`, field grouping, and analytics hooks
 
 ### `title`
@@ -59,7 +60,8 @@ Question-level settings.
 
 ### `option[].id`
 - Meaning: unique option identifier
-- Rule: random and non-repeating inside the questionnaire
+- Rule: radio option ids also use `radio-xxxxxx`
+- Rule: must remain unique inside the questionnaire
 
 ### `option[].child`
 - Meaning: optional follow-up inputs attached to a specific option

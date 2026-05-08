@@ -293,6 +293,84 @@
       display: flex;
       justify-content: flex-start;
     }
+    .resume-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    .resume-overlay.is-visible {
+      display: flex;
+    }
+    .resume-dialog {
+      width: min(100%, 480px);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+    .resume-dialog-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0 12px;
+      min-height: 28px;
+      border-radius: 999px;
+      align-items: center;
+      background: rgba(91,124,255,.10);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .resume-dialog-title {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+      margin: 0;
+    }
+    .resume-dialog-desc {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-soft);
+      margin: 0;
+    }
+    .resume-dialog-meta {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .resume-dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .resume-dialog-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .dark .resume-dialog {
+      background: var(--panel);
+      color: var(--text-light);
+      border-color: var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+    }
+    .dark .resume-dialog-desc,
+    .dark .resume-dialog-meta {
+      color: var(--text-light-soft);
+    }
     .hero-grid, .finish-grid {
       grid-template-columns: 1fr;
       align-items: start;
@@ -906,6 +984,16 @@
         padding: 0 18px;
         font-size: 15px;
       }
+      .resume-overlay {
+        padding: 16px;
+      }
+      .resume-dialog {
+        border-radius: 20px;
+        padding: 20px;
+      }
+      .resume-dialog-actions {
+        grid-template-columns: 1fr;
+      }
       body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
         font-size: 32px;
       }
@@ -934,7 +1022,7 @@
     const surveySchema = {
   "survey": {
     "type": "survey",
-    "id": "survey_service_satisfaction_post_submit_redirect",
+    "id": "survey-310991634347282432",
     "title": "<h1>服务满意度回访</h1>",
     "description": "<p>你好，这是一份更贴近真实业务的服务回访问卷示例。系统会根据你的满意度分支，把你带到不同的结束页，并在<strong>提交成功后</strong>跳转到对应的后续动作页面。</p>",
     "attribute": {
@@ -946,7 +1034,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_service_scene",
+      "id": "radio-205152",
       "title": "<h2>你本次体验的是哪类服务？</h2>",
       "description": "<p>用于帮助我们区分不同服务链路的体验差异。</p>",
       "attribute": {
@@ -956,21 +1044,21 @@
       },
       "option": [
         {
-          "id": "option_scene_online",
+          "id": "radio-205153",
           "title": "<p>线上咨询 / 在线客服</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_scene_store",
+          "id": "radio-205154",
           "title": "<p>到店服务 / 线下接待</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_scene_delivery",
+          "id": "radio-205155",
           "title": "<p>上门 / 履约 / 配送服务</p>",
           "attribute": {
             "media": []
@@ -980,7 +1068,7 @@
     },
     {
       "type": "radio",
-      "id": "question_overall_level",
+      "id": "radio-205156",
       "title": "<h2>你对本次服务的整体感受是？</h2>",
       "description": "<p>请选择最符合你当前体验的一项。</p>",
       "attribute": {
@@ -990,21 +1078,21 @@
       },
       "option": [
         {
-          "id": "option_level_positive",
+          "id": "radio-205157",
           "title": "<p>满意，整体体验很好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_level_neutral",
+          "id": "radio-205158",
           "title": "<p>一般，还有优化空间</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_level_negative",
+          "id": "radio-205159",
           "title": "<p>不满意，低于预期</p>",
           "attribute": {
             "media": []
@@ -1014,7 +1102,7 @@
     },
     {
       "type": "score",
-      "id": "question_positive_score",
+      "id": "score-205160",
       "title": "<h2>如果你满意，请为以下维度打分</h2>",
       "description": "<p>1 分最低，5 分最高。你的高分会帮助我们识别应该继续保持的服务能力。</p>",
       "attribute": {
@@ -1023,7 +1111,7 @@
       },
       "option": [
         {
-          "id": "option_positive_speed",
+          "id": "score-205161",
           "title": "<p>响应速度</p>",
           "attribute": {
             "scope": [
@@ -1042,7 +1130,7 @@
           }
         },
         {
-          "id": "option_positive_professional",
+          "id": "score-205162",
           "title": "<p>专业程度</p>",
           "attribute": {
             "scope": [
@@ -1061,7 +1149,7 @@
           }
         },
         {
-          "id": "option_positive_result",
+          "id": "score-205163",
           "title": "<p>问题解决结果</p>",
           "attribute": {
             "scope": [
@@ -1083,7 +1171,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_neutral_gap",
+      "id": "checkbox-205164",
       "title": "<h2>如果你觉得一般，最希望我们优先优化哪些地方？</h2>",
       "description": "<p>可多选，帮助我们判断优先优化方向。</p>",
       "attribute": {
@@ -1093,28 +1181,28 @@
       },
       "option": [
         {
-          "id": "option_neutral_gap_speed",
+          "id": "checkbox-205165",
           "title": "<p>效率还不够高</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_gap_clarity",
+          "id": "checkbox-205166",
           "title": "<p>沟通说明不够清楚</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_gap_detail",
+          "id": "checkbox-205167",
           "title": "<p>服务细节还可以更细致</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_gap_other",
+          "id": "checkbox-205168",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -1122,7 +1210,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_neutral_gap_other_text",
+              "id": "input-205169",
               "title": "<p>补充说明</p>",
               "attribute": {
                 "required": true,
@@ -1137,7 +1225,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_negative_reason",
+      "id": "checkbox-205170",
       "title": "<h2>如果不满意，主要问题出在哪些地方？</h2>",
       "description": "<p>可多选，我们会优先定位影响最大的环节。</p>",
       "attribute": {
@@ -1147,28 +1235,28 @@
       },
       "option": [
         {
-          "id": "option_negative_reason_speed",
+          "id": "checkbox-205171",
           "title": "<p>响应 / 处理速度慢</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_negative_reason_attitude",
+          "id": "checkbox-205172",
           "title": "<p>服务态度不够好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_negative_reason_result",
+          "id": "checkbox-205173",
           "title": "<p>问题没有真正解决</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_negative_reason_other",
+          "id": "checkbox-205174",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -1176,7 +1264,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_negative_reason_other_text",
+              "id": "input-205175",
               "title": "<p>补充说明</p>",
               "attribute": {
                 "required": true,
@@ -1191,7 +1279,7 @@
     },
     {
       "type": "radio",
-      "id": "question_negative_followup",
+      "id": "radio-205176",
       "title": "<h2>我们是否可以安排专人继续跟进？</h2>",
       "description": "<p>仅用于处理本次问题，不会用于营销打扰。</p>",
       "attribute": {
@@ -1201,14 +1289,14 @@
       },
       "option": [
         {
-          "id": "option_negative_followup_yes",
+          "id": "radio-205177",
           "title": "<p>可以，请继续联系我</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_negative_followup_no",
+          "id": "radio-205178",
           "title": "<p>暂时不用联系</p>",
           "attribute": {
             "media": []
@@ -1218,7 +1306,7 @@
     },
     {
       "type": "input",
-      "id": "question_negative_contact",
+      "id": "input-205179",
       "title": "<h2>请留下你的联系方式</h2>",
       "description": "<p>仅在你同意回访时，用于售后专员继续处理本次问题。</p>",
       "attribute": {
@@ -1227,7 +1315,7 @@
       },
       "option": [
         {
-          "id": "option_negative_contact_name",
+          "id": "input-205180",
           "title": "<p>姓名</p>",
           "attribute": {
             "dataType": "text",
@@ -1237,7 +1325,7 @@
           }
         },
         {
-          "id": "option_negative_contact_phone",
+          "id": "input-205181",
           "title": "<p>手机号</p>",
           "attribute": {
             "dataType": "tel",
@@ -1252,7 +1340,7 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_positive_reward",
+      "id": "finish-205182",
       "title": "<h2>感谢你的认可</h2>",
       "description": "<p>你的满意会帮助我们继续保持好的服务标准。提交成功后，我们会带你进入会员权益页，查看本次回访感谢福利。</p>",
       "media": [],
@@ -1265,7 +1353,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_neutral_service_center",
+      "id": "finish-205183",
       "title": "<h2>感谢你的建议</h2>",
       "description": "<p>我们已经收到你的优化方向。提交成功后，页面会带你进入服务中心，方便你继续查看常见服务方案。</p>",
       "media": [],
@@ -1279,7 +1367,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_negative_self_serve",
+      "id": "finish-205184",
       "title": "<h2>很抱歉这次没能让你满意</h2>",
       "description": "<p>我们已记录你的问题。提交成功后，将带你进入自助处理入口，你可以随时继续查看进度或补充资料。</p>",
       "media": [],
@@ -1292,7 +1380,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_negative_manual_support",
+      "id": "finish-205185",
       "title": "<h2>我们会尽快安排专人跟进</h2>",
       "description": "<p>感谢你愿意留下联系方式。提交成功后，页面会跳转到人工售后入口，方便你继续查看处理说明。</p>",
       "media": [],
@@ -1309,118 +1397,119 @@
     {
       "id": "logic_show_positive_score",
       "when": {
-        "questionId": "question_overall_level",
+        "questionId": "radio-205156",
         "operator": "selected",
-        "optionId": "option_level_positive"
+        "optionId": "radio-205157"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_positive_score"
+        "targetQuestionId": "score-205160"
       }
     },
     {
       "id": "logic_positive_to_finish",
       "when": {
-        "questionId": "question_positive_score",
+        "questionId": "score-205160",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_positive_reward"
+        "targetQuestionId": "finish-205182"
       }
     },
     {
       "id": "logic_show_neutral_gap",
       "when": {
-        "questionId": "question_overall_level",
+        "questionId": "radio-205156",
         "operator": "selected",
-        "optionId": "option_level_neutral"
+        "optionId": "radio-205158"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_neutral_gap"
+        "targetQuestionId": "checkbox-205164"
       }
     },
     {
       "id": "logic_neutral_to_finish",
       "when": {
-        "questionId": "question_neutral_gap",
+        "questionId": "checkbox-205164",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_neutral_service_center"
+        "targetQuestionId": "finish-205183"
       }
     },
     {
       "id": "logic_show_negative_reason",
       "when": {
-        "questionId": "question_overall_level",
+        "questionId": "radio-205156",
         "operator": "selected",
-        "optionId": "option_level_negative"
+        "optionId": "radio-205159"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_negative_reason"
+        "targetQuestionId": "checkbox-205170"
       }
     },
     {
       "id": "logic_show_negative_followup",
       "when": {
-        "questionId": "question_overall_level",
+        "questionId": "radio-205156",
         "operator": "selected",
-        "optionId": "option_level_negative"
+        "optionId": "radio-205159"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_negative_followup"
+        "targetQuestionId": "radio-205176"
       }
     },
     {
       "id": "logic_show_negative_contact",
       "when": {
-        "questionId": "question_negative_followup",
+        "questionId": "radio-205176",
         "operator": "selected",
-        "optionId": "option_negative_followup_yes"
+        "optionId": "radio-205177"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_negative_contact"
+        "targetQuestionId": "input-205179"
       }
     },
     {
       "id": "logic_negative_no_followup_finish",
       "when": {
-        "questionId": "question_negative_followup",
+        "questionId": "radio-205176",
         "operator": "selected",
-        "optionId": "option_negative_followup_no"
+        "optionId": "radio-205178"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_negative_self_serve"
+        "targetQuestionId": "finish-205184"
       }
     },
     {
       "id": "logic_negative_contact_to_finish",
       "when": {
-        "questionId": "question_negative_contact",
+        "questionId": "input-205179",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_negative_manual_support"
+        "targetQuestionId": "finish-205185"
       }
     }
   ]
 };
 
-    const surveyStylePack = "consumer-trust";
+    const surveyStylePack = "consumer-minimal";
 
     const form = document.getElementById('surveyForm');
     const progressBar = document.getElementById('progressBar');
     const stepCounter = document.getElementById('stepCounter');
     const progressCaption = document.getElementById('progressCaption');
     const surveyId = surveySchema.survey.id;
+    const pageLoadStartedAt = Date.now();
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
     const finishScreens = (() => {
@@ -1464,15 +1553,44 @@
     let current = 0;
     let cache = loadCache();
 
+    function emptyCache() {
+      return {
+        surveyId,
+        updatedAt: new Date().toISOString(),
+        answers: {},
+        meta: {
+          lastScreenId: surveySchema.survey.id
+        }
+      };
+    }
+
+    function normalizeCache(raw) {
+      const fallback = emptyCache();
+      if (!raw || typeof raw !== 'object') return fallback;
+      const answers = raw.answers && typeof raw.answers === 'object' && !Array.isArray(raw.answers) ? raw.answers : {};
+      const meta = raw.meta && typeof raw.meta === 'object' && !Array.isArray(raw.meta) ? raw.meta : {};
+      return {
+        surveyId,
+        updatedAt: typeof raw.updatedAt === 'string' && raw.updatedAt ? raw.updatedAt : fallback.updatedAt,
+        answers,
+        meta: {
+          lastScreenId: typeof meta.lastScreenId === 'string' && meta.lastScreenId ? meta.lastScreenId : fallback.meta.lastScreenId
+        }
+      };
+    }
+
     function loadCache() {
       try {
-        return JSON.parse(localStorage.getItem(cacheKey)) || { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return normalizeCache(JSON.parse(localStorage.getItem(cacheKey)));
       } catch {
-        return { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return emptyCache();
       }
     }
 
     function saveCache() {
+      const activeScreenId = document.querySelector('.screen.is-active')?.dataset?.screenId;
+      if (!cache.meta || typeof cache.meta !== 'object' || Array.isArray(cache.meta)) cache.meta = { lastScreenId: surveySchema.survey.id };
+      if (activeScreenId) cache.meta.lastScreenId = activeScreenId;
       cache.updatedAt = new Date().toISOString();
       localStorage.setItem(cacheKey, JSON.stringify(cache));
     }
@@ -1713,6 +1831,7 @@
 
     function applyLogicRuntime(options = {}) {
       const preserveActiveId = options.preserveActiveId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+      const shouldSave = options.save !== false;
       logicState = computeLogicState();
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
@@ -1752,8 +1871,8 @@
       syncCacheFromDom(false);
       const visibleIds = visibleScreens().map((screen) => screen.dataset.screenId);
       const nextActiveId = preserveActiveId && visibleIds.includes(preserveActiveId) ? preserveActiveId : visibleIds[0] || null;
-      if (nextActiveId) showById(nextActiveId);
-      else saveCache();
+      if (nextActiveId) showById(nextActiveId, shouldSave);
+      else if (shouldSave) saveCache();
     }
     function shuffleIfNeeded(items, shouldRandom) {
       const list = [...items];
@@ -1894,6 +2013,22 @@
         return `提交成功后将展示结束提示，并在 ${seconds} 秒后跳转至下一步。`;
       }
       return '提交成功后将立即跳转至下一步页面。';
+    }
+
+    function formatResumeTime(isoString) {
+      if (!isoString) return '';
+      const value = new Date(isoString);
+      if (Number.isNaN(value.getTime())) return '';
+      try {
+        return new Intl.DateTimeFormat('zh-CN', {
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(value);
+      } catch {
+        return value.toLocaleString();
+      }
     }
 
     function mediaTitle(type) {
@@ -2094,8 +2229,11 @@
       rebuildQuestionScreenMap();
       bindEvents();
       hydrateAll();
-      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
-      if (!document.querySelector('.screen.is-active')) show(0);
+      const resumePending = hasResumeCandidate();
+      const initialScreenId = surveySchema.survey.id;
+      applyLogicRuntime({ preserveActiveId: initialScreenId, save: false });
+      if (!document.querySelector('.screen.is-active')) showById(initialScreenId, false);
+      if (resumePending) openResumePrompt();
     }
     function screens() {
       return Array.from(document.querySelectorAll('.screen'));
@@ -2461,6 +2599,64 @@
 
     function currentScreenId() {
       return (visibleScreens()[current] || screens()[current])?.dataset.screenId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+    }
+
+    function hasResumeCandidate() {
+      const answerCount = Object.keys(cache.answers || {}).length;
+      if (!answerCount) return false;
+      const updatedAtMs = Date.parse(cache.updatedAt || '');
+      if (Number.isNaN(updatedAtMs)) return false;
+      return updatedAtMs <= pageLoadStartedAt;
+    }
+
+    function resetQuestionStates() {
+      answerableQuestions.forEach((question) => clearQuestionState(question));
+    }
+
+    function resetForFreshStart() {
+      localStorage.removeItem(cacheKey);
+      cache = emptyCache();
+      logicState = { hiddenQuestions: new Set(), hiddenOptions: new Set(), skippedQuestions: new Set(), jumpTargets: new Map(), autoSelects: [] };
+      form.reset();
+      resetQuestionStates();
+      updateChildVisibility();
+      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
+      showById(surveySchema.survey.id, false);
+      saveCache();
+    }
+
+    function dismissResumePrompt() {
+      document.querySelector('.resume-overlay')?.remove();
+    }
+
+    function openResumePrompt() {
+      dismissResumePrompt();
+      const overlay = document.createElement('div');
+      overlay.className = 'resume-overlay is-visible';
+      const lastSaved = formatResumeTime(cache.updatedAt);
+      overlay.innerHTML = `
+        <div class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeDialogTitle">
+          <div class="resume-dialog-kicker">断点续答</div>
+          <h2 class="resume-dialog-title" id="resumeDialogTitle">检测到你上次有未完成的作答</h2>
+          <p class="resume-dialog-desc">你可以继续上次离开的进度，也可以清空已有内容，重新开始本次问卷。</p>
+          <div class="resume-dialog-meta">${escapeHtml(lastSaved ? `上次保存时间：${lastSaved}` : '已为你保留上次的作答进度。')}</div>
+          <div class="resume-dialog-actions">
+            <button class="btn secondary" type="button" data-resume-restart>重新开始作答</button>
+            <button class="btn" type="button" data-resume-continue>继续上次作答</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.querySelector('[data-resume-restart]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        resetForFreshStart();
+      }, { once: true });
+      overlay.querySelector('[data-resume-continue]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        const resumeTarget = cache.meta?.lastScreenId || surveySchema.survey.id;
+        applyLogicRuntime({ preserveActiveId: resumeTarget });
+        showById(resumeTarget, false);
+      }, { once: true });
     }
 
     function persistQuestions(questions, save = true) {

@@ -25,6 +25,7 @@ Use the schema as an internal generation artifact unless the user explicitly ask
 Before generating output, read only the files you need from:
 - `references/schema-notes.md`
 - `references/field-guide-overview.md`
+- `references/id-rules.md`
 - `references/survey-welcom.json`
 - `references/survey-fields.md`
 - `references/question-radio.json`
@@ -65,7 +66,7 @@ Before generating output, read only the files you need from:
 - `tests/contract/README.md`
 - `run_all_legality_checks.sh`
 
-Always read `references/schema-notes.md` first, then `references/field-guide-overview.md`, then `references/rich-text-rules.md`, `references/pagination-rules.md`, `references/submission-contract.md`, `references/child-input-rules.md`, `references/local-cache-rules.md`, `references/logic-rules.md`, `references/logic-specification.md`, and `references/logic-example-library.md`, then the specific `*-fields.md` files for every node type you plan to generate or validate. If the user requests a stronger toC visual direction, also read `references/toc-style-system.md` and `references/toc-survey-ui-rules.md`. When schema safety matters, also use `validators/validate_survey_schema.py` as the executable guardrail before rendering HTML.
+Always read `references/schema-notes.md` first, then `references/field-guide-overview.md`, then `references/id-rules.md`, `references/rich-text-rules.md`, `references/pagination-rules.md`, `references/submission-contract.md`, `references/child-input-rules.md`, `references/local-cache-rules.md`, `references/logic-rules.md`, `references/logic-specification.md`, and `references/logic-example-library.md`, then the specific `*-fields.md` files for every node type you plan to generate or validate. If the user requests a stronger toC visual direction, also read `references/toc-style-system.md` and `references/toc-survey-ui-rules.md`. When schema safety matters, also use `validators/validate_survey_schema.py` as the executable guardrail before rendering HTML.
 
 
 ## Legality engine boundary
@@ -373,7 +374,7 @@ Do not invent a different backend API contract unless the user later specifies o
 
 ## ID rules
 All ids must be:
-- randomly generated
+- generated from a snowflake-style time-ordered generator
 - unique within the page
 - non-placeholder
 - frozen before the final HTML is delivered to users
@@ -392,18 +393,34 @@ Never use placeholder or predictable ids such as:
 - `q-1`
 - `opt-1`
 
-Use random readable ids such as:
-- `survey_9f3k2m8x`
-- `question_b7x4n2qp`
-- `option_m3v8k1zr`
+Use canonical type-prefixed ids such as:
+- `survey-190238471928`
+- `radio-234567`
+- `checkbox-345678`
+- `input-456789`
+- `score-567890`
+- `nps-678901`
+- `finish-789012`
+- `pagination-890123`
 
-They do not need to follow one strict format, but they must look random and never repeat.
+For option ids, reuse the parent question type prefix:
+- radio option → `radio-xxxxxx`
+- checkbox option → `checkbox-xxxxxx`
+- input option → `input-xxxxxx`
+- score option → `score-xxxxxx`
+- nps option → `nps-xxxxxx`
+
+For child follow-up inputs, use:
+- `input-xxxxxx`
 
 Important:
 - generate ids during schema creation time, not at browser runtime
 - the final HTML delivered to respondents must contain already-materialized stable ids
 - do not use `Math.random()` or similar runtime generation for production survey ids inside the browser
 - stable pre-frozen ids are required for correct cache keys, analytics, payload consistency, and debugging
+- `survey.id` must use a global long snowflake-style suffix
+- all non-survey ids use exactly 6 digits after the type prefix
+- non-survey ids are locally unique within one survey, and should be treated as jointly unique with `survey.id`
 
 ## Supported schema types
 Unless the user explicitly asks to extend the schema, only use:

@@ -13,7 +13,8 @@ The `checkbox` node represents a question where the respondent may choose multip
 
 ### `id`
 - Meaning: unique identifier for the question
-- Rule: random and non-repeating within the questionnaire
+- Rule: must use `checkbox-xxxxxx`, with the `checkbox` prefix plus a 6-digit snowflake-style numeric suffix
+- Rule: must remain unique within the questionnaire
 
 ### `title`
 - Type: `string`
@@ -54,7 +55,8 @@ Question-level settings.
 
 ### `option[].id`
 - Meaning: unique option identifier
-- Rule: random and non-repeating
+- Rule: checkbox option ids also use `checkbox-xxxxxx`
+- Rule: must remain unique within the questionnaire
 
 ### `option[].child`
 - Meaning: optional follow-up input shown after this option

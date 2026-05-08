@@ -13,7 +13,8 @@ The `score` node represents a question where respondents rate one or more items 
 
 ### `id`
 - Meaning: unique identifier for the question
-- Rule: random and non-repeating within the questionnaire
+- Rule: must use `score-xxxxxx`, with the `score` prefix plus a 6-digit snowflake-style numeric suffix
+- Rule: must remain unique within the questionnaire
 
 ### `title`
 - Type: `string`
@@ -44,6 +45,8 @@ The `score` node represents a question where respondents rate one or more items 
 
 ### `option[].id`
 - Meaning: unique identifier for the scored item
+- Rule: score option ids also use `score-xxxxxx`
+- Rule: must remain unique within the questionnaire
 
 ### `option[].title`
 - Type: `string`

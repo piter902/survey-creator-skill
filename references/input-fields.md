@@ -13,7 +13,8 @@ The `input` node represents a question answered by typed text.
 
 ### `id`
 - Meaning: unique question identifier
-- Rule: random and non-repeating within the questionnaire
+- Rule: must use `input-xxxxxx`, with the `input` prefix plus a 6-digit snowflake-style numeric suffix
+- Rule: must remain unique within the questionnaire
 
 ### `title`
 - Type: `string`
@@ -51,7 +52,8 @@ Question-level configuration.
 
 ### `option[].id`
 - Meaning: unique field identifier
-- Rule: random and non-repeating
+- Rule: input option ids also use `input-xxxxxx`
+- Rule: must remain unique within the questionnaire
 
 ### `option[].attribute`
 Input behavior configuration.

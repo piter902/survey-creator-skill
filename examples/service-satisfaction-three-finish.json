@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_service_satisfaction_three_finish",
+    "id": "survey-310991634506665984",
     "title": "<h1>服务体验满意度调研</h1>",
     "description": "<p>这是一份演示 <strong>三结束页分流</strong> 的问卷示例：满意、中立、不满意的用户，会进入不同语气和动作引导的结束页。</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_experience_level",
+      "id": "radio-266624",
       "title": "<h2>你对本次服务的整体感受是？</h2>",
       "description": "<p>请选择最符合你当前感受的一项。</p>",
       "attribute": {
@@ -23,21 +23,21 @@
       },
       "option": [
         {
-          "id": "option_experience_good",
+          "id": "radio-266625",
           "title": "<p>满意，整体体验很好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_experience_neutral",
+          "id": "radio-266626",
           "title": "<p>一般，还有可优化空间</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_experience_bad",
+          "id": "radio-266627",
           "title": "<p>不满意，体验低于预期</p>",
           "attribute": {
             "media": []
@@ -47,7 +47,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_neutral_reason",
+      "id": "checkbox-266628",
       "title": "<h2>如果你觉得一般，主要还差在哪些地方？</h2>",
       "description": "<p>可多选，帮助我们判断优先优化方向。</p>",
       "attribute": {
@@ -57,21 +57,21 @@
       },
       "option": [
         {
-          "id": "option_neutral_speed",
+          "id": "checkbox-266629",
           "title": "<p>效率还不够高</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_clarity",
+          "id": "checkbox-266630",
           "title": "<p>沟通说明不够清楚</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_detail",
+          "id": "checkbox-266631",
           "title": "<p>细节体验还可以更精致</p>",
           "attribute": {
             "media": []
@@ -81,7 +81,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_bad_reason",
+      "id": "checkbox-266632",
       "title": "<h2>如果不满意，最主要的问题是什么？</h2>",
       "description": "<p>可多选，我们会优先定位最影响体验的问题。</p>",
       "attribute": {
@@ -91,28 +91,28 @@
       },
       "option": [
         {
-          "id": "option_bad_attitude",
+          "id": "checkbox-266633",
           "title": "<p>服务态度不够好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad_speed",
+          "id": "checkbox-266634",
           "title": "<p>响应 / 处理速度慢</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad_result",
+          "id": "checkbox-266635",
           "title": "<p>问题没有得到解决</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad_other",
+          "id": "checkbox-266636",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -120,7 +120,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_bad_other_text",
+              "id": "input-266637",
               "title": "<p>补充说明</p>",
               "attribute": {
                 "required": true,
@@ -135,7 +135,7 @@
     },
     {
       "type": "radio",
-      "id": "question_followup_permission",
+      "id": "radio-266638",
       "title": "<h2>我们是否可以联系你继续跟进？</h2>",
       "description": "<p>仅用于本次服务问题处理，不会用于营销。</p>",
       "attribute": {
@@ -145,14 +145,14 @@
       },
       "option": [
         {
-          "id": "option_followup_yes",
+          "id": "radio-266639",
           "title": "<p>可以，请联系我</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_followup_no",
+          "id": "radio-266640",
           "title": "<p>暂时不用联系</p>",
           "attribute": {
             "media": []
@@ -164,21 +164,21 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_positive",
+      "id": "finish-266641",
       "title": "<h2>感谢你的认可</h2>",
       "description": "<p>你的满意会帮助我们继续保持好的服务标准，也欢迎你未来持续给我们建议。</p>",
       "media": []
     },
     {
       "type": "finish",
-      "id": "finish_neutral",
+      "id": "finish-266642",
       "title": "<h2>感谢你的建议</h2>",
       "description": "<p>我们已经收到你的优化方向，会优先复盘影响体验的关键环节。</p>",
       "media": []
     },
     {
       "type": "finish",
-      "id": "finish_negative",
+      "id": "finish-266643",
       "title": "<h2>很抱歉这次没有让你满意</h2>",
       "description": "<p>我们会认真处理你的反馈，并持续改进后续服务流程。感谢你仍愿意告诉我们真实感受。</p>",
       "media": []
@@ -188,84 +188,84 @@
     {
       "id": "logic_good_to_positive_finish",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_good"
+        "optionId": "radio-266625"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_positive"
+        "targetQuestionId": "finish-266641"
       }
     },
     {
       "id": "logic_show_neutral_reason",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_neutral"
+        "optionId": "radio-266626"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_neutral_reason"
+        "targetQuestionId": "checkbox-266628"
       }
     },
     {
       "id": "logic_neutral_reason_to_neutral_finish",
       "when": {
-        "questionId": "question_neutral_reason",
+        "questionId": "checkbox-266628",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_neutral"
+        "targetQuestionId": "finish-266642"
       }
     },
     {
       "id": "logic_show_bad_reason",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_bad"
+        "optionId": "radio-266627"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_bad_reason"
+        "targetQuestionId": "checkbox-266632"
       }
     },
     {
       "id": "logic_show_followup_permission",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_bad"
+        "optionId": "radio-266627"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_followup_permission"
+        "targetQuestionId": "radio-266638"
       }
     },
     {
       "id": "logic_bad_followup_yes_to_negative_finish",
       "when": {
-        "questionId": "question_followup_permission",
+        "questionId": "radio-266638",
         "operator": "selected",
-        "optionId": "option_followup_yes"
+        "optionId": "radio-266639"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_negative"
+        "targetQuestionId": "finish-266643"
       }
     },
     {
       "id": "logic_bad_followup_no_to_negative_finish",
       "when": {
-        "questionId": "question_followup_permission",
+        "questionId": "radio-266638",
         "operator": "selected",
-        "optionId": "option_followup_no"
+        "optionId": "radio-266640"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_negative"
+        "targetQuestionId": "finish-266643"
       }
     }
   ]

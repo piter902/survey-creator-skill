@@ -1,15 +1,15 @@
 {
-  "surveyId": "survey_n4w8k2qp",
+  "surveyId": "survey-310991633843965952",
   "submittedAt": "2026-04-21T09:30:00.000Z",
   "answers": [
     {
-      "questionId": "question_t9m2x1qp",
+      "questionId": "radio-247872",
       "questionType": "radio",
       "value": {
-        "optionId": "option_b2m9x3qp",
+        "optionId": "radio-247874",
         "child": [
           {
-            "childId": "child_c3m9x4qp",
+            "childId": "input-247875",
             "dataType": "text",
             "value": "我要做一个 AI Native 风格问卷"
           }
@@ -17,30 +17,30 @@
       }
     },
     {
-      "questionId": "question_score_k5m1p2rt",
+      "questionId": "score-247876",
       "questionType": "score",
       "value": [
         {
-          "optionId": "option_score_appearance",
+          "optionId": "score-247877",
           "score": 4
         },
         {
-          "optionId": "option_score_warm",
+          "optionId": "score-247878",
           "score": 5
         }
       ]
     },
     {
-      "questionId": "question_i6m9x7qp",
+      "questionId": "input-247879",
       "questionType": "input",
       "value": [
         {
-          "optionId": "option_j7m9x8qp",
+          "optionId": "input-247880",
           "dataType": "email",
           "value": "name@example.com"
         },
         {
-          "optionId": "option_range_demo",
+          "optionId": "input-247881",
           "dataType": "dateRange",
           "value": {
             "start": "2026-04-21",
@@ -50,10 +50,10 @@
       ]
     },
     {
-      "questionId": "question_nps_z8m2k4qp",
+      "questionId": "nps-247882",
       "questionType": "nps",
       "value": {
-        "optionId": "option_nps_scale_1",
+        "optionId": "nps-247883",
         "score": 9
       }
     }

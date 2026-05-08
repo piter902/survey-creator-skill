@@ -2,7 +2,7 @@
     "title": "NPS题标题",
     "description": "NPS题描述",
     "type": "nps",
-    "id": "question-id",
+    "id": "nps-123456",
     "attribute": {
         "required": true,
         "media": [
@@ -22,7 +22,7 @@
     },
     "option": [
         {
-            "id": "option-id-1",
+            "id": "nps-123457",
             "attribute": {
                 "scope": [
                     0,

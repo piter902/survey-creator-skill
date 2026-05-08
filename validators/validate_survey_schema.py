@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json, re, sys
 from pathlib import Path
+from schema_id_utils import collect_noncanonical_schema_id_paths, canonical_id_example
 
 ALLOWED_MEDIA_TYPES = {"image", "audio", "video"}
 ALLOWED_QUESTION_TYPES = {"radio", "checkbox", "input", "score", "nps"}
@@ -657,6 +658,21 @@ def semantic_lint(schema, reporter):
     survey = schema.get("survey") if is_plain_object(schema) else None
     questions = schema.get("questions") if is_plain_object(schema) and isinstance(schema.get("questions"), list) else []
     finish = schema.get("finish") if is_plain_object(schema) else None
+
+    noncanonical_id_issues = collect_noncanonical_schema_id_paths(schema)
+    if noncanonical_id_issues:
+        preview = ", ".join(
+            f'{item["path"]} -> {canonical_id_example(item["expectedPrefix"])}'
+            for item in noncanonical_id_issues[:5]
+        )
+        reporter.warn(
+            "schema.ids",
+            f"Schema ids should use canonical snowflake-based ids. Example targets: {preview}.",
+            "low",
+            "noncanonical-id-format",
+            "Normalize all schema ids to the canonical format before delivery.",
+            "Use survey-<long snowflake> for survey.id, and radio-123456 / checkbox-123456 / input-123456 / score-123456 / nps-123456 / finish-123456 / pagination-123456 for local schema ids, with option ids following their parent question type prefix.",
+        )
 
     if is_plain_object(survey):
         if not has_meaningful_rich_text(survey.get("title")):

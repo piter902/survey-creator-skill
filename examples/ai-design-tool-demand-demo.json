@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_ai_design_tool_demo_20260423",
+    "id": "survey-310991633843965952",
     "title": "<h1>AI + 设计工具需求调研 Demo</h1>",
     "description": "<p>这是一份用于 <strong>survey-creator-skill</strong> 开源示例的综合问卷，用来演示 <em>schema → validation → HTML</em> 的完整流程。</p><p>本示例同时覆盖：<strong>logic</strong>、<strong>Pagination 手动分页</strong>、<strong>一页多题</strong>、<strong>child input</strong>、<strong>score</strong> 与 <strong>nps</strong>。</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_recent_usage",
+      "id": "radio-247872",
       "title": "<h2>过去 3 个月，你是否使用过 AI 工具来输出 UI 稿？</h2>",
       "description": "<p>这里会触发后续逻辑：若你选“高频使用”，会显示进阶追问；若你选“还没有正式使用过”，会直接跳过中间页。</p>",
       "attribute": {
@@ -23,7 +23,7 @@
       },
       "option": [
         {
-          "id": "option_used_often",
+          "id": "radio-247873",
           "title": "<p>是，已经高频使用</p>",
           "attribute": {
             "random": false,
@@ -31,26 +31,26 @@
           }
         },
         {
-          "id": "option_used_tried",
+          "id": "radio-247874",
           "title": "<p>试过，但还没形成稳定工作流</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_not_used",
+          "id": "radio-247875",
           "title": "<p>还没有正式使用过</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_other_state",
+          "id": "radio-510016",
           "title": "<p>其他，请说明</p>",
           "child": [
             {
               "type": "input",
-              "id": "child_other_state_reason",
+              "id": "input-510017",
               "title": "<p>请简单描述你的现状</p>",
               "attribute": {
                 "required": false,
@@ -68,7 +68,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_feature_priority",
+      "id": "checkbox-510018",
       "title": "<h2>如果要选一个 AI 设计工具，你最在意哪些能力？</h2>",
       "description": "<p>这是第一页中的第二道题，用来演示一页多题。这里也会触发 <code>auto_select_option</code> 和 <code>hide_option</code>。</p>",
       "attribute": {
@@ -78,7 +78,7 @@
       },
       "option": [
         {
-          "id": "option_feature_prompt_to_ui",
+          "id": "checkbox-510019",
           "title": "<p>一句话生成页面 / 线框 / 高保真 UI</p>",
           "attribute": {
             "random": false,
@@ -86,40 +86,40 @@
           }
         },
         {
-          "id": "option_feature_design_system",
+          "id": "checkbox-510020",
           "title": "<p>能复用设计系统与已有组件</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_feature_editability",
+          "id": "checkbox-510021",
           "title": "<p>生成后还能继续编辑，而不是只能看图</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_feature_collaboration",
+          "id": "checkbox-510022",
           "title": "<p>支持和 Figma / Pencil / Codex 等工作流协作</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_feature_blank_canvas",
+          "id": "checkbox-510023",
           "title": "<p>我更希望从纯空白画布手工开始</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_feature_other",
+          "id": "checkbox-510024",
           "title": "<p>其他能力诉求</p>",
           "child": [
             {
               "type": "input",
-              "id": "child_feature_other_text",
+              "id": "input-510025",
               "title": "<p>请补充你的能力诉求</p>",
               "attribute": {
                 "required": false,
@@ -134,7 +134,7 @@
           }
         },
         {
-          "id": "option_feature_not_sure",
+          "id": "checkbox-510026",
           "title": "<p>暂无明确判断，以上都不确定</p>",
           "attribute": {
             "exclusive": true,
@@ -145,11 +145,11 @@
     },
     {
       "type": "Pagination",
-      "id": "page_sep_logic_followup"
+      "id": "pagination-510027"
     },
     {
       "type": "input",
-      "id": "question_workflow_bottleneck",
+      "id": "input-510028",
       "title": "<h2>如果你已经尝试过 AI 出图，目前最卡的环节是什么？</h2>",
       "description": "<p>这是第二页中的逻辑追问题，默认隐藏，仅在“高频使用”时展示；若用户从未使用过 AI，则整页会被跳过。</p>",
       "attribute": {
@@ -158,7 +158,7 @@
       },
       "option": [
         {
-          "id": "option_workflow_bottleneck_text",
+          "id": "input-510029",
           "title": "<p>请描述你最主要的工作流阻塞点</p>",
           "attribute": {
             "dataType": "text",
@@ -171,11 +171,11 @@
     },
     {
       "type": "Pagination",
-      "id": "page_sep_profile_and_eval"
+      "id": "pagination-510030"
     },
     {
       "type": "checkbox",
-      "id": "question_platform_focus",
+      "id": "checkbox-510031",
       "title": "<h2>你目前主要面向哪些端进行设计？</h2>",
       "description": "<p>这里演示 <code>mutual-exclusion</code>：Web-first 与 Mobile-first 不能同时选中，但仍可与其他普通选项共存。</p>",
       "attribute": {
@@ -185,7 +185,7 @@
       },
       "option": [
         {
-          "id": "option_platform_web_first",
+          "id": "checkbox-510032",
           "title": "<p>Web-first</p>",
           "attribute": {
             "mutual-exclusion": true,
@@ -193,7 +193,7 @@
           }
         },
         {
-          "id": "option_platform_mobile_first",
+          "id": "checkbox-510033",
           "title": "<p>Mobile-first</p>",
           "attribute": {
             "mutual-exclusion": true,
@@ -201,14 +201,14 @@
           }
         },
         {
-          "id": "option_platform_cross_platform",
+          "id": "checkbox-510034",
           "title": "<p>跨端统一设计</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_platform_admin_b2b",
+          "id": "checkbox-510035",
           "title": "<p>B 端后台 / 配置类系统</p>",
           "attribute": {
             "media": []
@@ -218,7 +218,7 @@
     },
     {
       "type": "input",
-      "id": "question_profile",
+      "id": "input-510036",
       "title": "<h2>为了更好理解你的背景，请补充以下信息</h2>",
       "description": "<p>该题演示一个 <strong>input</strong> 问题可同时包含多个字段，并按 <code>option[].id</code> 分别提交。</p>",
       "attribute": {
@@ -227,7 +227,7 @@
       },
       "option": [
         {
-          "id": "option_profile_role",
+          "id": "input-510037",
           "title": "<p>你的角色</p>",
           "attribute": {
             "dataType": "text",
@@ -237,7 +237,7 @@
           }
         },
         {
-          "id": "option_profile_email",
+          "id": "input-510038",
           "title": "<p>邮箱</p>",
           "attribute": {
             "dataType": "email",
@@ -246,7 +246,7 @@
           }
         },
         {
-          "id": "option_profile_team_size",
+          "id": "input-510039",
           "title": "<p>团队人数</p>",
           "attribute": {
             "dataType": "number",
@@ -258,7 +258,7 @@
     },
     {
       "type": "score",
-      "id": "question_score_current_tools",
+      "id": "score-510040",
       "title": "<h2>请给你现在使用的设计工具组合打分</h2>",
       "description": "<p>1 分最低，5 分最高。</p>",
       "attribute": {
@@ -267,7 +267,7 @@
       },
       "option": [
         {
-          "id": "option_score_quality",
+          "id": "score-510041",
           "title": "<p>输出质量</p>",
           "attribute": {
             "scope": [
@@ -286,7 +286,7 @@
           }
         },
         {
-          "id": "option_score_speed",
+          "id": "score-510042",
           "title": "<p>产出速度</p>",
           "attribute": {
             "scope": [
@@ -305,7 +305,7 @@
           }
         },
         {
-          "id": "option_score_editability",
+          "id": "score-510043",
           "title": "<p>后续可编辑性</p>",
           "attribute": {
             "scope": [
@@ -327,7 +327,7 @@
     },
     {
       "type": "nps",
-      "id": "question_nps_recommendation",
+      "id": "nps-510044",
       "title": "<h2>如果有一款真正可编辑、可复用设计系统、可直接进入工作流的 AI 设计工具，你愿意推荐给同事吗？</h2>",
       "description": "<p>请按 0-10 分打分，0 表示完全不愿意推荐，10 表示非常愿意推荐。</p>",
       "attribute": {
@@ -336,7 +336,7 @@
       },
       "option": [
         {
-          "id": "option_nps_recommendation",
+          "id": "nps-510045",
           "attribute": {
             "scope": [
               0,
@@ -356,7 +356,7 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_ai_design_tool_demo",
+      "id": "finish-510046",
       "title": "<h2>感谢你的反馈</h2>",
       "description": "<p>这份 demo 问卷已经覆盖了 <strong>radio / checkbox / input / score / nps / logic / Pagination</strong> 等主要能力。</p><p>提交后，页面会按默认 submission contract 组装 payload，并在浏览器中输出到 <code>console.log</code>。</p>",
       "media": []
@@ -366,51 +366,51 @@
     {
       "id": "logic_show_workflow_bottleneck",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "radio-247872",
         "operator": "selected",
-        "optionId": "option_used_often"
+        "optionId": "radio-247873"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_workflow_bottleneck"
+        "targetQuestionId": "input-510028"
       }
     },
     {
       "id": "logic_auto_select_prompt_to_ui",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "radio-247872",
         "operator": "selected",
-        "optionId": "option_used_often"
+        "optionId": "radio-247873"
       },
       "action": {
         "type": "auto_select_option",
-        "targetQuestionId": "question_feature_priority",
-        "targetOptionId": "option_feature_prompt_to_ui"
+        "targetQuestionId": "checkbox-510018",
+        "targetOptionId": "checkbox-510019"
       }
     },
     {
       "id": "logic_hide_blank_canvas_for_power_users",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "radio-247872",
         "operator": "selected",
-        "optionId": "option_used_often"
+        "optionId": "radio-247873"
       },
       "action": {
         "type": "hide_option",
-        "targetQuestionId": "question_feature_priority",
-        "targetOptionId": "option_feature_blank_canvas"
+        "targetQuestionId": "checkbox-510018",
+        "targetOptionId": "checkbox-510023"
       }
     },
     {
       "id": "logic_jump_skip_followup_page",
       "when": {
-        "questionId": "question_recent_usage",
+        "questionId": "radio-247872",
         "operator": "selected",
-        "optionId": "option_not_used"
+        "optionId": "radio-247875"
       },
       "action": {
         "type": "jump_to_page",
-        "targetQuestionId": "question_platform_focus"
+        "targetQuestionId": "checkbox-510031"
       }
     }
   ]

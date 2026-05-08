@@ -15,7 +15,8 @@ In HTML, it usually becomes the hero, intro card, or welcome block.
 
 ### `id`
 - Meaning: unique identifier for the survey intro node
-- Rule: generate a random, non-repeating id that is unique within the whole questionnaire
+- Rule: generate `survey-<long snowflake>`, using the `survey` prefix plus a global long snowflake numeric suffix
+- Rule: this id must remain globally unique across all questionnaires, not just inside the current schema
 - Important: ids support later positioning and analytics, not just rendering
 - HTML note: may also be reused as a DOM anchor or `data-schema-id`
 

@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "example_survey_minimal",
+    "id": "survey-310991634108207104",
     "title": "<h1>Minimal Survey Example</h1>",
     "description": "<p>This is a minimal example for the survey-creator-skill pipeline.</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_satisfaction",
+      "id": "radio-562944",
       "title": "<h2>How satisfied are you?</h2>",
       "description": "<p>Please choose one option.</p>",
       "attribute": {
@@ -23,14 +23,14 @@
       },
       "option": [
         {
-          "id": "option_good",
+          "id": "radio-562945",
           "title": "<p>Satisfied</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad",
+          "id": "radio-562946",
           "title": "<p>Not satisfied</p>",
           "attribute": {
             "media": []
@@ -42,7 +42,7 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_example_minimal",
+      "id": "finish-562947",
       "title": "<h2>Thank you</h2>",
       "description": "<p>Your response has been recorded.</p>",
       "media": []

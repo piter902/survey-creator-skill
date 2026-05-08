@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_complex_regression_2x7v",
+    "id": "survey-310991634615717888",
     "title": "<h1><strong>复杂业务问卷回归测试</strong></h1>",
     "description": "<p>该问卷用于验证 schema 字段、渲染、交互与提交协议。<a href='https://example.com'>查看说明</a></p>",
     "attribute": {
@@ -26,7 +26,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_complex_radio",
+      "id": "radio-782368",
       "title": "<h2>你当前的主要目标是什么？</h2>",
       "description": "<p>请选择最符合的一项。</p>",
       "attribute": {
@@ -41,7 +41,7 @@
       },
       "option": [
         {
-          "id": "option_goal_growth",
+          "id": "radio-782369",
           "title": "<p><strong>增长获客</strong></p>",
           "attribute": {
             "random": false,
@@ -49,14 +49,14 @@
           }
         },
         {
-          "id": "option_goal_research",
+          "id": "radio-782370",
           "title": "<p>用户研究</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_goal_other",
+          "id": "radio-782371",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -64,7 +64,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_goal_other_text",
+              "id": "input-782372",
               "title": "<p>目标说明</p>",
               "attribute": {
                 "dataType": "text",
@@ -75,7 +75,7 @@
             },
             {
               "type": "input",
-              "id": "child_goal_contact_time",
+              "id": "input-782373",
               "title": "<p>可联系时间</p>",
               "attribute": {
                 "dataType": "timeRange",
@@ -88,7 +88,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_complex_checkbox",
+      "id": "checkbox-782374",
       "title": "<h2>需要哪些能力？</h2>",
       "description": "<p>可多选，请按实际情况选择。</p>",
       "attribute": {
@@ -98,7 +98,7 @@
       },
       "option": [
         {
-          "id": "option_need_ai",
+          "id": "checkbox-782375",
           "title": "<p>AI 生成</p>",
           "attribute": {
             "random": false,
@@ -106,14 +106,14 @@
           }
         },
         {
-          "id": "option_need_logic",
+          "id": "checkbox-782376",
           "title": "<p>题目逻辑</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_single_page",
+          "id": "checkbox-782377",
           "title": "<p>只要单页</p>",
           "attribute": {
             "mutual-exclusion": true,
@@ -121,7 +121,7 @@
           }
         },
         {
-          "id": "option_need_step",
+          "id": "checkbox-782378",
           "title": "<p>只要分页</p>",
           "attribute": {
             "mutual-exclusion": true,
@@ -129,7 +129,7 @@
           }
         },
         {
-          "id": "option_need_none",
+          "id": "checkbox-782379",
           "title": "<p>以上都不需要</p>",
           "attribute": {
             "exclusive": true,
@@ -140,7 +140,7 @@
     },
     {
       "type": "input",
-      "id": "question_complex_input",
+      "id": "input-782380",
       "title": "<h2>基础联系信息</h2>",
       "description": "<p>补充信息将帮助我们更好理解你的需求。</p>",
       "attribute": {
@@ -149,7 +149,7 @@
       },
       "option": [
         {
-          "id": "option_complex_email",
+          "id": "input-782381",
           "title": "<p>邮箱</p>",
           "attribute": {
             "dataType": "email",
@@ -159,7 +159,7 @@
           }
         },
         {
-          "id": "option_complex_tel",
+          "id": "input-782382",
           "title": "<p>电话</p>",
           "attribute": {
             "dataType": "tel",
@@ -169,7 +169,7 @@
           }
         },
         {
-          "id": "option_complex_number",
+          "id": "input-782383",
           "title": "<p>预计样本量</p>",
           "attribute": {
             "dataType": "number",
@@ -178,7 +178,7 @@
           }
         },
         {
-          "id": "option_complex_datetime",
+          "id": "input-782384",
           "title": "<p>期望开始时间</p>",
           "attribute": {
             "dataType": "dateTime",
@@ -186,7 +186,7 @@
           }
         },
         {
-          "id": "option_complex_daterange",
+          "id": "input-782385",
           "title": "<p>项目周期</p>",
           "attribute": {
             "dataType": "dateRange",
@@ -197,7 +197,7 @@
     },
     {
       "type": "score",
-      "id": "question_complex_score",
+      "id": "score-782386",
       "title": "<h2>请评价当前方案</h2>",
       "description": "<p>请按你的真实体验评分，1 分最低，5 分最高。</p>",
       "attribute": {
@@ -219,7 +219,7 @@
       },
       "option": [
         {
-          "id": "option_complex_score_speed",
+          "id": "score-782387",
           "title": "<p>生成速度</p>",
           "attribute": {
             "scope": [
@@ -243,7 +243,7 @@
           }
         },
         {
-          "id": "option_complex_score_quality",
+          "id": "score-782388",
           "title": "<p>结果质量</p>",
           "attribute": {
             "scope": [
@@ -270,7 +270,7 @@
     },
     {
       "type": "nps",
-      "id": "question_complex_nps",
+      "id": "nps-782389",
       "title": "<h2>你愿意推荐这个方案吗？</h2>",
       "description": "<p>0 表示完全不推荐，10 表示非常愿意推荐。</p>",
       "attribute": {
@@ -284,7 +284,7 @@
       },
       "option": [
         {
-          "id": "option_question_complex_nps_scale",
+          "id": "nps-782390",
           "attribute": {
             "scope": [
               0,
@@ -316,7 +316,7 @@
   ],
   "finish": {
     "type": "finish",
-    "id": "finish_complex",
+    "id": "finish-782391",
     "title": "<h1>提交成功</h1>",
     "description": "<p>感谢填写，提交后将只在控制台输出 payload，并清空本地缓存。</p>",
     "media": []

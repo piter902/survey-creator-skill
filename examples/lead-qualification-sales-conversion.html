@@ -293,6 +293,84 @@
       display: flex;
       justify-content: flex-start;
     }
+    .resume-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    .resume-overlay.is-visible {
+      display: flex;
+    }
+    .resume-dialog {
+      width: min(100%, 480px);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+    .resume-dialog-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0 12px;
+      min-height: 28px;
+      border-radius: 999px;
+      align-items: center;
+      background: rgba(91,124,255,.10);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .resume-dialog-title {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+      margin: 0;
+    }
+    .resume-dialog-desc {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-soft);
+      margin: 0;
+    }
+    .resume-dialog-meta {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .resume-dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .resume-dialog-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .dark .resume-dialog {
+      background: var(--panel);
+      color: var(--text-light);
+      border-color: var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+    }
+    .dark .resume-dialog-desc,
+    .dark .resume-dialog-meta {
+      color: var(--text-light-soft);
+    }
     .hero-grid, .finish-grid {
       grid-template-columns: 1fr;
       align-items: start;
@@ -906,6 +984,16 @@
         padding: 0 18px;
         font-size: 15px;
       }
+      .resume-overlay {
+        padding: 16px;
+      }
+      .resume-dialog {
+        border-radius: 20px;
+        padding: 20px;
+      }
+      .resume-dialog-actions {
+        grid-template-columns: 1fr;
+      }
       body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
         font-size: 32px;
       }
@@ -934,7 +1022,7 @@
     const surveySchema = {
   "survey": {
     "type": "survey",
-    "id": "survey_lead_qualification_sales_conversion",
+    "id": "survey-310991633986572288",
     "title": "<h1>企业版产品需求评估</h1>",
     "description": "<p>这是一份更贴近真实销售转化场景的线索筛选问卷示例。系统会根据你的采购阶段、预算区间和后续偏好，把你带到不同的结束页，并在<strong>提交成功后</strong>跳转到对应的下一步页面。</p>",
     "attribute": {
@@ -946,7 +1034,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_role",
+      "id": "radio-160768",
       "title": "<h2>你当前在采购决策中扮演什么角色？</h2>",
       "description": "<p>用于帮助我们判断后续更适合给你演示、资料还是自助方案。</p>",
       "attribute": {
@@ -956,21 +1044,21 @@
       },
       "option": [
         {
-          "id": "option_role_decision_maker",
+          "id": "radio-160769",
           "title": "<p>最终决策者 / 负责人</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_role_evaluator",
+          "id": "radio-160770",
           "title": "<p>调研评估 / 项目推进人</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_role_executor",
+          "id": "radio-160771",
           "title": "<p>实际使用者 / 执行同学</p>",
           "attribute": {
             "media": []
@@ -980,7 +1068,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_core_needs",
+      "id": "checkbox-160772",
       "title": "<h2>你当前最关注哪些能力？</h2>",
       "description": "<p>可多选，帮助我们快速判断更适合给你哪类解决方案。</p>",
       "attribute": {
@@ -990,35 +1078,35 @@
       },
       "option": [
         {
-          "id": "option_need_lead_capture",
+          "id": "checkbox-160773",
           "title": "<p>线索收集与表单转化</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_automation",
+          "id": "checkbox-160774",
           "title": "<p>自动化跟进与分配</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_crm",
+          "id": "checkbox-160775",
           "title": "<p>客户管理与销售协同</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_ai_assistant",
+          "id": "checkbox-160776",
           "title": "<p>AI 助手 / 智能客服 / 话术辅助</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_need_other",
+          "id": "checkbox-160777",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -1026,7 +1114,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_need_other_text",
+              "id": "input-160778",
               "title": "<p>补充需求</p>",
               "attribute": {
                 "required": true,
@@ -1041,7 +1129,7 @@
     },
     {
       "type": "radio",
-      "id": "question_timeline",
+      "id": "radio-160779",
       "title": "<h2>你预计什么时候启动采购或上线？</h2>",
       "description": "<p>这是最关键的分流题，我们会根据你的时间窗口安排不同的后续动作。</p>",
       "attribute": {
@@ -1051,28 +1139,28 @@
       },
       "option": [
         {
-          "id": "option_timeline_urgent",
+          "id": "radio-160780",
           "title": "<p>2 周内，希望尽快推进</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_timeline_this_quarter",
+          "id": "radio-160781",
           "title": "<p>1-3 个月内，正在评估中</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_timeline_research",
+          "id": "radio-160782",
           "title": "<p>先了解方案，还没到决策阶段</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_timeline_no_plan",
+          "id": "radio-160783",
           "title": "<p>暂无明确计划，先看看</p>",
           "attribute": {
             "media": []
@@ -1082,7 +1170,7 @@
     },
     {
       "type": "input",
-      "id": "question_contact_hot",
+      "id": "input-160784",
       "title": "<h2>请留下你的联系方式，方便我们尽快安排演示</h2>",
       "description": "<p>适合已经有明确推进计划的团队，提交后我们会优先安排产品顾问联系你。</p>",
       "attribute": {
@@ -1091,7 +1179,7 @@
       },
       "option": [
         {
-          "id": "option_contact_hot_name",
+          "id": "input-160785",
           "title": "<p>姓名</p>",
           "attribute": {
             "dataType": "text",
@@ -1101,7 +1189,7 @@
           }
         },
         {
-          "id": "option_contact_hot_company",
+          "id": "input-160786",
           "title": "<p>公司名称</p>",
           "attribute": {
             "dataType": "text",
@@ -1111,7 +1199,7 @@
           }
         },
         {
-          "id": "option_contact_hot_phone",
+          "id": "input-160787",
           "title": "<p>手机号</p>",
           "attribute": {
             "dataType": "tel",
@@ -1124,7 +1212,7 @@
     },
     {
       "type": "input",
-      "id": "question_contact_consult",
+      "id": "input-160788",
       "title": "<h2>请留下你的联系方式，方便顾问结合你的阶段给出建议</h2>",
       "description": "<p>如果你还在评估期，我们会根据你的业务目标，安排更适合的方案沟通。</p>",
       "attribute": {
@@ -1133,7 +1221,7 @@
       },
       "option": [
         {
-          "id": "option_contact_consult_name",
+          "id": "input-160789",
           "title": "<p>姓名</p>",
           "attribute": {
             "dataType": "text",
@@ -1143,7 +1231,7 @@
           }
         },
         {
-          "id": "option_contact_consult_company",
+          "id": "input-160790",
           "title": "<p>公司名称</p>",
           "attribute": {
             "dataType": "text",
@@ -1153,7 +1241,7 @@
           }
         },
         {
-          "id": "option_contact_consult_phone",
+          "id": "input-160791",
           "title": "<p>手机号</p>",
           "attribute": {
             "dataType": "tel",
@@ -1166,7 +1254,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_nurture_content",
+      "id": "checkbox-160792",
       "title": "<h2>如果你还在调研阶段，更希望先获取哪些内容？</h2>",
       "description": "<p>可多选，我们会把你带到更匹配的资料页。</p>",
       "attribute": {
@@ -1176,21 +1264,21 @@
       },
       "option": [
         {
-          "id": "option_nurture_case_study",
+          "id": "checkbox-160793",
           "title": "<p>客户案例 / 行业最佳实践</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_nurture_pricing",
+          "id": "checkbox-160794",
           "title": "<p>价格方案 / 套餐说明</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_nurture_product_tour",
+          "id": "checkbox-160795",
           "title": "<p>产品功能介绍 / Demo 视频</p>",
           "attribute": {
             "media": []
@@ -1202,7 +1290,7 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_hot_demo",
+      "id": "finish-160796",
       "title": "<h2>非常适合直接安排产品演示</h2>",
       "description": "<p>我们已经记录你的需求与时间窗口。提交成功后，页面会带你进入预约演示入口，方便你直接锁定演示时间。</p>",
       "media": [],
@@ -1215,7 +1303,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_sales_consult",
+      "id": "finish-160797",
       "title": "<h2>更适合先安排一场顾问咨询</h2>",
       "description": "<p>你已经进入明确评估阶段。提交成功后，页面会带你进入方案咨询入口，方便你继续了解适合的落地路径。</p>",
       "media": [],
@@ -1229,7 +1317,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_nurture_content",
+      "id": "finish-160798",
       "title": "<h2>我们先把最适合你的资料准备好</h2>",
       "description": "<p>提交成功后，页面会带你进入内容资料页，你可以先系统了解方案，再决定是否进入下一步。</p>",
       "media": [],
@@ -1243,7 +1331,7 @@
     },
     {
       "type": "finish",
-      "id": "finish_self_serve_resources",
+      "id": "finish-160799",
       "title": "<h2>先从公开资料开始也没问题</h2>",
       "description": "<p>如果你还没有明确计划，我们建议你先从产品总览、价格和案例开始。提交成功后，页面会带你进入自助资源中心。</p>",
       "media": [],
@@ -1259,94 +1347,95 @@
     {
       "id": "logic_show_hot_contact",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_urgent"
+        "optionId": "radio-160780"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_contact_hot"
+        "targetQuestionId": "input-160784"
       }
     },
     {
       "id": "logic_hot_contact_to_demo",
       "when": {
-        "questionId": "question_contact_hot",
+        "questionId": "input-160784",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_hot_demo"
+        "targetQuestionId": "finish-160796"
       }
     },
     {
       "id": "logic_show_consult_contact",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_this_quarter"
+        "optionId": "radio-160781"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_contact_consult"
+        "targetQuestionId": "input-160788"
       }
     },
     {
       "id": "logic_consult_contact_to_finish",
       "when": {
-        "questionId": "question_contact_consult",
+        "questionId": "input-160788",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_sales_consult"
+        "targetQuestionId": "finish-160797"
       }
     },
     {
       "id": "logic_show_nurture_content",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_research"
+        "optionId": "radio-160782"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_nurture_content"
+        "targetQuestionId": "checkbox-160792"
       }
     },
     {
       "id": "logic_research_to_finish",
       "when": {
-        "questionId": "question_nurture_content",
+        "questionId": "checkbox-160792",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_nurture_content"
+        "targetQuestionId": "finish-160798"
       }
     },
     {
       "id": "logic_no_plan_to_self_serve",
       "when": {
-        "questionId": "question_timeline",
+        "questionId": "radio-160779",
         "operator": "selected",
-        "optionId": "option_timeline_no_plan"
+        "optionId": "radio-160783"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_self_serve_resources"
+        "targetQuestionId": "finish-160799"
       }
     }
   ]
 };
 
-    const surveyStylePack = "consumer-trust";
+    const surveyStylePack = "consumer-minimal";
 
     const form = document.getElementById('surveyForm');
     const progressBar = document.getElementById('progressBar');
     const stepCounter = document.getElementById('stepCounter');
     const progressCaption = document.getElementById('progressCaption');
     const surveyId = surveySchema.survey.id;
+    const pageLoadStartedAt = Date.now();
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
     const finishScreens = (() => {
@@ -1390,15 +1479,44 @@
     let current = 0;
     let cache = loadCache();
 
+    function emptyCache() {
+      return {
+        surveyId,
+        updatedAt: new Date().toISOString(),
+        answers: {},
+        meta: {
+          lastScreenId: surveySchema.survey.id
+        }
+      };
+    }
+
+    function normalizeCache(raw) {
+      const fallback = emptyCache();
+      if (!raw || typeof raw !== 'object') return fallback;
+      const answers = raw.answers && typeof raw.answers === 'object' && !Array.isArray(raw.answers) ? raw.answers : {};
+      const meta = raw.meta && typeof raw.meta === 'object' && !Array.isArray(raw.meta) ? raw.meta : {};
+      return {
+        surveyId,
+        updatedAt: typeof raw.updatedAt === 'string' && raw.updatedAt ? raw.updatedAt : fallback.updatedAt,
+        answers,
+        meta: {
+          lastScreenId: typeof meta.lastScreenId === 'string' && meta.lastScreenId ? meta.lastScreenId : fallback.meta.lastScreenId
+        }
+      };
+    }
+
     function loadCache() {
       try {
-        return JSON.parse(localStorage.getItem(cacheKey)) || { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return normalizeCache(JSON.parse(localStorage.getItem(cacheKey)));
       } catch {
-        return { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return emptyCache();
       }
     }
 
     function saveCache() {
+      const activeScreenId = document.querySelector('.screen.is-active')?.dataset?.screenId;
+      if (!cache.meta || typeof cache.meta !== 'object' || Array.isArray(cache.meta)) cache.meta = { lastScreenId: surveySchema.survey.id };
+      if (activeScreenId) cache.meta.lastScreenId = activeScreenId;
       cache.updatedAt = new Date().toISOString();
       localStorage.setItem(cacheKey, JSON.stringify(cache));
     }
@@ -1639,6 +1757,7 @@
 
     function applyLogicRuntime(options = {}) {
       const preserveActiveId = options.preserveActiveId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+      const shouldSave = options.save !== false;
       logicState = computeLogicState();
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
@@ -1678,8 +1797,8 @@
       syncCacheFromDom(false);
       const visibleIds = visibleScreens().map((screen) => screen.dataset.screenId);
       const nextActiveId = preserveActiveId && visibleIds.includes(preserveActiveId) ? preserveActiveId : visibleIds[0] || null;
-      if (nextActiveId) showById(nextActiveId);
-      else saveCache();
+      if (nextActiveId) showById(nextActiveId, shouldSave);
+      else if (shouldSave) saveCache();
     }
     function shuffleIfNeeded(items, shouldRandom) {
       const list = [...items];
@@ -1820,6 +1939,22 @@
         return `提交成功后将展示结束提示，并在 ${seconds} 秒后跳转至下一步。`;
       }
       return '提交成功后将立即跳转至下一步页面。';
+    }
+
+    function formatResumeTime(isoString) {
+      if (!isoString) return '';
+      const value = new Date(isoString);
+      if (Number.isNaN(value.getTime())) return '';
+      try {
+        return new Intl.DateTimeFormat('zh-CN', {
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(value);
+      } catch {
+        return value.toLocaleString();
+      }
     }
 
     function mediaTitle(type) {
@@ -2020,8 +2155,11 @@
       rebuildQuestionScreenMap();
       bindEvents();
       hydrateAll();
-      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
-      if (!document.querySelector('.screen.is-active')) show(0);
+      const resumePending = hasResumeCandidate();
+      const initialScreenId = surveySchema.survey.id;
+      applyLogicRuntime({ preserveActiveId: initialScreenId, save: false });
+      if (!document.querySelector('.screen.is-active')) showById(initialScreenId, false);
+      if (resumePending) openResumePrompt();
     }
     function screens() {
       return Array.from(document.querySelectorAll('.screen'));
@@ -2387,6 +2525,64 @@
 
     function currentScreenId() {
       return (visibleScreens()[current] || screens()[current])?.dataset.screenId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+    }
+
+    function hasResumeCandidate() {
+      const answerCount = Object.keys(cache.answers || {}).length;
+      if (!answerCount) return false;
+      const updatedAtMs = Date.parse(cache.updatedAt || '');
+      if (Number.isNaN(updatedAtMs)) return false;
+      return updatedAtMs <= pageLoadStartedAt;
+    }
+
+    function resetQuestionStates() {
+      answerableQuestions.forEach((question) => clearQuestionState(question));
+    }
+
+    function resetForFreshStart() {
+      localStorage.removeItem(cacheKey);
+      cache = emptyCache();
+      logicState = { hiddenQuestions: new Set(), hiddenOptions: new Set(), skippedQuestions: new Set(), jumpTargets: new Map(), autoSelects: [] };
+      form.reset();
+      resetQuestionStates();
+      updateChildVisibility();
+      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
+      showById(surveySchema.survey.id, false);
+      saveCache();
+    }
+
+    function dismissResumePrompt() {
+      document.querySelector('.resume-overlay')?.remove();
+    }
+
+    function openResumePrompt() {
+      dismissResumePrompt();
+      const overlay = document.createElement('div');
+      overlay.className = 'resume-overlay is-visible';
+      const lastSaved = formatResumeTime(cache.updatedAt);
+      overlay.innerHTML = `
+        <div class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeDialogTitle">
+          <div class="resume-dialog-kicker">断点续答</div>
+          <h2 class="resume-dialog-title" id="resumeDialogTitle">检测到你上次有未完成的作答</h2>
+          <p class="resume-dialog-desc">你可以继续上次离开的进度，也可以清空已有内容，重新开始本次问卷。</p>
+          <div class="resume-dialog-meta">${escapeHtml(lastSaved ? `上次保存时间：${lastSaved}` : '已为你保留上次的作答进度。')}</div>
+          <div class="resume-dialog-actions">
+            <button class="btn secondary" type="button" data-resume-restart>重新开始作答</button>
+            <button class="btn" type="button" data-resume-continue>继续上次作答</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.querySelector('[data-resume-restart]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        resetForFreshStart();
+      }, { once: true });
+      overlay.querySelector('[data-resume-continue]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        const resumeTarget = cache.meta?.lastScreenId || surveySchema.survey.id;
+        applyLogicRuntime({ preserveActiveId: resumeTarget });
+        showById(resumeTarget, false);
+      }, { once: true });
     }
 
     function persistQuestions(questions, save = true) {

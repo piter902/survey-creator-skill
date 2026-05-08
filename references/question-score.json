@@ -1,6 +1,6 @@
 {
     "type": "score",
-    "id": "question-id",
+    "id": "score-123456",
     "title": "评分题标题",
     "description": "评分题描述",
     "attribute": {
@@ -22,7 +22,7 @@
     },
     "option": [
         {
-            "id": "option-id-1",
+            "id": "score-123457",
             "title": "打分项目标题",
             "attribute": {
                 "scope": [

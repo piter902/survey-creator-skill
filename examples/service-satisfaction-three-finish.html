@@ -267,6 +267,110 @@
       line-height: 1.7;
       color: var(--text-soft);
     }
+    .finish-submit-status {
+      display: none;
+    }
+    .finish-submit-status.is-visible {
+      display: block;
+    }
+    .submit-status-card {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid rgba(46, 160, 67, 0.24);
+      border-radius: 16px;
+      background: rgba(46, 160, 67, 0.08);
+    }
+    .submit-status-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .dark .submit-status-text {
+      color: var(--text-light);
+    }
+    .submit-status-actions {
+      display: flex;
+      justify-content: flex-start;
+    }
+    .resume-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    .resume-overlay.is-visible {
+      display: flex;
+    }
+    .resume-dialog {
+      width: min(100%, 480px);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+    .resume-dialog-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0 12px;
+      min-height: 28px;
+      border-radius: 999px;
+      align-items: center;
+      background: rgba(91,124,255,.10);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .resume-dialog-title {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+      margin: 0;
+    }
+    .resume-dialog-desc {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-soft);
+      margin: 0;
+    }
+    .resume-dialog-meta {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+    .resume-dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .resume-dialog-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .dark .resume-dialog {
+      background: var(--panel);
+      color: var(--text-light);
+      border-color: var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+    }
+    .dark .resume-dialog-desc,
+    .dark .resume-dialog-meta {
+      color: var(--text-light-soft);
+    }
     .hero-grid, .finish-grid {
       grid-template-columns: 1fr;
       align-items: start;
@@ -880,6 +984,16 @@
         padding: 0 18px;
         font-size: 15px;
       }
+      .resume-overlay {
+        padding: 16px;
+      }
+      .resume-dialog {
+        border-radius: 20px;
+        padding: 20px;
+      }
+      .resume-dialog-actions {
+        grid-template-columns: 1fr;
+      }
       body[data-style-pack="consumer-campaign"] .survey-hero-copy .rich h1 {
         font-size: 32px;
       }
@@ -908,7 +1022,7 @@
     const surveySchema = {
   "survey": {
     "type": "survey",
-    "id": "survey_service_satisfaction_three_finish",
+    "id": "survey-310991634506665984",
     "title": "<h1>服务体验满意度调研</h1>",
     "description": "<p>这是一份演示 <strong>三结束页分流</strong> 的问卷示例：满意、中立、不满意的用户，会进入不同语气和动作引导的结束页。</p>",
     "attribute": {
@@ -920,7 +1034,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_experience_level",
+      "id": "radio-266624",
       "title": "<h2>你对本次服务的整体感受是？</h2>",
       "description": "<p>请选择最符合你当前感受的一项。</p>",
       "attribute": {
@@ -930,21 +1044,21 @@
       },
       "option": [
         {
-          "id": "option_experience_good",
+          "id": "radio-266625",
           "title": "<p>满意，整体体验很好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_experience_neutral",
+          "id": "radio-266626",
           "title": "<p>一般，还有可优化空间</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_experience_bad",
+          "id": "radio-266627",
           "title": "<p>不满意，体验低于预期</p>",
           "attribute": {
             "media": []
@@ -954,7 +1068,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_neutral_reason",
+      "id": "checkbox-266628",
       "title": "<h2>如果你觉得一般，主要还差在哪些地方？</h2>",
       "description": "<p>可多选，帮助我们判断优先优化方向。</p>",
       "attribute": {
@@ -964,21 +1078,21 @@
       },
       "option": [
         {
-          "id": "option_neutral_speed",
+          "id": "checkbox-266629",
           "title": "<p>效率还不够高</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_clarity",
+          "id": "checkbox-266630",
           "title": "<p>沟通说明不够清楚</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_neutral_detail",
+          "id": "checkbox-266631",
           "title": "<p>细节体验还可以更精致</p>",
           "attribute": {
             "media": []
@@ -988,7 +1102,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_bad_reason",
+      "id": "checkbox-266632",
       "title": "<h2>如果不满意，最主要的问题是什么？</h2>",
       "description": "<p>可多选，我们会优先定位最影响体验的问题。</p>",
       "attribute": {
@@ -998,28 +1112,28 @@
       },
       "option": [
         {
-          "id": "option_bad_attitude",
+          "id": "checkbox-266633",
           "title": "<p>服务态度不够好</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad_speed",
+          "id": "checkbox-266634",
           "title": "<p>响应 / 处理速度慢</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad_result",
+          "id": "checkbox-266635",
           "title": "<p>问题没有得到解决</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_bad_other",
+          "id": "checkbox-266636",
           "title": "<p>其他，请说明</p>",
           "attribute": {
             "media": []
@@ -1027,7 +1141,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_bad_other_text",
+              "id": "input-266637",
               "title": "<p>补充说明</p>",
               "attribute": {
                 "required": true,
@@ -1042,7 +1156,7 @@
     },
     {
       "type": "radio",
-      "id": "question_followup_permission",
+      "id": "radio-266638",
       "title": "<h2>我们是否可以联系你继续跟进？</h2>",
       "description": "<p>仅用于本次服务问题处理，不会用于营销。</p>",
       "attribute": {
@@ -1052,14 +1166,14 @@
       },
       "option": [
         {
-          "id": "option_followup_yes",
+          "id": "radio-266639",
           "title": "<p>可以，请联系我</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_followup_no",
+          "id": "radio-266640",
           "title": "<p>暂时不用联系</p>",
           "attribute": {
             "media": []
@@ -1071,21 +1185,21 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish_positive",
+      "id": "finish-266641",
       "title": "<h2>感谢你的认可</h2>",
       "description": "<p>你的满意会帮助我们继续保持好的服务标准，也欢迎你未来持续给我们建议。</p>",
       "media": []
     },
     {
       "type": "finish",
-      "id": "finish_neutral",
+      "id": "finish-266642",
       "title": "<h2>感谢你的建议</h2>",
       "description": "<p>我们已经收到你的优化方向，会优先复盘影响体验的关键环节。</p>",
       "media": []
     },
     {
       "type": "finish",
-      "id": "finish_negative",
+      "id": "finish-266643",
       "title": "<h2>很抱歉这次没有让你满意</h2>",
       "description": "<p>我们会认真处理你的反馈，并持续改进后续服务流程。感谢你仍愿意告诉我们真实感受。</p>",
       "media": []
@@ -1095,84 +1209,84 @@
     {
       "id": "logic_good_to_positive_finish",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_good"
+        "optionId": "radio-266625"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_positive"
+        "targetQuestionId": "finish-266641"
       }
     },
     {
       "id": "logic_show_neutral_reason",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_neutral"
+        "optionId": "radio-266626"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_neutral_reason"
+        "targetQuestionId": "checkbox-266628"
       }
     },
     {
       "id": "logic_neutral_reason_to_neutral_finish",
       "when": {
-        "questionId": "question_neutral_reason",
+        "questionId": "checkbox-266628",
         "operator": "answered"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_neutral"
+        "targetQuestionId": "finish-266642"
       }
     },
     {
       "id": "logic_show_bad_reason",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_bad"
+        "optionId": "radio-266627"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_bad_reason"
+        "targetQuestionId": "checkbox-266632"
       }
     },
     {
       "id": "logic_show_followup_permission",
       "when": {
-        "questionId": "question_experience_level",
+        "questionId": "radio-266624",
         "operator": "selected",
-        "optionId": "option_experience_bad"
+        "optionId": "radio-266627"
       },
       "action": {
         "type": "show_question",
-        "targetQuestionId": "question_followup_permission"
+        "targetQuestionId": "radio-266638"
       }
     },
     {
       "id": "logic_bad_followup_yes_to_negative_finish",
       "when": {
-        "questionId": "question_followup_permission",
+        "questionId": "radio-266638",
         "operator": "selected",
-        "optionId": "option_followup_yes"
+        "optionId": "radio-266639"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_negative"
+        "targetQuestionId": "finish-266643"
       }
     },
     {
       "id": "logic_bad_followup_no_to_negative_finish",
       "when": {
-        "questionId": "question_followup_permission",
+        "questionId": "radio-266638",
         "operator": "selected",
-        "optionId": "option_followup_no"
+        "optionId": "radio-266640"
       },
       "action": {
         "type": "end_survey",
-        "targetQuestionId": "finish_negative"
+        "targetQuestionId": "finish-266643"
       }
     }
   ]
@@ -1185,6 +1299,7 @@
     const stepCounter = document.getElementById('stepCounter');
     const progressCaption = document.getElementById('progressCaption');
     const surveyId = surveySchema.survey.id;
+    const pageLoadStartedAt = Date.now();
     const cacheKey = `survey_step_cache_${surveyId}`;
     const logicRules = Array.isArray(surveySchema.logic) ? surveySchema.logic : [];
     const finishScreens = (() => {
@@ -1228,15 +1343,44 @@
     let current = 0;
     let cache = loadCache();
 
+    function emptyCache() {
+      return {
+        surveyId,
+        updatedAt: new Date().toISOString(),
+        answers: {},
+        meta: {
+          lastScreenId: surveySchema.survey.id
+        }
+      };
+    }
+
+    function normalizeCache(raw) {
+      const fallback = emptyCache();
+      if (!raw || typeof raw !== 'object') return fallback;
+      const answers = raw.answers && typeof raw.answers === 'object' && !Array.isArray(raw.answers) ? raw.answers : {};
+      const meta = raw.meta && typeof raw.meta === 'object' && !Array.isArray(raw.meta) ? raw.meta : {};
+      return {
+        surveyId,
+        updatedAt: typeof raw.updatedAt === 'string' && raw.updatedAt ? raw.updatedAt : fallback.updatedAt,
+        answers,
+        meta: {
+          lastScreenId: typeof meta.lastScreenId === 'string' && meta.lastScreenId ? meta.lastScreenId : fallback.meta.lastScreenId
+        }
+      };
+    }
+
     function loadCache() {
       try {
-        return JSON.parse(localStorage.getItem(cacheKey)) || { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return normalizeCache(JSON.parse(localStorage.getItem(cacheKey)));
       } catch {
-        return { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+        return emptyCache();
       }
     }
 
     function saveCache() {
+      const activeScreenId = document.querySelector('.screen.is-active')?.dataset?.screenId;
+      if (!cache.meta || typeof cache.meta !== 'object' || Array.isArray(cache.meta)) cache.meta = { lastScreenId: surveySchema.survey.id };
+      if (activeScreenId) cache.meta.lastScreenId = activeScreenId;
       cache.updatedAt = new Date().toISOString();
       localStorage.setItem(cacheKey, JSON.stringify(cache));
     }
@@ -1379,7 +1523,7 @@
     }
 
     function clearQuestionState(question) {
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen) return;
       screen.querySelectorAll('input, textarea').forEach((input) => {
         input.value = '';
@@ -1412,10 +1556,10 @@
         (question.option || []).forEach((option) => {
           if (!isOptionHidden(question.id, option.id)) return;
           const selectors = [
-            `.option[data-option-id="${option.id}"] input`,
-            `[data-option-field="${option.id}"] [data-option-id="${option.id}"]`,
-            `[data-score-option="${option.id}"] .score-pill`,
-            `[data-nps-option="${option.id}"] .score-pill`
+            `.option${dataSelector('option-id', option.id)} input`,
+            `${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}`,
+            `${dataSelector('score-option', option.id)} .score-pill`,
+            `${dataSelector('nps-option', option.id)} .score-pill`
           ];
           document.querySelectorAll(selectors.join(',')).forEach((node) => {
             if (node.matches('input')) node.checked = false;
@@ -1424,7 +1568,7 @@
               node.setAttribute('aria-pressed', 'false');
             }
           });
-          document.querySelectorAll(`[data-option-field="${option.id}"] [data-option-id="${option.id}"], [data-child-wrap="${option.id}"] [data-child-id]`).forEach(clearFieldValue);
+          document.querySelectorAll(`${dataSelector('option-field', option.id)} ${dataSelector('option-id', option.id)}, ${dataSelector('child-wrap', option.id)} [data-child-id]`).forEach(clearFieldValue);
         });
       });
     }
@@ -1432,10 +1576,10 @@
     function applyAutoSelects() {
       logicState.autoSelects.forEach(({ questionId, optionId }) => {
         if (isQuestionUnavailable(questionId) || isOptionHidden(questionId, optionId)) return;
-        const input = document.querySelector(`.option[data-option-id="${optionId}"] input[name="${questionId}"]`);
+        const input = document.querySelector(`.option${dataSelector('option-id', optionId)} input${selectorAttr('name', questionId)}`);
         if (!input) return;
         if (input.type === 'radio') {
-          document.querySelectorAll(`input[name="${questionId}"]`).forEach((node) => { if (node !== input) node.checked = false; });
+          document.querySelectorAll(`input${selectorAttr('name', questionId)}`).forEach((node) => { if (node !== input) node.checked = false; });
         }
         input.checked = true;
       });
@@ -1477,6 +1621,7 @@
 
     function applyLogicRuntime(options = {}) {
       const preserveActiveId = options.preserveActiveId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
+      const shouldSave = options.save !== false;
       logicState = computeLogicState();
       logicState.skippedQuestions = computeSkippedQuestions(logicState.jumpTargets);
       document.querySelectorAll('[data-screen-id][data-schema-type]').forEach((node) => {
@@ -1499,10 +1644,10 @@
         (question.option || []).forEach((option) => {
           const hidden = isOptionHidden(question.id, option.id);
           const selector = [
-            `.option[data-option-id="${option.id}"]`,
-            `[data-option-field="${option.id}"]`,
-            `[data-score-option="${option.id}"]`,
-            `[data-nps-option="${option.id}"]`
+            `.option${dataSelector('option-id', option.id)}`,
+            dataSelector('option-field', option.id),
+            dataSelector('score-option', option.id),
+            dataSelector('nps-option', option.id)
           ].join(',');
           document.querySelectorAll(selector).forEach((node) => {
             node.classList.toggle('is-hidden-by-logic', hidden);
@@ -1516,8 +1661,8 @@
       syncCacheFromDom(false);
       const visibleIds = visibleScreens().map((screen) => screen.dataset.screenId);
       const nextActiveId = preserveActiveId && visibleIds.includes(preserveActiveId) ? preserveActiveId : visibleIds[0] || null;
-      if (nextActiveId) showById(nextActiveId);
-      else saveCache();
+      if (nextActiveId) showById(nextActiveId, shouldSave);
+      else if (shouldSave) saveCache();
     }
     function shuffleIfNeeded(items, shouldRandom) {
       const list = [...items];
@@ -1595,6 +1740,23 @@
         .replaceAll('>', '&gt;');
     }
 
+    function cssEscape(value) {
+      const input = String(value ?? '');
+      if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(input);
+      return input.replace(/[\0-\x1F\x7F]|^-?\d|^-$|[^\w-]/g, (token) => {
+        if (token === '\0') return '\uFFFD';
+        return `\\${token.codePointAt(0).toString(16)} `;
+      });
+    }
+
+    function selectorAttr(attrName, value) {
+      return `[${attrName}="${cssEscape(value)}"]`;
+    }
+
+    function dataSelector(name, value) {
+      return selectorAttr(`data-${name}`, value);
+    }
+
     function safeJsonAttr(value) {
       return escapeAttr(JSON.stringify(value || {}));
     }
@@ -1605,6 +1767,58 @@
 
     function isSafeMediaUrl(value) {
       return typeof value === 'string' && /^(https?:\/\/|data:(image|audio|video)\/)/i.test(value);
+    }
+
+    function isSafeRedirectUrl(value) {
+      return typeof value === 'string' && /^(https?:\/\/|\/|\.\/|\.\.\/|#)/i.test(value.trim());
+    }
+
+    function normalizePostSubmitAction(postSubmit) {
+      if (!postSubmit || typeof postSubmit !== 'object') return null;
+      if (postSubmit.type !== 'redirect' || !isSafeRedirectUrl(postSubmit.url || '')) return null;
+      const mode = postSubmit.mode === 'delay' ? 'delay' : 'immediate';
+      const delayValue = Number(postSubmit.delayMs);
+      const delayMs = mode === 'delay' && Number.isFinite(delayValue) && delayValue >= 0 ? delayValue : 3000;
+      const openIn = postSubmit.openIn === 'blank' ? 'blank' : 'self';
+      return {
+        type: 'redirect',
+        url: String(postSubmit.url).trim(),
+        mode,
+        delayMs,
+        openIn
+      };
+    }
+
+    function finishSubmitButtonLabel(finish) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      if (!action) return '确认并提交';
+      return action.mode === 'delay' ? '提交并进入下一步' : '提交并前往';
+    }
+
+    function finishSubmitNote(finish) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      if (!action) return '提交后将立即完成本次问卷，页面不会再要求额外填写内容。';
+      if (action.mode === 'delay') {
+        const seconds = Math.max(1, Math.ceil(action.delayMs / 1000));
+        return `提交成功后将展示结束提示，并在 ${seconds} 秒后跳转至下一步。`;
+      }
+      return '提交成功后将立即跳转至下一步页面。';
+    }
+
+    function formatResumeTime(isoString) {
+      if (!isoString) return '';
+      const value = new Date(isoString);
+      if (Number.isNaN(value.getTime())) return '';
+      try {
+        return new Intl.DateTimeFormat('zh-CN', {
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(value);
+      } catch {
+        return value.toLocaleString();
+      }
     }
 
     function mediaTitle(type) {
@@ -1621,18 +1835,24 @@
       return `<a class="media-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeAttr(text)}</a>`;
     }
 
+    function renderMediaSourceAttr(url, attrName = 'src') {
+      return isSafeMediaUrl(url) ? ` ${attrName}="${escapeAttr(url)}"` : '';
+    }
+
     function renderMediaItem(m, context = 'question') {
       const label = `<small>${mediaTitle(m.type)}</small>`;
       const variantClass = context ? `media-card--${escapeAttr(context)}` : '';
-      const mediaUrl = isSafeMediaUrl(m.url) ? escapeAttr(m.url) : '';
+      if (!isSafeMediaUrl(m?.url)) {
+        return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">资源地址不安全或格式不合法，已跳过内嵌预览。</div></div>`;
+      }
       if (m.type === 'image') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img src="${mediaUrl}" alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--image"><img${renderMediaSourceAttr(m.url)} alt="问卷图片资源" /></div>${renderMediaLink(m.url, '打开原图')}</div>`;
       }
       if (m.type === 'audio') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata" src="${mediaUrl}"></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--audio"><audio controls preload="metadata"${renderMediaSourceAttr(m.url)}></audio></div><div class="media-fallback">可直接播放音频内容。</div>${renderMediaLink(m.url)}</div>`;
       }
       if (m.type === 'video') {
-        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline src="${mediaUrl}"></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
+        return `<div class="media-card ${variantClass}">${label}<div class="media-frame media-frame--video"><video controls preload="metadata" playsinline${renderMediaSourceAttr(m.url)}></video></div><div class="media-fallback">可直接播放视频内容。</div>${renderMediaLink(m.url)}</div>`;
       }
       return `<div class="media-card ${variantClass}">${label}<div class="media-fallback">当前资源类型暂不支持内嵌预览，请打开原始资源查看。</div>${renderMediaLink(m.url)}</div>`;
     }
@@ -1777,7 +1997,7 @@
 
     function renderFinish(f) {
       const allowBack = surveySchema.survey.attribute?.allowBack === true;
-      return screenShell(f.id, 'finish', `<section class="finish-state"><div class="finish-kicker">反馈确认</div><div class="finish-badge">✓ 即将完成提交</div>${renderHeroVisual(f.media || [], 'finish')}<div class="finish-copy">${renderRich(f.title)}${renderRich(f.description)}</div><div class="finish-note">提交后将立即完成本次问卷，页面不会再要求额外填写内容。</div></section><div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="submit">确认并提交</button></div></div>`, true);
+      return screenShell(f.id, 'finish', `<section class="finish-state"><div class="finish-kicker">反馈确认</div><div class="finish-badge">✓ 即将完成提交</div>${renderHeroVisual(f.media || [], 'finish')}<div class="finish-copy">${renderRich(f.title)}${renderRich(f.description)}</div><div class="finish-note">${escapeHtml(finishSubmitNote(f))}</div><div class="finish-submit-status" data-submit-status aria-live="polite"></div></section><div class="actions" style="grid-column:1 / -1;">${allowBack ? '<button class="btn secondary" type="button" data-prev>上一页</button>' : '<span></span>'}<div class="actions-right"><button class="btn" type="submit">${escapeHtml(finishSubmitButtonLabel(f))}</button></div></div>`, true);
     }
 
     function screenShell(id, type, inner, dark = false) {
@@ -1794,13 +2014,16 @@
       } else if (onePageOneQuestion) {
         form.innerHTML = [renderSurvey(), ...answerableQuestions.map(renderQuestion), ...renderedFinishes].join('');
       } else {
-        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(defaultFinish.title)}${renderRich(defaultFinish.description)}</div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">提交问卷</button></div></div>`);
+        form.innerHTML = screenShell('all_in_one', 'survey-all', `<div style="grid-column:1 / -1;">${renderRich(surveySchema.survey.title)}${renderRich(surveySchema.survey.description)}</div>${answerableQuestions.map((q) => renderQuestionBlock(q)).join('')}<div style="grid-column:1 / -1;">${renderRich(defaultFinish.title)}${renderRich(defaultFinish.description)}<div class="finish-note">${escapeHtml(finishSubmitNote(defaultFinish))}</div><div class="finish-submit-status" data-submit-status aria-live="polite"></div></div><div class="actions" style="grid-column:1 / -1;"><span></span><div class="actions-right"><button class="btn" type="submit">${escapeHtml(finishSubmitButtonLabel(defaultFinish))}</button></div></div>`);
       }
       rebuildQuestionScreenMap();
       bindEvents();
       hydrateAll();
-      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
-      if (!document.querySelector('.screen.is-active')) show(0);
+      const resumePending = hasResumeCandidate();
+      const initialScreenId = surveySchema.survey.id;
+      applyLogicRuntime({ preserveActiveId: initialScreenId, save: false });
+      if (!document.querySelector('.screen.is-active')) showById(initialScreenId, false);
+      if (resumePending) openResumePrompt();
     }
     function screens() {
       return Array.from(document.querySelectorAll('.screen'));
@@ -1867,7 +2090,7 @@
       show(index >= 0 ? index : 0, save);
     }
     function visibleChildWrapForInput(input) {
-      return input.closest('.option')?.querySelector(`[data-child-wrap="${input.value}"]`);
+      return input.closest('.option')?.querySelector(dataSelector('child-wrap', input.value));
     }
 
     function updateChildVisibility() {
@@ -1892,7 +2115,7 @@
       const optionId = button.dataset.scoreOptionId;
       const scoreValue = button.dataset.scoreValue;
       const screen = button.closest('[data-screen-id]');
-      screen.querySelectorAll(`[data-score-option-id="${optionId}"]`).forEach((el) => {
+      screen.querySelectorAll(dataSelector('score-option-id', optionId)).forEach((el) => {
         const active = el === button;
         el.classList.toggle('is-active', active);
         el.setAttribute('aria-pressed', active ? 'true' : 'false');
@@ -1901,7 +2124,7 @@
       const question = (candidateQuestions.length ? candidateQuestions : answerableQuestions).find((item) => (item.option || []).some((opt) => opt.id === optionId));
       const option = question?.option?.find((item) => item.id === optionId);
       const desc = scoreDescForValue(option?.attribute?.scoreDesc || {}, scoreValue);
-      const descEl = screen.querySelector(`[data-score-desc-for="${optionId}"]`);
+      const descEl = screen.querySelector(dataSelector('score-desc-for', optionId));
       if (descEl) descEl.textContent = desc;
     }
     function extractFieldValue(field) {
@@ -1945,11 +2168,11 @@
     }
 
     function collectQuestion(question) {
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen || isQuestionUnavailable(question.id)) return null;
 
       if (question.type === 'radio') {
-        const checked = Array.from(screen.querySelectorAll(`input[name="${question.id}"]:checked`)).find((input) => !isOptionHidden(question.id, input.value));
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).find((input) => !isOptionHidden(question.id, input.value));
         if (!checked) return null;
         const optionEl = checked.closest('.option');
         const child = readChildAnswers(optionEl);
@@ -1959,7 +2182,7 @@
       }
 
       if (question.type === 'checkbox') {
-        const checked = Array.from(screen.querySelectorAll(`input[name="${question.id}"]:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
+        const checked = Array.from(screen.querySelectorAll(`input${selectorAttr('name', question.id)}:checked`)).filter((input) => !isOptionHidden(question.id, input.value));
         if (!checked.length) return null;
         return {
           questionType: question.type,
@@ -1975,7 +2198,7 @@
 
       if (question.type === 'input') {
         const value = question.option.filter((opt) => !isOptionHidden(question.id, opt.id)).map((opt) => {
-          const field = screen.querySelector(`[data-option-id="${opt.id}"]`);
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
           const extracted = extractFieldValue(field);
           if (!extracted) return null;
           return { optionId: opt.id, dataType: opt.attribute?.dataType || 'text', value: extracted };
@@ -2007,7 +2230,7 @@
 
     function validateQuestion(question) {
       if (!question || isQuestionUnavailable(question.id)) return true;
-      const screen = document.querySelector(`[data-screen-id="${question.id}"]`);
+      const screen = document.querySelector(dataSelector('screen-id', question.id));
       if (!screen) return true;
       screen.querySelectorAll('.error').forEach((el) => el.classList.remove('is-visible'));
       screen.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
@@ -2020,7 +2243,7 @@
 
       if (question.type === 'input') {
         for (const opt of question.option.filter((item) => !isOptionHidden(question.id, item.id))) {
-          const field = screen.querySelector(`[data-option-id="${opt.id}"]`);
+          const field = screen.querySelector(dataSelector('option-id', opt.id));
           const msg = validateByDataType(field, opt.attribute || {});
           if (msg) {
             field.classList.add('is-invalid');
@@ -2060,7 +2283,7 @@
           const msg = validateByDataType(field, attr);
           if (msg) {
             field.classList.add('is-invalid');
-            const err = optionEl.querySelector(`[data-child-error="${field.dataset.childId}"]`);
+            const err = optionEl.querySelector(dataSelector('child-error', field.dataset.childId));
             if (err) {
               err.textContent = msg;
               err.classList.add('is-visible');
@@ -2090,14 +2313,14 @@
 
     function hydrateAll() {
       Object.entries(cache.answers || {}).forEach(([questionId, answer]) => {
-        const screen = document.querySelector(`[data-screen-id="${questionId}"]`);
+        const screen = document.querySelector(dataSelector('screen-id', questionId));
         if (!screen) return;
 
         if (answer.questionType === 'radio') {
-          const input = screen.querySelector(`input[value="${answer.value.optionId}"]`);
+          const input = screen.querySelector(`input${selectorAttr('value', answer.value.optionId)}`);
           if (input) input.checked = true;
           (answer.value.child || []).forEach((item) => {
-            const child = screen.querySelector(`[data-child-id="${item.childId}"]`);
+            const child = screen.querySelector(dataSelector('child-id', item.childId));
             if (!child) return;
             if (child.matches('[data-range-type]')) hydrateRangeField(child, item.value);
             else child.value = typeof item.value === 'object' ? '' : (item.value || '');
@@ -2106,10 +2329,10 @@
 
         if (answer.questionType === 'checkbox') {
           (answer.value || []).forEach((item) => {
-            const input = screen.querySelector(`input[value="${item.optionId}"]`);
+            const input = screen.querySelector(`input${selectorAttr('value', item.optionId)}`);
             if (input) input.checked = true;
             (item.child || []).forEach((childItem) => {
-              const child = screen.querySelector(`[data-child-id="${childItem.childId}"]`);
+              const child = screen.querySelector(dataSelector('child-id', childItem.childId));
               if (!child) return;
               if (child.matches('[data-range-type]')) hydrateRangeField(child, childItem.value);
               else child.value = typeof childItem.value === 'object' ? '' : (childItem.value || '');
@@ -2119,7 +2342,7 @@
 
         if (answer.questionType === 'input') {
           (answer.value || []).forEach((item) => {
-            const field = screen.querySelector(`[data-option-id="${item.optionId}"]`);
+            const field = screen.querySelector(dataSelector('option-id', item.optionId));
             if (!field) return;
             if (field.matches('[data-range-type]')) hydrateRangeField(field, item.value);
             else field.value = typeof item.value === 'object' ? '' : (item.value || '');
@@ -2128,14 +2351,14 @@
 
         if (answer.questionType === 'score') {
           (answer.value || []).forEach((item) => {
-            const button = screen.querySelector(`[data-score-option-id="${item.optionId}"][data-score-value="${formatScoreValue(item.score)}"]`);
+            const button = screen.querySelector(`${dataSelector('score-option-id', item.optionId)}${dataSelector('score-value', formatScoreValue(item.score))}`);
             if (button) updateScoreDisplay(button);
           });
         }
 
 
         if (answer.questionType === 'nps') {
-          const button = screen.querySelector(`[data-score-option-id="${answer.value.optionId}"][data-score-value="${formatScoreValue(answer.value.score)}"]`);
+          const button = screen.querySelector(`${dataSelector('score-option-id', answer.value.optionId)}${dataSelector('score-value', formatScoreValue(answer.value.score))}`);
           if (button) updateScoreDisplay(button);
         }
       });
@@ -2168,6 +2391,64 @@
       return (visibleScreens()[current] || screens()[current])?.dataset.screenId || document.querySelector('.screen.is-active')?.dataset.screenId || null;
     }
 
+    function hasResumeCandidate() {
+      const answerCount = Object.keys(cache.answers || {}).length;
+      if (!answerCount) return false;
+      const updatedAtMs = Date.parse(cache.updatedAt || '');
+      if (Number.isNaN(updatedAtMs)) return false;
+      return updatedAtMs <= pageLoadStartedAt;
+    }
+
+    function resetQuestionStates() {
+      answerableQuestions.forEach((question) => clearQuestionState(question));
+    }
+
+    function resetForFreshStart() {
+      localStorage.removeItem(cacheKey);
+      cache = emptyCache();
+      logicState = { hiddenQuestions: new Set(), hiddenOptions: new Set(), skippedQuestions: new Set(), jumpTargets: new Map(), autoSelects: [] };
+      form.reset();
+      resetQuestionStates();
+      updateChildVisibility();
+      applyLogicRuntime({ preserveActiveId: surveySchema.survey.id });
+      showById(surveySchema.survey.id, false);
+      saveCache();
+    }
+
+    function dismissResumePrompt() {
+      document.querySelector('.resume-overlay')?.remove();
+    }
+
+    function openResumePrompt() {
+      dismissResumePrompt();
+      const overlay = document.createElement('div');
+      overlay.className = 'resume-overlay is-visible';
+      const lastSaved = formatResumeTime(cache.updatedAt);
+      overlay.innerHTML = `
+        <div class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeDialogTitle">
+          <div class="resume-dialog-kicker">断点续答</div>
+          <h2 class="resume-dialog-title" id="resumeDialogTitle">检测到你上次有未完成的作答</h2>
+          <p class="resume-dialog-desc">你可以继续上次离开的进度，也可以清空已有内容，重新开始本次问卷。</p>
+          <div class="resume-dialog-meta">${escapeHtml(lastSaved ? `上次保存时间：${lastSaved}` : '已为你保留上次的作答进度。')}</div>
+          <div class="resume-dialog-actions">
+            <button class="btn secondary" type="button" data-resume-restart>重新开始作答</button>
+            <button class="btn" type="button" data-resume-continue>继续上次作答</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.querySelector('[data-resume-restart]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        resetForFreshStart();
+      }, { once: true });
+      overlay.querySelector('[data-resume-continue]')?.addEventListener('click', () => {
+        dismissResumePrompt();
+        const resumeTarget = cache.meta?.lastScreenId || surveySchema.survey.id;
+        applyLogicRuntime({ preserveActiveId: resumeTarget });
+        showById(resumeTarget, false);
+      }, { once: true });
+    }
+
     function persistQuestions(questions, save = true) {
       questions.forEach((question) => persist(question, false));
       if (save) saveCache();
@@ -2178,6 +2459,101 @@
         if (!validateQuestion(question)) return false;
       }
       return true;
+    }
+
+    function activeFinishScreen() {
+      const activeId = logicState.activeFinishId || currentScreenId();
+      return finishScreens.find((item) => item.id === activeId)
+        || finishScreens.find((item) => item.id === currentScreenId())
+        || defaultFinishScreen;
+    }
+
+    function submitStatusNode() {
+      return document.querySelector('.screen.is-active [data-submit-status]') || form.querySelector('[data-submit-status]');
+    }
+
+    function setSubmitStatus(message, actionsHtml = '') {
+      const node = submitStatusNode();
+      if (!node) return;
+      node.innerHTML = `<div class="submit-status-card"><div class="submit-status-text">${escapeHtml(message)}</div>${actionsHtml}</div>`;
+      node.classList.add('is-visible');
+    }
+
+    function resetAfterSubmit() {
+      cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
+      form.reset();
+      updateChildVisibility();
+      show(0, false);
+    }
+
+    function navigateAfterSubmit(action) {
+      const record = {
+        type: action.type,
+        url: action.url,
+        mode: action.mode,
+        delayMs: action.delayMs,
+        openIn: action.openIn,
+        surveyId,
+        triggeredAt: new Date().toISOString()
+      };
+      window.__surveyRedirects = Array.isArray(window.__surveyRedirects) ? window.__surveyRedirects : [];
+      window.__surveyRedirects.push(record);
+      if (typeof window.__surveyNavigate === 'function') {
+        window.__surveyNavigate(record);
+        return;
+      }
+      if (action.openIn === 'blank') {
+        const opened = window.open(action.url, '_blank', 'noopener,noreferrer');
+        if (!opened) window.location.assign(action.url);
+        return;
+      }
+      window.location.assign(action.url);
+    }
+
+    function runPostSubmitAction(finish, payload) {
+      const action = normalizePostSubmitAction(finish?.postSubmit);
+      window.__surveySubmitEvents = Array.isArray(window.__surveySubmitEvents) ? window.__surveySubmitEvents : [];
+      window.__surveySubmitEvents.push({
+        surveyId,
+        finishId: finish?.id || defaultFinishScreen.id,
+        submittedAt: payload?.submittedAt || new Date().toISOString(),
+        postSubmit: action
+      });
+
+      if (!action) {
+        resetAfterSubmit();
+        alert('提交成功，感谢你的填写。');
+        return;
+      }
+
+      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = true; });
+      const immediateActionHtml = action.mode === 'delay'
+        ? `<div class="submit-status-actions"><button class="btn secondary" type="button" data-submit-go-now>立即前往</button></div>`
+        : '';
+
+      if (action.mode === 'delay') {
+        const renderCountdown = () => {
+          const seconds = Math.max(1, Math.ceil(action.delayMs / 1000));
+          setSubmitStatus(`提交成功，${seconds} 秒后将跳转至下一步。`, immediateActionHtml);
+          submitStatusNode()?.querySelector('[data-submit-go-now]')?.addEventListener('click', () => navigateAfterSubmit(action), { once: true });
+        };
+        renderCountdown();
+        const startedAt = Date.now();
+        const timer = window.setInterval(() => {
+          const remaining = Math.max(0, action.delayMs - (Date.now() - startedAt));
+          const seconds = Math.max(1, Math.ceil(remaining / 1000));
+          setSubmitStatus(`提交成功，${seconds} 秒后将跳转至下一步。`, immediateActionHtml);
+          submitStatusNode()?.querySelector('[data-submit-go-now]')?.addEventListener('click', () => navigateAfterSubmit(action), { once: true });
+          if (remaining <= 0) {
+            window.clearInterval(timer);
+            navigateAfterSubmit(action);
+          }
+        }, 250);
+        return;
+      }
+
+      setSubmitStatus('提交成功，正在前往下一步...');
+      navigateAfterSubmit(action);
     }
 
     function bindEvents() {
@@ -2252,11 +2628,7 @@
         const payload = assemblePayload();
         console.log(payload);
         localStorage.removeItem(cacheKey);
-        cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
-        form.reset();
-        updateChildVisibility();
-        show(0, false);
-        alert('提交成功，感谢你的填写。');
+        runPostSubmitAction(activeFinishScreen(), payload);
       });
     }
 

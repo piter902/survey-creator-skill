@@ -1,7 +1,7 @@
 {
   "survey": {
     "type": "survey",
-    "id": "survey_xhs_ai_native_6c1n",
+    "id": "survey-310991634624106496",
     "title": "<h1>AI 问卷创建体验反馈</h1>",
     "description": "<p>这份问卷用于了解你对“用 AI 对话生成问卷草稿”的接受度。</p>",
     "attribute": {
@@ -13,7 +13,7 @@
   "questions": [
     {
       "type": "radio",
-      "id": "question_ai_understand",
+      "id": "radio-406656",
       "title": "<h2>你是否理解“和 AI 对话生成问卷草稿”？</h2>",
       "description": "<p>请选择最符合的一项。</p>",
       "attribute": {
@@ -23,21 +23,21 @@
       },
       "option": [
         {
-          "id": "option_understand_yes",
+          "id": "radio-406657",
           "title": "<p>很清楚</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_understand_some",
+          "id": "radio-406658",
           "title": "<p>大概理解</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_understand_no",
+          "id": "radio-406659",
           "title": "<p>不太理解，需要解释</p>",
           "attribute": {
             "media": []
@@ -45,7 +45,7 @@
           "child": [
             {
               "type": "input",
-              "id": "child_understand_confuse",
+              "id": "input-406660",
               "title": "<p>哪里不清楚？</p>",
               "attribute": {
                 "dataType": "text",
@@ -60,7 +60,7 @@
     },
     {
       "type": "checkbox",
-      "id": "question_ai_value",
+      "id": "checkbox-406661",
       "title": "<h2>你觉得 AI 创建最有价值的地方是？</h2>",
       "description": "<p>可多选，请按实际情况选择。</p>",
       "attribute": {
@@ -70,28 +70,28 @@
       },
       "option": [
         {
-          "id": "option_value_fast",
+          "id": "checkbox-406662",
           "title": "<p>更快起草</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_value_structure",
+          "id": "checkbox-406663",
           "title": "<p>自动整理题目结构</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_value_copy",
+          "id": "checkbox-406664",
           "title": "<p>优化题目文案</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_value_none",
+          "id": "checkbox-406665",
           "title": "<p>暂时没有价值</p>",
           "attribute": {
             "exclusive": true,
@@ -102,7 +102,7 @@
     },
     {
       "type": "radio",
-      "id": "question_ai_next_action",
+      "id": "radio-406666",
       "title": "<h2>AI 生成草稿后，你更想做什么？</h2>",
       "description": "<p>请选择最符合的一项。</p>",
       "attribute": {
@@ -112,21 +112,21 @@
       },
       "option": [
         {
-          "id": "option_next_publish",
+          "id": "radio-406667",
           "title": "<p>直接发布</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_next_designer",
+          "id": "radio-406668",
           "title": "<p>进入设计器继续精修</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "option_next_chat",
+          "id": "radio-406669",
           "title": "<p>继续和 AI 对话修改</p>",
           "attribute": {
             "media": []
@@ -136,7 +136,7 @@
     },
     {
       "type": "nps",
-      "id": "question_ai_nps",
+      "id": "nps-406670",
       "title": "<h2>你愿意推荐这个 AI 创建方式吗？</h2>",
       "description": "<p>0 表示完全不推荐，10 表示非常愿意推荐。</p>",
       "attribute": {
@@ -145,7 +145,7 @@
       },
       "option": [
         {
-          "id": "option_question_ai_nps_scale",
+          "id": "nps-406671",
           "attribute": {
             "scope": [
               0,
@@ -163,7 +163,7 @@
     },
     {
       "type": "input",
-      "id": "question_ai_suggestion",
+      "id": "input-406672",
       "title": "<h2>你希望它继续优化什么？</h2>",
       "description": "<p>补充信息将帮助我们更好理解你的需求。</p>",
       "attribute": {
@@ -172,7 +172,7 @@
       },
       "option": [
         {
-          "id": "option_ai_suggestion_text",
+          "id": "input-406673",
           "title": "<p>建议</p>",
           "attribute": {
             "dataType": "text",
@@ -186,7 +186,7 @@
   ],
   "finish": {
     "type": "finish",
-    "id": "finish_xhs_ai",
+    "id": "finish-406674",
     "title": "<h1>反馈已收到</h1>",
     "description": "<p>感谢填写，提交后将只在控制台输出 payload，并清空本地缓存。</p>",
     "media": []

@@ -1,6 +1,6 @@
 {
     "type": "checkbox",
-    "id": "question-id",
+    "id": "checkbox-123456",
     "title": "多选题标题",
     "description": "多选题描述",
     "attribute": {
@@ -24,10 +24,10 @@
     "option": [
         {
             "title": "选项描述",
-            "id": "option-id",
+            "id": "checkbox-123457",
             "child": [{
                 "title": "子选项描述",
-                "id": "option-id",
+                "id": "input-123458",
                 "type":"input"
             }],
             "attribute": {
@@ -50,10 +50,10 @@
         },
         {
             "title": "选项描述",
-            "id": "option-id",
+            "id": "checkbox-123459",
             "child": [{
                 "title": "子选项描述",
-                "id": "option-id",
+                "id": "input-123460",
                 "type":"input"
             }],
             "attribute": {

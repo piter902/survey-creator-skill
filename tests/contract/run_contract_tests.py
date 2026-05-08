@@ -21,7 +21,9 @@ VALIDATE_ACCESSIBILITY = ROOT / 'validators' / 'validate_survey_html_accessibili
 PIPELINE = ROOT / 'validators' / 'run_survey_creator_pipeline.py'
 from run_survey_creator_pipeline import validate_browser_payloads_against_schema, compute_release_decision
 from auto_repair_survey_html import auto_repair_html
+from auto_repair_survey_schema import auto_repair_schema
 from render_survey_html import render_html_from_schema, DEFAULT_TEMPLATE
+from schema_id_utils import normalize_schema_ids
 
 SCHEMA_CASES = {
     'minimal-radio.json': True,
@@ -1003,6 +1005,69 @@ def test_auto_repair_html_preserves_requested_style_pack():
     assert_case('auto-repair-stylepack-rerender-path', any(item.get('action') == 'rerendered-from-extracted-schema' for item in report.get('appliedFixes', [])), True, report.get('appliedFixes'))
 
 
+def test_schema_id_normalizer_normalizes_ids():
+    schema = {
+        "survey": {
+            "type": "survey",
+            "id": "survey_legacy",
+            "title": "<h1>Legacy survey</h1>",
+            "description": "<p>desc</p>",
+            "attribute": {"onePageOneQuestion": True, "allowBack": True, "media": []},
+        },
+        "questions": [
+            {
+                "type": "radio",
+                "id": "question_legacy",
+                "title": "<h2>Question</h2>",
+                "description": "<p>Choose one</p>",
+                "attribute": {"required": True, "random": False, "media": []},
+                "option": [
+                    {"id": "option_a", "title": "<p>A</p>", "attribute": {}},
+                    {
+                        "id": "option_b",
+                        "title": "<p>B</p>",
+                        "attribute": {},
+                        "child": [
+                            {
+                                "type": "input",
+                                "id": "child_other",
+                                "title": "<p>why</p>",
+                                "attribute": {"dataType": "text", "required": True},
+                            }
+                        ],
+                    },
+                ],
+            }
+        ],
+        "finish": [
+            {"type": "finish", "id": "finish_done", "title": "<h2>Done</h2>", "description": "<p>Thanks</p>", "media": []}
+        ],
+        "logic": [
+            {
+                "when": {"questionId": "question_legacy", "operator": "selected", "optionId": "option_b"},
+                "action": {"type": "end_survey", "targetQuestionId": "finish_done"},
+            }
+        ],
+    }
+    repaired, id_map = normalize_schema_ids(schema)
+    assert_case('schema-id-normalizer-changed', len(id_map) > 0, True, id_map)
+    report = auto_repair_schema(repaired)
+    assert_case('schema-id-normalizer-valid-after-normalize', report.get('finalReport', {}).get('valid'), True, report.get('finalReport'))
+    assert_case('schema-id-normalizer-survey-id-format', bool(re.fullmatch(r'survey-\d{10,}', repaired.get('survey', {}).get('id', ''))), True, repaired.get('survey'))
+    radio_question = (repaired.get('questions') or [{}])[0]
+    assert_case('schema-id-normalizer-radio-id-format', bool(re.fullmatch(r'radio-\d{6}', radio_question.get('id', ''))), True, radio_question)
+    radio_options = radio_question.get('option') or []
+    assert_case('schema-id-normalizer-radio-option-id-format', all(re.fullmatch(r'radio-\d{6}', item.get('id', '')) for item in radio_options), True, radio_options)
+    child = ((radio_options[1].get('child') or [{}])[0]) if len(radio_options) > 1 else {}
+    assert_case('schema-id-normalizer-child-id-format', bool(re.fullmatch(r'input-\d{6}', child.get('id', ''))), True, child)
+    finish = (repaired.get('finish') or [{}])[0]
+    assert_case('schema-id-normalizer-finish-id-format', bool(re.fullmatch(r'finish-\d{6}', finish.get('id', ''))), True, finish)
+    logic = (repaired.get('logic') or [{}])[0]
+    assert_case('schema-id-normalizer-logic-question-ref-remapped', logic.get('when', {}).get('questionId'), radio_question.get('id'), logic)
+    assert_case('schema-id-normalizer-logic-option-ref-remapped', logic.get('when', {}).get('optionId'), radio_options[1].get('id'), logic)
+    assert_case('schema-id-normalizer-logic-finish-ref-remapped', logic.get('action', {}).get('targetQuestionId'), finish.get('id'), logic)
+
+
 
 def test_accessibility_rejects_unlabeled_control():
     with tempfile.TemporaryDirectory(prefix='survey-creator-contract-a11y.') as tmp:
@@ -1054,6 +1119,7 @@ def main():
     test_interaction_e2e_rejects_bad_runtime_payload()
     test_pipeline_release_decision_blocks_browser_payload_schema_mismatch()
     test_auto_repair_html_preserves_requested_style_pack()
+    test_schema_id_normalizer_normalizes_ids()
     test_accessibility_rejects_unlabeled_control()
     print('\n✅ survey-creator-skill contract tests passed')
 
