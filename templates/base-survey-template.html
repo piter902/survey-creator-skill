@@ -1022,7 +1022,7 @@
     const surveySchema = {
       survey: {
         type: 'survey',
-        id: 'survey_tpl_k8m4x2qp',
+        id: 'survey-310000000000000001',
         title: '<h1>问卷填写示例</h1>',
         description: '<p>感谢你参与本次调研，整份问卷预计耗时 2~3 分钟。你的回答仅用于产品优化与体验改进。</p>',
         attribute: {
@@ -1036,21 +1036,21 @@
       questions: [
         {
           type: 'radio',
-          id: 'question_tpl_r7m4x3qp',
+          id: 'radio-123456',
           title: '<h2>你通常会使用哪类问卷？<span class="required">*</span></h2>',
           description: '<p>请选择最符合你当前场景的一项。</p>',
           attribute: { required: true, random: true, media: [] },
           option: [
-            { title: '<p><strong>用户满意度调研</strong></p>', id: 'option_tpl_r7a1x4qp', attribute: { random: false, media: [] } },
-            { title: '<p><strong>活动报名</strong></p>', id: 'option_tpl_r7b2x5qp', attribute: { media: [] } },
+            { title: '<p><strong>用户满意度调研</strong></p>', id: 'radio-123457', attribute: { random: false, media: [] } },
+            { title: '<p><strong>活动报名</strong></p>', id: 'radio-123458', attribute: { media: [] } },
             {
               title: '<p><strong>其他，请说明</strong></p>',
-              id: 'option_tpl_r7c3x6qp',
+              id: 'radio-123459',
               attribute: { media: [] },
               child: [
                 {
                   type: 'input',
-                  id: 'child_tpl_r7d4x7qp',
+                  id: 'input-123460',
                   title: '<p>补充说明</p>',
                   attribute: { dataType: 'text', required: true, placeholder: '请输入你的问卷场景', minLength: 2, maxLength: 120 }
                 }
@@ -1060,39 +1060,39 @@
         },
         {
           type: 'checkbox',
-          id: 'question_tpl_c8m4x8qp',
+          id: 'checkbox-123461',
           title: '<h2>你最关注哪些填写体验？<span class="required">*</span></h2>',
           description: '<p>可多选，我们会据此优化问卷体验。</p>',
           attribute: { required: true, random: true, media: [] },
           option: [
-            { title: '<p>富文本标题/描述</p>', id: 'option_tpl_c8a1x9qp', attribute: { random: false } },
-            { title: '<p>一页一题</p>', id: 'option_tpl_c8b2y1qp', attribute: {} },
-            { title: '<p>本地缓存</p>', id: 'option_tpl_c8c3y2qp', attribute: {} },
-            { title: '<p>仅生成单页整表单</p>', id: 'option_tpl_c8d4y3qp', attribute: { 'mutual-exclusion': true } },
-            { title: '<p>仅生成分页问卷</p>', id: 'option_tpl_c8e5y4qp', attribute: { 'mutual-exclusion': true } },
-            { title: '<p>以上都不需要</p>', id: 'option_tpl_c8f6y5qp', attribute: { exclusive: true } }
+            { title: '<p>富文本标题/描述</p>', id: 'checkbox-123462', attribute: { random: false } },
+            { title: '<p>一页一题</p>', id: 'checkbox-123463', attribute: {} },
+            { title: '<p>本地缓存</p>', id: 'checkbox-123464', attribute: {} },
+            { title: '<p>仅生成单页整表单</p>', id: 'checkbox-123465', attribute: { 'mutual-exclusion': true } },
+            { title: '<p>仅生成分页问卷</p>', id: 'checkbox-123466', attribute: { 'mutual-exclusion': true } },
+            { title: '<p>以上都不需要</p>', id: 'checkbox-123467', attribute: { exclusive: true } }
           ]
         },
         {
           type: 'input',
-          id: 'question_tpl_i9m4y6qp',
+          id: 'input-123468',
           title: '<h2>补充说明</h2>',
           description: '<p>如果你愿意，可以补充你的联系方式与更多建议。</p>',
           attribute: { required: false, media: [] },
           option: [
             {
               title: '<p>联系人邮箱</p>',
-              id: 'option_tpl_i9a1y7qp',
+              id: 'input-123469',
               attribute: { dataType: 'email', required: false, placeholder: 'name@example.com', minLength: 0, maxLength: 120 }
             },
             {
               title: '<p>预计调研时间范围</p>',
-              id: 'option_tpl_i9b2y8qp',
+              id: 'input-123470',
               attribute: { dataType: 'dateRange', required: false, placeholder: '', minLength: 0, maxLength: 40 }
             },
             {
               title: '<p>风格说明</p>',
-              id: 'option_tpl_i9c3y9qp',
+              id: 'input-123471',
               attribute: { dataType: 'text', required: false, placeholder: '例如：AI Native、黑色高级感、轻盈 toC', minLength: 0, maxLength: 240 }
             }
           ]
@@ -1101,7 +1101,7 @@
       finish: [
         {
           type: 'finish',
-          id: 'finish_tpl_f2m5z1qp',
+          id: 'finish-123472',
           title: '<h2>提交前请确认信息无误</h2>',
           description: '<p>提交后我们会记录你的答案，用于后续分析与体验优化。</p>',
           media: []
@@ -1130,13 +1130,13 @@
         .map((item, index) => ({
           ...item,
           type: 'finish',
-          id: item.id || `finish_${index + 1}`,
+          id: item.id || `finish-${String(index + 1).padStart(6, '0')}`,
           media: Array.isArray(item.media) ? item.media : []
         }));
       if (!normalized.length) {
         normalized.push({
           type: 'finish',
-          id: 'finish_fallback',
+          id: 'finish-999999',
           title: '<h2>提交完成</h2>',
           description: '<p>感谢你的填写。</p>',
           media: []
