@@ -2514,7 +2514,7 @@
       answerableQuestions.forEach((q) => persist(q));
       return {
         surveyId,
-        submittedAt: new Date().toISOString(),
+        submittedAt: Date.now(),
         answers: Object.entries(cache.answers).filter(([questionId]) => !isQuestionHidden(questionId)).map(([questionId, answer]) => ({
           questionId,
           questionType: answer.questionType,
@@ -2661,7 +2661,7 @@
       window.__surveySubmitEvents.push({
         surveyId,
         finishId: finish?.id || defaultFinishScreen.id,
-        submittedAt: payload?.submittedAt || new Date().toISOString(),
+        submittedAt: payload?.submittedAt || Date.now(),
         postSubmit: action
       });
 

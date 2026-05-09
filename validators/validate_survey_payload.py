@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import json, sys
-from datetime import datetime
 from pathlib import Path
 
 ALLOWED_QUESTION_TYPES = {"radio", "checkbox", "input", "score", "nps"}
@@ -17,14 +16,8 @@ def is_non_empty_string(v):
     return isinstance(v, str) and bool(v.strip())
 
 
-def is_iso_date_string(v):
-    if not is_non_empty_string(v):
-        return False
-    try:
-        datetime.fromisoformat(v.replace("Z", "+00:00"))
-        return True
-    except ValueError:
-        return False
+def is_timestamp_number(v):
+    return isinstance(v, int) and not isinstance(v, bool) and v >= 0
 
 
 class Reporter:
@@ -194,11 +187,28 @@ def validate_survey_payload(payload):
     if not is_plain_object(payload):
         reporter.error("payload", "Payload must be an object.")
         return reporter.result()
-    assert_allowed_keys(payload, ["surveyId", "submittedAt", "answers"], "payload", reporter)
+    assert_allowed_keys(payload, ["surveyId", "submittedAt", "extra", "answers"], "payload", reporter)
     if not is_non_empty_string(payload.get("surveyId")):
         reporter.error("payload.surveyId", "surveyId must be a non-empty string.")
-    if not is_iso_date_string(payload.get("submittedAt")):
-        reporter.error("payload.submittedAt", "submittedAt must be a valid ISO timestamp string.")
+    if not is_timestamp_number(payload.get("submittedAt")):
+        reporter.error("payload.submittedAt", "submittedAt must be a non-negative integer timestamp.")
+    extra = payload.get("extra")
+    if extra is not None:
+        if not is_plain_object(extra):
+            reporter.error("payload.extra", "extra must be an object when present.")
+        else:
+            for key, value in extra.items():
+                if not is_non_empty_string(key):
+                    reporter.error("payload.extra", "extra keys must be non-empty strings.")
+                    continue
+                if isinstance(value, list):
+                    if not value:
+                        reporter.error(f"payload.extra.{key}", "extra array values must not be empty.")
+                    for idx, item in enumerate(value):
+                        if not is_non_empty_string(item):
+                            reporter.error(f"payload.extra.{key}[{idx}]", "extra array items must be non-empty strings.")
+                elif not is_non_empty_string(value):
+                    reporter.error(f"payload.extra.{key}", "extra values must be non-empty strings or arrays of non-empty strings.")
     answers = payload.get("answers")
     if not isinstance(answers, list):
         reporter.error("payload.answers", "answers must be an array.")

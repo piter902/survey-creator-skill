@@ -91,7 +91,9 @@ async function fillQuestionField(field) {
   const width = Number(process.argv[3] || 1440);
   const height = Number(process.argv[4] || 960);
   const viewportName = process.argv[5] || 'desktop';
-  const url = 'file://' + path.resolve(htmlPath);
+  const queryString = process.argv[6] || '';
+  const normalizedQuery = queryString ? (queryString.startsWith('?') ? queryString : `?${queryString}`) : '';
+  const url = 'file://' + path.resolve(htmlPath) + normalizedQuery;
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width, height }, isMobile: viewportName === 'mobile' });
   const pageErrors = [];
@@ -261,7 +263,7 @@ VIEWPORTS = {
     "mobile": {"width": 390, "height": 844},
 }
 
-def run_browser_interaction_check(html_path: Path, viewport_name="desktop"):
+def run_browser_interaction_check(html_path: Path, viewport_name="desktop", query_string=""):
     viewport = VIEWPORTS.get(viewport_name) or VIEWPORTS["desktop"]
     node = shutil.which("node")
     if not node:
@@ -274,7 +276,7 @@ def run_browser_interaction_check(html_path: Path, viewport_name="desktop"):
         validators_node_modules = VALIDATORS_DIR / "node_modules"
         env["NODE_PATH"] = str(validators_node_modules) + (f":{env['NODE_PATH']}" if env.get("NODE_PATH") else "")
         proc = subprocess.run(
-            [node, str(tmp_path), str(html_path), str(viewport["width"]), str(viewport["height"]), viewport_name],
+            [node, str(tmp_path), str(html_path), str(viewport["width"]), str(viewport["height"]), viewport_name, query_string],
             capture_output=True,
             text=True,
             cwd=str(VALIDATORS_DIR),
@@ -340,10 +342,10 @@ def validate_payload_against_schema_metadata(payload, schema_questions, reporter
             check_option(value.get("optionId"), f"interaction.payload.answers[{idx}].value.optionId")
 
 
-def validate_single_viewport_interaction(html_path: Path, viewport_name):
+def validate_single_viewport_interaction(html_path: Path, viewport_name, query_string=""):
     reporter = Reporter()
     try:
-        raw = run_browser_interaction_check(html_path, viewport_name=viewport_name)
+        raw = run_browser_interaction_check(html_path, viewport_name=viewport_name, query_string=query_string)
     except Exception as exc:
         reporter.error(f"interaction.{viewport_name}.execution", f"Interaction E2E test could not run: {exc}")
         return reporter.result({"executed": False, "supported": False, "viewport": {"name": viewport_name, **VIEWPORTS.get(viewport_name, {})}})
@@ -425,12 +427,12 @@ def validate_single_viewport_interaction(html_path: Path, viewport_name):
     })
 
 
-def validate_html_interaction_e2e(html_path: Path, viewport="all"):
+def validate_html_interaction_e2e(html_path: Path, viewport="all", query_string=""):
     names = list(VIEWPORTS.keys()) if viewport == "all" else [viewport]
     reporter = Reporter()
     viewport_reports = {}
     for name in names:
-        report = validate_single_viewport_interaction(html_path, name)
+        report = validate_single_viewport_interaction(html_path, name, query_string=query_string)
         viewport_reports[name] = report
         for item in report.get("errors", []):
             reporter.errors.append(item)
@@ -470,6 +472,7 @@ def main():
     args = sys.argv[1:]
     json_output = "--json" in args
     viewport = "all"
+    query_string = ""
     if "--viewport" in args:
         idx = args.index("--viewport")
         try:
@@ -477,18 +480,25 @@ def main():
         except IndexError:
             print("--viewport requires desktop, mobile, or all", file=sys.stderr)
             sys.exit(1)
+    if "--query" in args:
+        idx = args.index("--query")
+        try:
+            query_string = args[idx + 1]
+        except IndexError:
+            print("--query requires a query string value", file=sys.stderr)
+            sys.exit(1)
     if viewport not in {"desktop", "mobile", "all"}:
         print("--viewport must be desktop, mobile, or all", file=sys.stderr)
         sys.exit(1)
-    file_arg = next((a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i-1] != "--viewport")), None)
+    file_arg = next((a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i-1] not in {"--viewport", "--query"})), None)
     if not file_arg:
-        print("Usage: validate_survey_html_interaction_e2e.py /absolute/path/to/file.html [--json] [--viewport desktop|mobile|all]", file=sys.stderr)
+        print("Usage: validate_survey_html_interaction_e2e.py /absolute/path/to/file.html [--json] [--viewport desktop|mobile|all] [--query key=value&foo=bar]", file=sys.stderr)
         sys.exit(1)
     html_path = Path(file_arg)
     if not html_path.exists():
         print(f"Failed to read HTML file: {html_path} does not exist", file=sys.stderr)
         sys.exit(1)
-    report = validate_html_interaction_e2e(html_path, viewport=viewport)
+    report = validate_html_interaction_e2e(html_path, viewport=viewport, query_string=query_string)
     if json_output:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:

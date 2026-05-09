@@ -20,7 +20,7 @@ Default shape:
 
 {
   "surveyId": "survey_xxx",
-  "submittedAt": "2026-04-20T17:00:00.000Z",
+  "submittedAt": 1776742800000,
   "answers": [ ... ]
 }
 
@@ -33,8 +33,8 @@ Default shape:
 - Required: yes
 
 ### `submittedAt`
-- Type: `string`
-- Meaning: ISO timestamp for when the submission happened
+- Type: `integer`
+- Meaning: Unix timestamp in milliseconds for when the submission happened
 - Required: yes
 - Note: generated at submit time
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import json, sys
-from datetime import datetime, timezone
+import time
 from pathlib import Path
 
 RANGE_DEFAULTS = {
@@ -133,7 +133,8 @@ def generate_payload(schema):
             answers.append(answer)
     return {
         'surveyId': survey.get('id', 'survey_unknown'),
-        'submittedAt': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+        'submittedAt': int(time.time() * 1000),
+        'extra': {},
         'answers': answers,
     }
 

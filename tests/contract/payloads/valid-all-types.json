@@ -1,6 +1,6 @@
 {
   "surveyId": "survey_contract",
-  "submittedAt": "2026-04-22T00:00:00.000Z",
+  "submittedAt": 1776816000000,
   "answers": [
     {
       "questionId": "question_radio",

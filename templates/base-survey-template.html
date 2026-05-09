@@ -2184,9 +2184,23 @@
 
     function assemblePayload() {
       answerableQuestions.forEach((q) => persist(q));
+      const extra = (() => {
+        const params = new URLSearchParams(window.location.search || '');
+        const data = {};
+        params.forEach((value, key) => {
+          if (Object.prototype.hasOwnProperty.call(data, key)) {
+            if (Array.isArray(data[key])) data[key].push(value);
+            else data[key] = [data[key], value];
+          } else {
+            data[key] = value;
+          }
+        });
+        return data;
+      })();
       return {
         surveyId,
-        submittedAt: new Date().toISOString(),
+        submittedAt: Date.now(),
+        extra,
         answers: Object.entries(cache.answers).filter(([questionId]) => !isQuestionHidden(questionId)).map(([questionId, answer]) => ({
           questionId,
           questionType: answer.questionType,
@@ -2333,7 +2347,7 @@
       window.__surveySubmitEvents.push({
         surveyId,
         finishId: finish?.id || defaultFinishScreen.id,
-        submittedAt: payload?.submittedAt || new Date().toISOString(),
+        submittedAt: payload?.submittedAt || Date.now(),
         postSubmit: action
       });
 

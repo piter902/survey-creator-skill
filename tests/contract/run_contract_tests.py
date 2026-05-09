@@ -24,6 +24,7 @@ from auto_repair_survey_html import auto_repair_html
 from auto_repair_survey_schema import auto_repair_schema
 from render_survey_html import render_html_from_schema, DEFAULT_TEMPLATE
 from schema_id_utils import normalize_schema_ids
+from validate_survey_payload import validate_survey_payload
 
 SCHEMA_CASES = {
     'minimal-radio.json': True,
@@ -161,6 +162,29 @@ def test_payload_cases():
         code, data, _ = run_json(['python3', str(VALIDATE_PAYLOAD), str(PAYLOADS / name), '--json'])
         assert_case(f'payload/{name}', data.get('valid') is True, expected, data.get('errors'))
         assert_case(f'payload-exit/{name}', code == 0, expected)
+
+
+def test_payload_extra_cases():
+    payload = json.loads((PAYLOADS / 'valid-all-types.json').read_text(encoding='utf-8'))
+
+    valid_extra = json.loads(json.dumps(payload))
+    valid_extra['extra'] = {
+        'utm_source': 'wechat',
+        'channel': 'qr',
+        'tag': ['a', 'b'],
+    }
+    report = validate_survey_payload(valid_extra)
+    assert_case('payload-extra-valid', report.get('valid'), True, report.get('errors'))
+
+    invalid_extra = json.loads(json.dumps(payload))
+    invalid_extra['extra'] = {'utm_source': ''}
+    report = validate_survey_payload(invalid_extra)
+    assert_case('payload-extra-invalid-empty-string', report.get('valid'), False, report.get('errors'))
+
+    invalid_extra_array = json.loads(json.dumps(payload))
+    invalid_extra_array['extra'] = {'tag': ['a', '']}
+    report = validate_survey_payload(invalid_extra_array)
+    assert_case('payload-extra-invalid-empty-array-item', report.get('valid'), False, report.get('errors'))
 
 
 def parse_allowed_types():
@@ -1039,6 +1063,37 @@ def test_full_pipeline():
         assert_case('pipeline-accessibility-mobile-viewport', data.get('htmlAccessibility', {}).get('viewports', {}).get('mobile', {}).get('valid'), True)
 
 
+def test_interaction_payload_includes_query_extra():
+    with tempfile.TemporaryDirectory(prefix='survey-creator-contract-query-extra.') as tmp:
+        tmp_path = Path(tmp)
+        proc = subprocess.run([
+            'python3', str(PIPELINE),
+            '--schema', str(SCHEMAS / 'full-all-types.json'),
+            '--output-dir', str(tmp_path),
+            '--auto-repair',
+            '--fail-on-high-warning',
+            '--json',
+        ], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if proc.returncode != 0:
+            print(proc.stdout)
+            print(proc.stderr, file=sys.stderr)
+            raise AssertionError('query extra pipeline returned non-zero')
+        data = json.loads(proc.stdout)
+        html_path = get_pipeline_output_path(data, 'html')
+        code, interaction_report, _ = run_json([
+            'python3', str(VALIDATE_INTERACTION_E2E), str(html_path), '--json', '--viewport', 'desktop', '--query',
+            'utm_source=wechat&channel=qr&tag=a&tag=b'
+        ])
+        assert_case('interaction-query-extra-exit', code == 0, True, interaction_report.get('errors'))
+        assert_case('interaction-query-extra-valid', interaction_report.get('valid'), True, interaction_report.get('errors'))
+        payload = interaction_report.get('payload') or {}
+        extra = payload.get('extra') or {}
+        assert_case('interaction-query-extra-object', isinstance(extra, dict), True, payload)
+        assert_case('interaction-query-extra-utm_source', extra.get('utm_source'), 'wechat', payload)
+        assert_case('interaction-query-extra-channel', extra.get('channel'), 'qr', payload)
+        assert_case('interaction-query-extra-repeated-array', extra.get('tag'), ['a', 'b'], payload)
+
+
 def test_interaction_e2e_rejects_bad_runtime_payload():
     with tempfile.TemporaryDirectory(prefix='survey-creator-contract-bad-runtime.') as tmp:
         tmp_path = Path(tmp)
@@ -1261,6 +1316,7 @@ def main():
     test_reference_validator_consistency()
     test_schema_cases()
     test_payload_cases()
+    test_payload_extra_cases()
     test_payload_against_schema_cases()
     test_logic_pipeline_and_interaction()
     test_logic_jump_page_pipeline_and_interaction()
@@ -1278,6 +1334,7 @@ def main():
     test_logic_selection_status_operators_pipeline_and_interaction()
     test_pagination_pipeline_and_interaction()
     test_full_pipeline()
+    test_interaction_payload_includes_query_extra()
     test_interaction_e2e_rejects_bad_runtime_payload()
     test_pipeline_release_decision_blocks_browser_payload_schema_mismatch()
     test_auto_repair_html_preserves_requested_style_pack()

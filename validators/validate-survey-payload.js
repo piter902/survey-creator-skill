@@ -149,7 +149,7 @@ function validateSurveyPayload(payload) {
   }
   assertAllowedKeys(payload, ['surveyId', 'submittedAt', 'answers'], 'payload', reporter);
   if (!isNonEmptyString(payload.surveyId)) reporter.error('payload.surveyId', 'surveyId must be a non-empty string.');
-  if (!isIsoDateString(payload.submittedAt)) reporter.error('payload.submittedAt', 'submittedAt must be a valid ISO timestamp string.');
+  if (!Number.isInteger(payload.submittedAt) || payload.submittedAt < 0) reporter.error('payload.submittedAt', 'submittedAt must be a non-negative integer timestamp.');
   if (!Array.isArray(payload.answers)) {
     reporter.error('payload.answers', 'answers must be an array.');
   } else {

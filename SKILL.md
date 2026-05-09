@@ -309,7 +309,7 @@ Use `references/submission-contract.md` as the default submit serialization prot
 
 At minimum, the generated HTML should make it possible to assemble:
 - `surveyId`
-- `submittedAt`
+- `submittedAt` as a millisecond timestamp
 - `answers[]` with `questionId`, `questionType`, and type-specific `value`
 
 For radio / checkbox / input / score / nps questions, preserve schema ids in DOM structure so submission assembly is reliable.
