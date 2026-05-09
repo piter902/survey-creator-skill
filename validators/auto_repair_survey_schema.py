@@ -5,6 +5,7 @@ import sys
 from copy import deepcopy
 from pathlib import Path
 
+from schema_id_utils import normalize_schema_ids
 from validate_survey_schema import validate_survey_schema, normalize_rich_text
 
 
@@ -104,6 +105,19 @@ def get_question_from_warning_path(schema, warning_path):
 def repair_warning(schema, warning, applied):
     code = warning.get("code")
     path = warning.get("path")
+
+    if code == "noncanonical-id-format":
+        normalized, id_map = normalize_schema_ids(schema)
+        if normalized != schema:
+            schema.clear()
+            schema.update(normalized)
+            applied.append({
+                "code": code,
+                "path": path,
+                "action": "normalized-schema-ids",
+                "changedIdCount": len(id_map),
+            })
+            return True
 
     if code == "empty-rich-text-title" or code == "empty-finish-title" or code == "empty-question-title":
         if set_value(schema, path, fallback_title_for_path(path)):
