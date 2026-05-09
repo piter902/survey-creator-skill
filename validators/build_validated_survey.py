@@ -6,7 +6,7 @@ from validate_survey_schema import validate_survey_schema
 from validate_survey_html_runtime import validate_html_runtime
 from validate_survey_payload import validate_survey_payload
 from generate_sample_payload import generate_payload
-from render_survey_html import render_html_from_schema, DEFAULT_TEMPLATE
+from render_survey_html import render_html_from_schema, DEFAULT_TEMPLATE, derive_output_stem
 from auto_repair_survey_schema import auto_repair_schema
 
 
@@ -46,6 +46,18 @@ def warning_counts_by_severity(warnings):
     return counts
 
 
+def resolve_output_path(out_arg, schema, schema_path, suffix):
+    out_path = Path(out_arg)
+    stem = derive_output_stem(schema, schema_path)
+    if out_arg.endswith('/') or out_path.is_dir():
+        out_path.mkdir(parents=True, exist_ok=True)
+        return out_path / f'{stem}{suffix}'
+    parent = out_path.parent
+    if parent and not parent.exists():
+        parent.mkdir(parents=True, exist_ok=True)
+    return out_path
+
+
 def main():
     parser = argparse.ArgumentParser(description='Schema -> HTML -> payload fully automated release pipeline for survey-creator-skill.')
     parser.add_argument('--schema', required=True, help='Path to frozen schema JSON')
@@ -75,14 +87,23 @@ def main():
         full_report['repair'] = {k: v for k, v in repair_report.items() if k != 'schema'}
         schema = repair_report['schema']
 
+    out_html_path = resolve_output_path(args.out_html, schema, args.schema, '.html')
+    out_payload_path = resolve_output_path(args.out_payload, schema, args.schema, '.payload.json') if args.out_payload else None
+    out_schema_path = resolve_output_path(args.out_schema, schema, args.schema, '.repaired.schema.json') if args.out_schema else None
+    full_report['output'] = {
+        'html': str(out_html_path),
+        'payload': str(out_payload_path) if out_payload_path else None,
+        'schema': str(out_schema_path) if out_schema_path else None,
+    }
+
     schema_report = validate_survey_schema(schema)
     full_report['schema'] = schema_report
     full_report['summary']['schema'] = summarize(schema_report)
     full_report['summary']['schema']['warning_severity'] = warning_counts_by_severity(schema_report.get('warnings', []))
     full_report['valid'] = full_report['valid'] and schema_report.get('valid', False)
 
-    if args.out_schema:
-        Path(args.out_schema).write_text(json.dumps(schema, ensure_ascii=False, indent=2), encoding='utf-8')
+    if out_schema_path:
+        out_schema_path.write_text(json.dumps(schema, ensure_ascii=False, indent=2), encoding='utf-8')
 
     block_on_warning = args.fail_on_high_warning and warning_counts_by_severity(schema_report.get('warnings', [])).get('high', 0) > 0
     if block_on_warning:
@@ -91,19 +112,19 @@ def main():
     if schema_report.get('valid') and not block_on_warning:
         template_text = Path(args.template).read_text(encoding='utf-8')
         html = render_html_from_schema(schema, template_text, style_pack=args.style_pack)
-        Path(args.out_html).write_text(html, encoding='utf-8')
+        out_html_path.write_text(html, encoding='utf-8')
         html_report = validate_html_runtime(html)
         full_report['html'] = html_report
         full_report['summary']['html'] = summarize(html_report)
         full_report['valid'] = full_report['valid'] and html_report.get('valid', False)
 
         payload = generate_payload(schema)
-        if args.out_payload:
-            Path(args.out_payload).write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+        if out_payload_path:
+            out_payload_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
         payload_report = validate_survey_payload(payload)
         payload_report['generated'] = True
-        if args.out_payload:
-            payload_report['outputPath'] = args.out_payload
+        if out_payload_path:
+            payload_report['outputPath'] = str(out_payload_path)
         full_report['payload'] = payload_report
         full_report['summary']['payload'] = summarize(payload_report)
         full_report['valid'] = full_report['valid'] and payload_report.get('valid', False)
@@ -123,9 +144,9 @@ def main():
         if full_report['payload'] is not None:
             print_section('PAYLOAD', full_report['payload'])
         print('\nOutput:')
-        print(f'- html: {args.out_html}')
-        if args.out_payload:
-            print(f'- payload: {args.out_payload}')
+        print(f'- html: {out_html_path}')
+        if out_payload_path:
+            print(f'- payload: {out_payload_path}')
         print('\nSummary:')
         for key, value in full_report['summary'].items():
             print(f"- {key}: valid={value['valid']}, errors={value['error_count']}, warnings={value['warning_count']}")

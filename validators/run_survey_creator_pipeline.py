@@ -293,9 +293,25 @@ def tempfile_html_file(html):
         tmp_path.unlink(missing_ok=True)
 
 
-def resolve_output_paths(schema_path, output_dir, prefix=None):
+def sanitize_output_stem(value, fallback):
+    candidate = (value or "").strip()
+    if not candidate:
+        return fallback
+    safe = "".join(ch if ch.isalnum() or ch in ("-", "_", ".") else "-" for ch in candidate).strip("-.")
+    return safe or fallback
+
+
+def derive_output_stem(schema, schema_path, prefix=None):
+    if prefix:
+        return sanitize_output_stem(prefix, Path(schema_path).stem)
+    survey = schema.get("survey") if isinstance(schema, dict) else None
+    survey_id = survey.get("id") if isinstance(survey, dict) else None
+    return sanitize_output_stem(survey_id, Path(schema_path).stem)
+
+
+def resolve_output_paths(schema_path, output_dir, schema=None, prefix=None):
     schema_file = Path(schema_path)
-    stem = prefix or schema_file.stem
+    stem = derive_output_stem(schema, schema_path, prefix=prefix) if schema is not None else sanitize_output_stem(prefix, schema_file.stem)
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     return {
@@ -434,7 +450,6 @@ def main():
         print(f"Invalid JSON: {e}", file=sys.stderr)
         sys.exit(1)
 
-    outputs = resolve_output_paths(args.schema, args.output_dir, prefix=args.prefix)
     report, repaired_schema, html, payload = run_pipeline(
         schema,
         template_text,
@@ -442,6 +457,7 @@ def main():
         fail_on_high_warning=args.fail_on_high_warning,
         style_pack=args.style_pack,
     )
+    outputs = resolve_output_paths(args.schema, args.output_dir, schema=repaired_schema, prefix=args.prefix)
 
     Path(outputs["schema"]).write_text(json.dumps(repaired_schema, ensure_ascii=False, indent=2), encoding="utf-8")
     if html is not None:

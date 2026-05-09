@@ -9,6 +9,31 @@ STYLE_PACK_MARKER = 'const surveyStylePack ='
 FORM_MARKER = 'const form = document.getElementById'
 
 
+def sanitize_output_stem(value, fallback):
+    candidate = (value or '').strip()
+    if not candidate:
+        return fallback
+    safe = ''.join(ch if ch.isalnum() or ch in ('-', '_', '.') else '-' for ch in candidate).strip('-.')
+    return safe or fallback
+
+
+def derive_output_stem(schema, schema_path):
+    survey = schema.get('survey') if isinstance(schema, dict) else None
+    survey_id = survey.get('id') if isinstance(survey, dict) else None
+    return sanitize_output_stem(survey_id, Path(schema_path).stem)
+
+
+def resolve_html_output_path(out_arg, schema, schema_path):
+    out_path = Path(out_arg)
+    if out_arg.endswith('/') or out_path.is_dir():
+        out_path.mkdir(parents=True, exist_ok=True)
+        return out_path / f"{derive_output_stem(schema, schema_path)}.html"
+    parent = out_path.parent
+    if parent and not parent.exists():
+        parent.mkdir(parents=True, exist_ok=True)
+    return out_path
+
+
 def load_json(path_str):
     return json.loads(Path(path_str).read_text(encoding='utf-8'))
 
@@ -41,8 +66,9 @@ def main():
         schema = load_json(args.schema)
         template_text = Path(args.template).read_text(encoding='utf-8')
         html = render_html_from_schema(schema, template_text, style_pack=args.style_pack)
-        Path(args.out).write_text(html, encoding='utf-8')
-        print(args.out)
+        output_path = resolve_html_output_path(args.out, schema, args.schema)
+        output_path.write_text(html, encoding='utf-8')
+        print(str(output_path))
     except FileNotFoundError as e:
         print(f'File not found: {e}', file=sys.stderr)
         sys.exit(1)

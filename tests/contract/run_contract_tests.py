@@ -96,6 +96,19 @@ def assert_case(name, actual, expected, detail=''):
     print(f'✅ {name}')
 
 
+def get_pipeline_output_path(report, key):
+    output = report.get('output') or {}
+    path = output.get(key)
+    if not path:
+        raise AssertionError(f'missing pipeline output path for {key}: {report}')
+    return Path(path)
+
+
+def get_pipeline_schema(report):
+    schema_path = get_pipeline_output_path(report, 'schema')
+    return json.loads(schema_path.read_text(encoding='utf-8'))
+
+
 def test_schema_cases():
     for name, expected in SCHEMA_CASES.items():
         code, data, _ = run_json(['python3', str(VALIDATE_SCHEMA), str(SCHEMAS / name), '--json'])
@@ -209,7 +222,10 @@ def test_logic_pipeline_and_interaction():
         data = json.loads(proc.stdout)
         assert_case('logic-pipeline-valid', data.get('valid'), True)
         assert_case('logic-pipeline-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
-        html = (tmp_path / 'valid-logic-flow.html').read_text(encoding='utf-8')
+        html_path = get_pipeline_output_path(data, 'html')
+        repaired_schema = get_pipeline_schema(data)
+        assert_case('logic-pipeline-html-name-uses-survey-id', html_path.name, f"{repaired_schema.get('survey', {}).get('id')}.html")
+        html = html_path.read_text(encoding='utf-8')
         for marker in ['function computeLogicState()', 'function applyLogicRuntime(', 'jumpTargets', 'isQuestionHidden(', 'isOptionHidden(']:
             assert_case(f'logic-html-marker/{marker}', marker in html, True)
         payload = data.get('htmlInteractionE2E', {}).get('payload') or {}
@@ -242,7 +258,7 @@ def test_logic_jump_page_pipeline_and_interaction():
         data = json.loads(proc.stdout)
         assert_case('logic-jump-page-pipeline-valid', data.get('valid'), True)
         assert_case('logic-jump-page-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
-        html = (tmp_path / 'valid-logic-jump-page.html').read_text(encoding='utf-8')
+        html = get_pipeline_output_path(data, 'html').read_text(encoding='utf-8')
         for marker in ["action.type === 'jump_to_page'", 'jumpTargets', 'resolveScreenId(']:
             assert_case(f'logic-jump-page-html-marker/{marker}', marker in html, True)
         payload = data.get('htmlInteractionE2E', {}).get('payload') or {}
@@ -386,7 +402,7 @@ def test_logic_combo_chain_pipeline_and_interaction():
         data = json.loads(proc.stdout)
         assert_case('logic-combo-chain-pipeline-valid', data.get('valid'), True)
         assert_case('logic-combo-chain-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
-        html = (tmp_path / 'valid-logic-combo-chain.html').read_text(encoding='utf-8')
+        html = get_pipeline_output_path(data, 'html').read_text(encoding='utf-8')
         for marker in ["action.type === 'jump_to_page'", 'isQuestionUnavailable(', 'clearUnavailableState()']:
             assert_case(f'logic-combo-chain-html-marker/{marker}', marker in html, True)
         payload = data.get('htmlInteractionE2E', {}).get('payload') or {}
@@ -670,7 +686,7 @@ def test_logic_cache_hidden_cleanup_browser_interaction():
         data = json.loads(proc.stdout)
         assert_case('logic-cache-cleanup-pipeline-valid', data.get('valid'), True)
         assert_case('logic-cache-cleanup-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
-        code, browser_data, stderr = run_cache_cleanup_browser_check(tmp_path / 'valid-logic-cache-hidden-cleanup.html')
+        code, browser_data, stderr = run_cache_cleanup_browser_check(get_pipeline_output_path(data, 'html'))
         assert_case('logic-cache-cleanup-browser-exit', code == 0, True, stderr)
         assert_case('logic-cache-cleanup-no-page-errors', browser_data.get('pageErrors'), [], browser_data)
         cache_after_fill = browser_data.get('cacheAfterFill') or {}
@@ -703,7 +719,7 @@ def test_resume_checkpoint_browser_interaction():
         data = json.loads(proc.stdout)
         assert_case('resume-checkpoint-pipeline-valid', data.get('valid'), True)
         assert_case('resume-checkpoint-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
-        code, browser_data, stderr = run_resume_checkpoint_browser_check(tmp_path / 'valid-resume-checkpoint.html')
+        code, browser_data, stderr = run_resume_checkpoint_browser_check(get_pipeline_output_path(data, 'html'))
         assert_case('resume-checkpoint-browser-exit', code == 0, True, stderr)
         assert_case('resume-checkpoint-no-page-errors', browser_data.get('pageErrors'), [], browser_data)
         assert_case('resume-checkpoint-no-prompt-first-visit', browser_data.get('initialResumePromptVisible') == 0, True, browser_data)
@@ -859,7 +875,7 @@ def test_logic_selection_status_operators_pipeline_and_interaction():
         }
         assert_case('logic-selection-status-targets-submitted', expected_ids.issubset(answer_ids), True, answers)
         assert_case('logic-selection-status-not-answered-target-omitted-after-source-filled', 'question_not_answered_target' in answer_ids, False, answers)
-        code, browser_data, stderr = run_not_answered_visibility_browser_check(tmp_path / 'valid-logic-selection-status-operators.html')
+        code, browser_data, stderr = run_not_answered_visibility_browser_check(get_pipeline_output_path(data, 'html'))
         assert_case('logic-not-answered-browser-exit', code == 0, True, stderr)
         assert_case('logic-not-answered-no-page-errors', browser_data.get('pageErrors'), [], browser_data)
         assert_case('logic-not-answered-initial-visible', (browser_data.get('initial') or {}).get('notAnsweredTargetHidden'), False, browser_data)
@@ -912,7 +928,9 @@ def test_full_pipeline():
         data = json.loads(proc.stdout)
         assert_case('pipeline-valid', data.get('valid'), True)
         assert_case('pipeline-shipReady', data.get('releaseDecision', {}).get('shipReady'), True)
-        html_path = tmp_path / 'full-all-types.html'
+        html_path = get_pipeline_output_path(data, 'html')
+        repaired_schema = get_pipeline_schema(data)
+        assert_case('pipeline-html-name-uses-survey-id', html_path.name, f"{repaired_schema.get('survey', {}).get('id')}.html")
         html = html_path.read_text(encoding='utf-8')
         for marker in ["question.type === 'radio'", "question.type === 'checkbox'", "question.type === 'input'", "question.type === 'score'", "question.type === 'nps'", 'renderNpsQuestion', 'assemblePayload()', 'localStorage']:
             assert_case(f'html-marker/{marker}', marker in html, True)
@@ -945,7 +963,8 @@ def test_interaction_e2e_rejects_bad_runtime_payload():
             print(proc.stdout)
             print(proc.stderr, file=sys.stderr)
             raise AssertionError('setup pipeline for bad-runtime test returned non-zero')
-        html_path = tmp_path / 'full-all-types.html'
+        data = json.loads(proc.stdout)
+        html_path = get_pipeline_output_path(data, 'html')
         html = html_path.read_text(encoding='utf-8')
         # Break actual browser-submitted score payload while leaving static sample generation untouched.
         html = html.replace('return { optionId, score: Number(active.dataset.scoreValue) };', 'return { optionId: optionId + "_missing", score: Number(active.dataset.scoreValue) };')
@@ -1084,7 +1103,8 @@ def test_accessibility_rejects_unlabeled_control():
             print(proc.stdout)
             print(proc.stderr, file=sys.stderr)
             raise AssertionError('setup pipeline for a11y test returned non-zero')
-        html_path = tmp_path / 'full-all-types.html'
+        data = json.loads(proc.stdout)
+        html_path = get_pipeline_output_path(data, 'html')
         html = html_path.read_text(encoding='utf-8')
         html = html.replace('<label class="option-card"><input', '<div class="option-card"><input', 1)
         html = html.replace('</label>', '</div>', 1)

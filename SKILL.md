@@ -243,11 +243,19 @@ When local scripting is available, prefer using the automated renderer:
 python3 <repo-root>/validators/render_survey_html.py --schema /absolute/path/to/schema.json --out /absolute/path/to/output.html
 ```
 
+If `--out` points to a directory, the renderer writes:
+- `<survey.id>.html`
+
 Or use the full automatic pipeline in one command:
 
 ```bash
 python3 <repo-root>/validators/build_validated_survey.py --schema /absolute/path/to/schema.json --out-html /absolute/path/to/output.html --out-payload /absolute/path/to/output-payload.json
 ```
+
+If `--out-html`, `--out-payload`, or `--out-schema` point to directories, the builder writes:
+- `<survey.id>.html`
+- `<survey.id>.payload.json`
+- `<survey.id>.repaired.schema.json`
 
 When semantic warnings are expected, prefer the repair-enabled pipeline:
 
@@ -260,6 +268,11 @@ For skill execution, prefer the single unified entry:
 ```bash
 python3 <repo-root>/validators/run_survey_creator_pipeline.py --schema /absolute/path/to/schema.json --output-dir /absolute/path/to/output-dir --style-pack consumer-trust --auto-repair --fail-on-high-warning
 ```
+
+Default output naming for the unified pipeline:
+- if `--prefix` is provided, it is used as the output filename stem
+- otherwise the pipeline uses the final rendered `survey.id` as the filename stem
+- for example, if `survey.id === "survey-310991633843965952"`, the generated HTML file must be `survey-310991633843965952.html`
 
 Supported `--style-pack` values currently include:
 - `consumer-minimal`
