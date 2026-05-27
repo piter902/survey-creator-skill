@@ -275,9 +275,13 @@ npx skills add piter902/survey-creator-skill -a opencode
 - 上线前检查清单：[skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md](./skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md)
 - 性能 benchmark：[skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md](./skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md)
 - 问卷 bundle 协议：[specs/survey-bundle.md](./specs/survey-bundle.md)
+- specs 总览：[specs/README.md](./specs/README.md)
 - 提交接口协议：[specs/submission-api.md](./specs/submission-api.md)
+- 问卷文件保存协议：[specs/survey-file-storage.md](./specs/survey-file-storage.md)
 - 答案存储协议：[specs/answer-storage.md](./specs/answer-storage.md)
 - 分析输入协议：[specs/analytics-input.md](./specs/analytics-input.md)
+- 最小后端接入示例：[specs/minimal-backend-example.md](./specs/minimal-backend-example.md)
+- 集成验收清单：[specs/integration-checklist.md](./specs/integration-checklist.md)
 
 ---
 

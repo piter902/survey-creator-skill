@@ -1,0 +1,70 @@
+[
+  {
+    "submissionId": "submission-310992845731864577",
+    "surveyId": "survey-310992845731864576",
+    "submittedAt": 1748320800000,
+    "receivedAt": 1748320800123,
+    "payload": {
+      "surveyId": "survey-310992845731864576",
+      "submittedAt": 1748320800000,
+      "extra": {
+        "utm_source": "wechat",
+        "campaign": "service-followup"
+      },
+      "answers": [
+        {
+          "questionId": "score-123456",
+          "questionType": "score",
+          "value": [
+            {
+              "optionId": "score-654321",
+              "score": 4
+            }
+          ]
+        },
+        {
+          "questionId": "nps-123456",
+          "questionType": "nps",
+          "value": {
+            "optionId": "nps-654321",
+            "score": 9
+          }
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": "submission-310992845731864578",
+    "surveyId": "survey-310992845731864576",
+    "submittedAt": 1748320860000,
+    "receivedAt": 1748320860100,
+    "payload": {
+      "surveyId": "survey-310992845731864576",
+      "submittedAt": 1748320860000,
+      "extra": {
+        "utm_source": "wechat",
+        "campaign": "service-followup"
+      },
+      "answers": [
+        {
+          "questionId": "score-123456",
+          "questionType": "score",
+          "value": [
+            {
+              "optionId": "score-654321",
+              "score": 2
+            }
+          ]
+        },
+        {
+          "questionId": "nps-123456",
+          "questionType": "nps",
+          "value": {
+            "optionId": "nps-654321",
+            "score": 4
+          }
+        }
+      ]
+    }
+  }
+]

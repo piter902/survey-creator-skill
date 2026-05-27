@@ -49,11 +49,18 @@ Default shape:
 - Required: yes
 - Rule: one answer object per question
 
+### `extra`
+- Type: `object`
+- Meaning: URL search params captured from the survey page at submit time
+- Required: yes
+- Rule: single query param values serialize as strings; repeated query param keys serialize as arrays of strings
+- Security note: treat this as attribution metadata only, not as trusted authorization or ownership data
+
 ## Answer object shape
 Each item inside `answers` should use this base structure:
 
 {
-  "questionId": "question_xxx",
+  "questionId": "radio-123456",
   "questionType": "radio",
   "value": ...
 }
@@ -83,13 +90,13 @@ Each item inside `answers` should use this base structure:
 Use this shape:
 
 {
-  "questionId": "question_xxx",
+  "questionId": "radio-123456",
   "questionType": "radio",
   "value": {
-    "optionId": "option_xxx",
+    "optionId": "radio-654321",
     "child": [
       {
-        "childId": "child_xxx",
+        "childId": "input-111111",
         "dataType": "text",
         "value": "补充输入"
       }
@@ -109,21 +116,21 @@ Use this shape:
 Use this shape:
 
 {
-  "questionId": "question_xxx",
+  "questionId": "checkbox-123456",
   "questionType": "checkbox",
   "value": [
     {
-      "optionId": "option_xxx",
+      "optionId": "checkbox-654321",
       "child": [
         {
-          "childId": "child_xxx",
+          "childId": "input-111112",
           "dataType": "text",
           "value": "补充输入"
         }
       ]
     },
     {
-      "optionId": "option_yyy"
+      "optionId": "checkbox-654322"
     }
   ]
 }
@@ -141,16 +148,16 @@ Use this shape:
 Use this shape:
 
 {
-  "questionId": "question_xxx",
+  "questionId": "input-123456",
   "questionType": "input",
   "value": [
     {
-      "optionId": "option_xxx",
+      "optionId": "input-654321",
       "dataType": "text",
       "value": "用户输入内容"
     },
     {
-      "optionId": "option_yyy",
+      "optionId": "input-654322",
       "dataType": "dateRange",
       "value": {
         "start": "2026-04-21",
@@ -184,11 +191,11 @@ Use this shape:
 Use this shape:
 
 {
-  "questionId": "question_xxx",
+  "questionId": "score-123456",
   "questionType": "score",
   "value": [
     {
-      "optionId": "option_xxx",
+      "optionId": "score-654321",
       "score": 4
     }
   ]
@@ -209,10 +216,10 @@ Use this shape:
 
 ```json
 {
-  "questionId": "question_xxx",
+  "questionId": "nps-123456",
   "questionType": "nps",
   "value": {
-    "optionId": "option_xxx",
+    "optionId": "nps-654321",
     "score": 9
   }
 }
@@ -249,8 +256,6 @@ The default contract does **not** require these fields yet:
 - page path
 - session id
 - draft id
-- score
-- nps
 - analytics event stream
 
 These can be added later if the user asks.

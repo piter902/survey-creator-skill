@@ -1,0 +1,73 @@
+{
+  "surveyId": "survey-310992845731864576",
+  "submittedAt": 1748320800000,
+  "extra": {
+    "utm_source": "wechat",
+    "campaign": "service-followup",
+    "tag": [
+      "vip",
+      "east-region"
+    ]
+  },
+  "answers": [
+    {
+      "questionId": "radio-123456",
+      "questionType": "radio",
+      "value": {
+        "optionId": "radio-654321"
+      }
+    },
+    {
+      "questionId": "checkbox-123456",
+      "questionType": "checkbox",
+      "value": [
+        {
+          "optionId": "checkbox-654321"
+        },
+        {
+          "optionId": "checkbox-654322",
+          "child": [
+            {
+              "childId": "input-111112",
+              "dataType": "text",
+              "value": "希望周末也能响应"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "questionId": "input-123456",
+      "questionType": "input",
+      "value": [
+        {
+          "optionId": "input-654321",
+          "dataType": "text",
+          "value": "客服态度很好"
+        }
+      ]
+    },
+    {
+      "questionId": "score-123456",
+      "questionType": "score",
+      "value": [
+        {
+          "optionId": "score-654321",
+          "score": 4
+        },
+        {
+          "optionId": "score-654322",
+          "score": 5
+        }
+      ]
+    },
+    {
+      "questionId": "nps-123456",
+      "questionType": "nps",
+      "value": {
+        "optionId": "nps-654321",
+        "score": 9
+      }
+    }
+  ]
+}

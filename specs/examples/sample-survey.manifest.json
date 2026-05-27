@@ -1,0 +1,17 @@
+{
+  "surveyId": "survey-310992845731864576",
+  "title": "Service satisfaction survey",
+  "version": "1.0.0",
+  "createdAt": "2026-05-27T10:00:00+08:00",
+  "paths": {
+    "html": "./survey-310992845731864576.html",
+    "schema": "./survey-310992845731864576.repaired.schema.json",
+    "samplePayload": "./survey-310992845731864576.payload.json",
+    "report": "./survey-310992845731864576.pipeline-report.json"
+  },
+  "submission": {
+    "contractVersion": "default-v1",
+    "endpoint": "/api/survey/submit",
+    "method": "POST"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "surveyId": "survey-310992845731864576",
+  "surveyUrl": "https://example.com/surveys/survey-310992845731864576/survey-310992845731864576.html",
+  "managementUrl": "https://app.example.com/surveys/survey-310992845731864576",
+  "storage": {
+    "provider": "custom",
+    "htmlObjectKey": "surveys/survey-310992845731864576/survey-310992845731864576.html",
+    "schemaObjectKey": "surveys/survey-310992845731864576/survey-310992845731864576.repaired.schema.json"
+  },
+  "createdAt": 1748320700000
+}

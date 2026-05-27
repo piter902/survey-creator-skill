@@ -261,9 +261,13 @@ Generated HTML examples are also checked in for direct inspection and browser te
 - Pre-release checklist: [skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md](./skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md)
 - Performance benchmark: [skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md](./skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md)
 - Bundle contract: [specs/survey-bundle.md](./specs/survey-bundle.md)
+- Specs overview: [specs/README.md](./specs/README.md)
 - Submission API contract: [specs/submission-api.md](./specs/submission-api.md)
+- Survey file storage contract: [specs/survey-file-storage.md](./specs/survey-file-storage.md)
 - Answer storage contract: [specs/answer-storage.md](./specs/answer-storage.md)
 - Analytics input contract: [specs/analytics-input.md](./specs/analytics-input.md)
+- Minimal backend example: [specs/minimal-backend-example.md](./specs/minimal-backend-example.md)
+- Integration checklist: [specs/integration-checklist.md](./specs/integration-checklist.md)
 
 ---
 

@@ -4,6 +4,8 @@ This repository does not prescribe hosting or backend implementation.
 
 The `survey-creator` skill is responsible for generating a portable survey bundle that other systems can consume.
 
+For upload, object storage, MIME type, public/private file boundary, and returned publish URLs, see [survey-file-storage.md](./survey-file-storage.md).
+
 ## Minimum bundle
 
 ```text
@@ -13,6 +15,14 @@ The `survey-creator` skill is responsible for generating a portable survey bundl
   <survey.id>.payload.json
   <survey.id>.pipeline-report.json
   survey.manifest.json
+```
+
+The HTML filename must use the concrete `survey.id`.
+
+Example:
+
+```text
+survey-310992845731864576.html
 ```
 
 ## Required manifest fields
@@ -47,3 +57,10 @@ The bundle does not define:
 - user account model
 
 Those belong to the adopter's own system.
+
+## Related contracts
+
+- Submission endpoint: [submission-api.md](./submission-api.md)
+- File storage and hosting handoff: [survey-file-storage.md](./survey-file-storage.md)
+- Answer persistence: [answer-storage.md](./answer-storage.md)
+- Analytics input: [analytics-input.md](./analytics-input.md)

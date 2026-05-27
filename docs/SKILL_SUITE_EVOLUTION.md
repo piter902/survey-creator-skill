@@ -114,6 +114,14 @@ Role:
 - define how adopters should store answers
 - define what `survey-analytics` expects as input
 
+Key contracts:
+
+- `specs/survey-bundle.md`
+- `specs/survey-file-storage.md`
+- `specs/submission-api.md`
+- `specs/answer-storage.md`
+- `specs/analytics-input.md`
+
 ## Shared contracts
 
 The repository should not exchange loose files informally.
@@ -124,10 +132,10 @@ Recommended bundle:
 
 ```text
 <bundle-dir>/
-  survey.html
-  survey.schema.json
-  survey.payload.sample.json
-  survey.report.json
+  <survey.id>.html
+  <survey.id>.repaired.schema.json
+  <survey.id>.payload.json
+  <survey.id>.pipeline-report.json
   survey.manifest.json
 ```
 
@@ -142,10 +150,10 @@ Recommended bundle:
   "version": "1.0.0",
   "createdAt": "2026-05-27T10:00:00+08:00",
   "paths": {
-    "html": "./survey.html",
-    "schema": "./survey.schema.json",
-    "samplePayload": "./survey.payload.sample.json",
-    "report": "./survey.report.json"
+    "html": "./survey-310992845731864576.html",
+    "schema": "./survey-310992845731864576.repaired.schema.json",
+    "samplePayload": "./survey-310992845731864576.payload.json",
+    "report": "./survey-310992845731864576.pipeline-report.json"
   },
   "submission": {
     "contractVersion": "default-v1",
