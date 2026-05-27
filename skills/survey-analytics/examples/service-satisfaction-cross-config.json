@@ -1,0 +1,16 @@
+{
+  "pairs": [
+    {
+      "segmentQuestionId": "radio-205152",
+      "metricQuestionId": "score-205160"
+    },
+    {
+      "segmentQuestionId": "radio-205156",
+      "metricQuestionId": "checkbox-205170"
+    },
+    {
+      "segmentQuestionId": "radio-205176",
+      "metricQuestionId": "checkbox-205170"
+    }
+  ]
+}

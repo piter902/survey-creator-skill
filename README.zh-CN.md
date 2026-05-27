@@ -232,6 +232,12 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 > Use `survey-analytics` to analyze a survey schema plus answer dataset and return key findings, segment patterns, and recommendations.
 
+现在 `survey-analytics` 已经不只是输出文字分析，还可以直接生成：
+
+- 一份带平铺答卷和图表的 Excel
+- 一份机器可读的 analysis JSON
+- 一份 markdown 洞察报告
+
 最佳实践：
 
 - 用自然语言描述问卷目标
@@ -268,6 +274,7 @@ npx skills add piter902/survey-creator-skill -a opencode
 ## 更多文档
 
 - 技术细节：[skills/survey-creator/docs/TECHNICAL_DETAILS.zh-CN.md](./skills/survey-creator/docs/TECHNICAL_DETAILS.zh-CN.md)
+- 问卷分析产物说明：[skills/survey-analytics/docs/OUTPUTS.md](./skills/survey-analytics/docs/OUTPUTS.md)
 - 逻辑条件与结果说明：[skills/survey-creator/references/logic-condition-action-guide.md](./skills/survey-creator/references/logic-condition-action-guide.md)
 - toC 问卷 UI 规范：[skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md](./skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md)
 - 合法性保证：[skills/survey-creator/docs/LEGALITY_GUARANTEE.md](./skills/survey-creator/docs/LEGALITY_GUARANTEE.md)

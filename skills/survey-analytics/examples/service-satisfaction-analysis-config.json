@@ -1,0 +1,19 @@
+{
+  "textAnalysis": {
+    "includeQuestionIds": [
+      "checkbox-205170"
+    ],
+    "excludeQuestionIds": [
+      "input-205179"
+    ],
+    "includeLabels": [
+      "补充说明",
+      "其他"
+    ],
+    "excludeLabels": [
+      "姓名",
+      "手机号",
+      "联系方式"
+    ]
+  }
+}

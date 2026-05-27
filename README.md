@@ -218,6 +218,12 @@ For analysis:
 
 > Use `survey-analytics` to analyze a survey schema plus answer dataset and return key findings, segment patterns, and recommendations.
 
+The analytics skill can now generate executable artifacts, not just prose:
+
+- one Excel workbook with flattened responses and embedded charts
+- one machine-readable analysis JSON
+- one markdown insight report
+
 Best practice:
 
 - describe the survey goal in plain language
@@ -254,6 +260,7 @@ Generated HTML examples are also checked in for direct inspection and browser te
 ## More docs
 
 - Technical details: [skills/survey-creator/docs/TECHNICAL_DETAILS.md](./skills/survey-creator/docs/TECHNICAL_DETAILS.md)
+- Survey analytics outputs: [skills/survey-analytics/docs/OUTPUTS.md](./skills/survey-analytics/docs/OUTPUTS.md)
 - Logic condition and action guide: [skills/survey-creator/references/logic-condition-action-guide.md](./skills/survey-creator/references/logic-condition-action-guide.md)
 - toC survey UI spec: [skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md](./skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md)
 - Legality guarantee: [skills/survey-creator/docs/LEGALITY_GUARANTEE.md](./skills/survey-creator/docs/LEGALITY_GUARANTEE.md)

@@ -1,0 +1,261 @@
+[
+  {
+    "submissionId": "submission-001",
+    "surveyId": "survey-310991634347282432",
+    "submittedAt": 1748320800000,
+    "receivedAt": 1748320800200,
+    "payload": {
+      "surveyId": "survey-310991634347282432",
+      "submittedAt": 1748320800000,
+      "extra": {
+        "utm_source": "wechat",
+        "campaign": "vip_followup"
+      },
+      "answers": [
+        {
+          "questionId": "radio-205152",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205153"
+          }
+        },
+        {
+          "questionId": "radio-205156",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205157"
+          }
+        },
+        {
+          "questionId": "score-205160",
+          "questionType": "score",
+          "value": [
+            {
+              "optionId": "score-205161",
+              "score": 5
+            },
+            {
+              "optionId": "score-205162",
+              "score": 5
+            },
+            {
+              "optionId": "score-205163",
+              "score": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": "submission-002",
+    "surveyId": "survey-310991634347282432",
+    "submittedAt": 1748320860000,
+    "receivedAt": 1748320860200,
+    "payload": {
+      "surveyId": "survey-310991634347282432",
+      "submittedAt": 1748320860000,
+      "extra": {
+        "utm_source": "wechat",
+        "campaign": "vip_followup"
+      },
+      "answers": [
+        {
+          "questionId": "radio-205152",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205154"
+          }
+        },
+        {
+          "questionId": "radio-205156",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205158"
+          }
+        },
+        {
+          "questionId": "checkbox-205164",
+          "questionType": "checkbox",
+          "value": [
+            {
+              "optionId": "checkbox-205165"
+            },
+            {
+              "optionId": "checkbox-205166"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": "submission-003",
+    "surveyId": "survey-310991634347282432",
+    "submittedAt": 1748320920000,
+    "receivedAt": 1748320920200,
+    "payload": {
+      "surveyId": "survey-310991634347282432",
+      "submittedAt": 1748320920000,
+      "extra": {
+        "utm_source": "wechat",
+        "campaign": "vip_followup"
+      },
+      "answers": [
+        {
+          "questionId": "radio-205152",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205155"
+          }
+        },
+        {
+          "questionId": "radio-205156",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205159"
+          }
+        },
+        {
+          "questionId": "checkbox-205170",
+          "questionType": "checkbox",
+          "value": [
+            {
+              "optionId": "checkbox-205171"
+            },
+            {
+              "optionId": "checkbox-205173"
+            }
+          ]
+        },
+        {
+          "questionId": "radio-205176",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205178"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": "submission-004",
+    "surveyId": "survey-310991634347282432",
+    "submittedAt": 1748320980000,
+    "receivedAt": 1748320980200,
+    "payload": {
+      "surveyId": "survey-310991634347282432",
+      "submittedAt": 1748320980000,
+      "extra": {
+        "utm_source": "wechat",
+        "campaign": "vip_followup"
+      },
+      "answers": [
+        {
+          "questionId": "radio-205152",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205153"
+          }
+        },
+        {
+          "questionId": "radio-205156",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205159"
+          }
+        },
+        {
+          "questionId": "checkbox-205170",
+          "questionType": "checkbox",
+          "value": [
+            {
+              "optionId": "checkbox-205172"
+            },
+            {
+              "optionId": "checkbox-205174",
+              "child": [
+                {
+                  "childId": "input-205175",
+                  "dataType": "text",
+                  "value": "节假日无人响应"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "questionId": "radio-205176",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205177"
+          }
+        },
+        {
+          "questionId": "input-205179",
+          "questionType": "input",
+          "value": [
+            {
+              "optionId": "input-205180",
+              "dataType": "text",
+              "value": "王女士"
+            },
+            {
+              "optionId": "input-205181",
+              "dataType": "tel",
+              "value": "13800138000"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": "submission-005",
+    "surveyId": "survey-310991634347282432",
+    "submittedAt": 1748321040000,
+    "receivedAt": 1748321040200,
+    "payload": {
+      "surveyId": "survey-310991634347282432",
+      "submittedAt": 1748321040000,
+      "extra": {
+        "utm_source": "app",
+        "campaign": "service_center"
+      },
+      "answers": [
+        {
+          "questionId": "radio-205152",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205154"
+          }
+        },
+        {
+          "questionId": "radio-205156",
+          "questionType": "radio",
+          "value": {
+            "optionId": "radio-205157"
+          }
+        },
+        {
+          "questionId": "score-205160",
+          "questionType": "score",
+          "value": [
+            {
+              "optionId": "score-205161",
+              "score": 4
+            },
+            {
+              "optionId": "score-205162",
+              "score": 4
+            },
+            {
+              "optionId": "score-205163",
+              "score": 5
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
