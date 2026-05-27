@@ -1,5 +1,7 @@
 # survey-creator-skill 上线前验收 checklist
 
+说明：本文中的命令默认相对于 `skills/survey-creator/` 执行；如果你从仓库根目录执行，请补上 `skills/survey-creator/` 前缀。
+
 用于确认一份由 `survey-creator-skill` 生成的问卷，是否适合真正交付给用户填写。
 
 这份 checklist 的目标不是只覆盖“主流程能不能跑通”，而是尽量覆盖：
@@ -327,7 +329,7 @@
 也可以直接使用统一入口：
 
 ```bash
-python3 <repo-root>/validators/run_survey_creator_pipeline.py \
+python3 <survey-creator-root>/validators/run_survey_creator_pipeline.py \
   --schema /absolute/path/to/schema.json \
   --output-dir /absolute/path/to/output-dir \
   --auto-repair \

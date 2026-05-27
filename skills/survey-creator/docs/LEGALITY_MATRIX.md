@@ -44,5 +44,5 @@ The legality engine does **not** guarantee:
 Whenever fields or types change, run:
 
 ```bash
-<repo-root>/run_all_legality_checks.sh
+<survey-creator-root>/run_all_legality_checks.sh
 ```

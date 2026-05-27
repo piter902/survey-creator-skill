@@ -92,16 +92,25 @@ When a user refreshes or revisits the survey and local step cache from a previou
 
 ```text
 survey-creator-skill/
-  SKILL.md                    # main skill definition for agents
+  SKILL.md                    # root bridge skill
   README.md                   # English usage guide
   README.zh-CN.md             # Chinese usage guide
-  docs/                       # human-facing documentation
-  references/                 # model-facing schema / logic constraints
-  templates/                  # HTML template assets
-  validators/                 # validation and rendering support
-  examples/                   # bundled schema + HTML examples
-  tests/                      # contract tests
-  evals/                      # evaluation inputs
+  docs/                       # suite-level documentation
+  services/                   # runtime services
+  skills/
+    survey-creator/
+      SKILL.md
+      docs/
+      evals/
+      examples/
+      references/
+      template-src/
+      templates/
+      tests/
+      tools/
+      validators/
+    publisher/
+      SKILL.md
   LICENSE
 ```
 
@@ -124,10 +133,9 @@ To run the full legality / rendering / browser-validation pipeline, the target m
 
 ### One-time setup
 
-From the repository root:
+From `skills/survey-creator/validators`:
 
 ```bash
-cd validators
 npm install
 npx playwright install
 ```
@@ -142,7 +150,7 @@ And builds the release artifact here:
 
 - `templates/base-survey-template.html`
 
-Rebuild it with:
+Rebuild it from `skills/survey-creator/` with:
 
 ```bash
 python3 tools/build_template.py
@@ -187,7 +195,7 @@ Recommended setup:
 npx skills add piter902/survey-creator-skill -a codex
 ```
 
-3. let Codex load `SKILL.md` and retrieve from `references/`
+3. let Codex load `skills/survey-creator/SKILL.md` and retrieve from `skills/survey-creator/references/`
 
 Discovery check:
 
@@ -214,9 +222,9 @@ npx skills add piter902/survey-creator-skill -a claude-code
 
 Then:
 
-1. use `SKILL.md` as the skill/system instruction body
-2. use `references/` as retrieval material
-3. use `templates/` and `validators/` as implementation support
+1. use `skills/survey-creator/SKILL.md` as the skill/system instruction body
+2. use `skills/survey-creator/references/` as retrieval material
+3. use `skills/survey-creator/templates/` and `skills/survey-creator/validators/` as implementation support
 
 Recommended prompt pattern:
 
@@ -232,8 +240,8 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 Then:
 
-1. point the agent to `SKILL.md`
-2. allow retrieval from `references/`
+1. point the agent to `skills/survey-creator/SKILL.md`
+2. allow retrieval from `skills/survey-creator/references/`
 3. tell the agent to follow the legality-first workflow instead of directly generating HTML from raw prompt text
 
 Recommended usage:
@@ -275,7 +283,7 @@ The skill is strongest when the prompt defines intent clearly and the repo enfor
 
 A benchmark summary for the current generated HTML runtime is archived at:
 
-- `docs/PERFORMANCE_BENCHMARK.md`
+- `skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md`
 
 Short conclusion:
 
@@ -287,8 +295,8 @@ Short conclusion:
 
 ## More docs
 
-- Logic condition and action guide: `references/logic-condition-action-guide.md`
-- toC survey UI spec: `docs/TOC_SURVEY_UI_SPEC.md`
-- legality guarantee: `docs/LEGALITY_GUARANTEE.md`
-- legality matrix: `docs/LEGALITY_MATRIX.md`
-- pre-release checklist: `docs/PRE_RELEASE_CHECKLIST.md`
+- Logic condition and action guide: `skills/survey-creator/references/logic-condition-action-guide.md`
+- toC survey UI spec: `skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md`
+- legality guarantee: `skills/survey-creator/docs/LEGALITY_GUARANTEE.md`
+- legality matrix: `skills/survey-creator/docs/LEGALITY_MATRIX.md`
+- pre-release checklist: `skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md`

@@ -263,7 +263,7 @@ Until a specific backend API is provided:
 When possible, validate generated payload examples and runtime payload snapshots with:
 
 ```bash
-python3 <repo-root>/validators/validate_survey_payload.py /absolute/path/to/payload.json
+python3 <survey-creator-root>/validators/validate_survey_payload.py /absolute/path/to/payload.json
 ```
 
 Use this as the machine-enforced contract check after schema validation.

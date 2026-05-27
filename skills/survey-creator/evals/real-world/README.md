@@ -11,7 +11,7 @@
 运行：
 
 ```bash
-python3 <repo-root>/evals/real-world/run_real_world_evals.py
+python3 <survey-creator-root>/evals/real-world/run_real_world_evals.py
 ```
 
 输出：

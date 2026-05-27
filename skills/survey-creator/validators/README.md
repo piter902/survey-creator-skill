@@ -1,24 +1,28 @@
 # Survey validators (Python)
 
-These validators are the hard guardrails for the global `survey-creator-skill` skill.
+These validators are the hard guardrails for the global `survey-creator-skill` generator.
+
+In this document, `<survey-creator-root>` means:
+
+`/path/to/survey-creator-skill/skills/survey-creator`
 
 If you edited the split template source under `template-src/partials/`, rebuild the frozen single-file template before running release-grade checks:
 
 ```bash
-python3 <repo-root>/tools/build_template.py
+python3 <survey-creator-root>/tools/build_template.py
 ```
 
 ## Files
-- `<repo-root>/tools/build_template.py`
-- `<repo-root>/validators/validate_survey_schema.py`
-- `<repo-root>/validators/auto_repair_survey_schema.py`
-- `<repo-root>/validators/validate_survey_payload.py`
-- `<repo-root>/validators/validate_payload_against_schema.py`
-- `<repo-root>/validators/validate_survey_html_runtime.py`
-- `<repo-root>/validators/validate_survey_html_e2e.py`
-- `<repo-root>/validators/auto_repair_survey_html.py`
-- `<repo-root>/validators/run_survey_creator_pipeline.py`
-- `<repo-root>/validators/run-validator-smoke-tests.sh`
+- `<survey-creator-root>/tools/build_template.py`
+- `<survey-creator-root>/validators/validate_survey_schema.py`
+- `<survey-creator-root>/validators/auto_repair_survey_schema.py`
+- `<survey-creator-root>/validators/validate_survey_payload.py`
+- `<survey-creator-root>/validators/validate_payload_against_schema.py`
+- `<survey-creator-root>/validators/validate_survey_html_runtime.py`
+- `<survey-creator-root>/validators/validate_survey_html_e2e.py`
+- `<survey-creator-root>/validators/auto_repair_survey_html.py`
+- `<survey-creator-root>/validators/run_survey_creator_pipeline.py`
+- `<survey-creator-root>/validators/run-validator-smoke-tests.sh`
 
 ## 1) Schema validator
 Purpose:
@@ -32,8 +36,8 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_survey_schema.py /absolute/path/to/schema.json
-python3 <repo-root>/validators/validate_survey_schema.py /absolute/path/to/schema.json --json
+python3 <survey-creator-root>/validators/validate_survey_schema.py /absolute/path/to/schema.json
+python3 <survey-creator-root>/validators/validate_survey_schema.py /absolute/path/to/schema.json --json
 ```
 
 ## 2) Payload validator
@@ -45,8 +49,8 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_survey_payload.py /absolute/path/to/payload.json
-python3 <repo-root>/validators/validate_survey_payload.py /absolute/path/to/payload.json --json
+python3 <survey-creator-root>/validators/validate_survey_payload.py /absolute/path/to/payload.json
+python3 <survey-creator-root>/validators/validate_survey_payload.py /absolute/path/to/payload.json --json
 ```
 
 ## 2.5) Payload-against-schema validator
@@ -60,8 +64,8 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_payload_against_schema.py /absolute/path/to/schema.json /absolute/path/to/payload.json
-python3 <repo-root>/validators/validate_payload_against_schema.py /absolute/path/to/schema.json /absolute/path/to/payload.json --json
+python3 <survey-creator-root>/validators/validate_payload_against_schema.py /absolute/path/to/schema.json /absolute/path/to/payload.json
+python3 <survey-creator-root>/validators/validate_payload_against_schema.py /absolute/path/to/schema.json /absolute/path/to/payload.json --json
 ```
 
 ## 3) HTML runtime contract checker
@@ -71,8 +75,8 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_survey_html_runtime.py /absolute/path/to/file.html
-python3 <repo-root>/validators/validate_survey_html_runtime.py /absolute/path/to/file.html --json
+python3 <survey-creator-root>/validators/validate_survey_html_runtime.py /absolute/path/to/file.html
+python3 <survey-creator-root>/validators/validate_survey_html_runtime.py /absolute/path/to/file.html --json
 ```
 
 ## 3.5) HTML E2E smoke checker
@@ -83,9 +87,9 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_survey_html_e2e.py /absolute/path/to/file.html
-python3 <repo-root>/validators/validate_survey_html_e2e.py /absolute/path/to/file.html --json
-python3 <repo-root>/validators/validate_survey_html_e2e.py /absolute/path/to/file.html --viewport mobile
+python3 <survey-creator-root>/validators/validate_survey_html_e2e.py /absolute/path/to/file.html
+python3 <survey-creator-root>/validators/validate_survey_html_e2e.py /absolute/path/to/file.html --json
+python3 <survey-creator-root>/validators/validate_survey_html_e2e.py /absolute/path/to/file.html --viewport mobile
 ```
 
 By default this runs both `desktop` (1440×960) and `mobile` (390×844) viewports.
@@ -109,9 +113,9 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_survey_html_interaction_e2e.py /absolute/path/to/file.html
-python3 <repo-root>/validators/validate_survey_html_interaction_e2e.py /absolute/path/to/file.html --json
-python3 <repo-root>/validators/validate_survey_html_interaction_e2e.py /absolute/path/to/file.html --viewport mobile
+python3 <survey-creator-root>/validators/validate_survey_html_interaction_e2e.py /absolute/path/to/file.html
+python3 <survey-creator-root>/validators/validate_survey_html_interaction_e2e.py /absolute/path/to/file.html --json
+python3 <survey-creator-root>/validators/validate_survey_html_interaction_e2e.py /absolute/path/to/file.html --viewport mobile
 ```
 
 By default this runs both `desktop` (1440×960) and `mobile` (390×844) viewports and requires both to be fillable and submittable.
@@ -126,9 +130,9 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/validate_survey_html_accessibility.py /absolute/path/to/file.html
-python3 <repo-root>/validators/validate_survey_html_accessibility.py /absolute/path/to/file.html --json
-python3 <repo-root>/validators/validate_survey_html_accessibility.py /absolute/path/to/file.html --viewport mobile
+python3 <survey-creator-root>/validators/validate_survey_html_accessibility.py /absolute/path/to/file.html
+python3 <survey-creator-root>/validators/validate_survey_html_accessibility.py /absolute/path/to/file.html --json
+python3 <survey-creator-root>/validators/validate_survey_html_accessibility.py /absolute/path/to/file.html --viewport mobile
 ```
 
 ## 3.8) HTML auto repair
@@ -139,8 +143,8 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/auto_repair_survey_html.py /absolute/path/to/file.html --out /absolute/path/to/repaired.html
-python3 <repo-root>/validators/auto_repair_survey_html.py /absolute/path/to/file.html --json
+python3 <survey-creator-root>/validators/auto_repair_survey_html.py /absolute/path/to/file.html --out /absolute/path/to/repaired.html
+python3 <survey-creator-root>/validators/auto_repair_survey_html.py /absolute/path/to/file.html --json
 ```
 
 Current safe repair strategies:
@@ -150,7 +154,7 @@ Current safe repair strategies:
 
 ## Smoke tests
 ```bash
-<repo-root>/validators/run-validator-smoke-tests.sh
+<survey-creator-root>/validators/run-validator-smoke-tests.sh
 ```
 
 ## Semantic lint examples
@@ -195,8 +199,8 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/auto_repair_survey_schema.py /absolute/path/to/schema.json --out /absolute/path/to/repaired-schema.json
-python3 <repo-root>/validators/auto_repair_survey_schema.py /absolute/path/to/schema.json --json
+python3 <survey-creator-root>/validators/auto_repair_survey_schema.py /absolute/path/to/schema.json --out /absolute/path/to/repaired-schema.json
+python3 <survey-creator-root>/validators/auto_repair_survey_schema.py /absolute/path/to/schema.json --json
 ```
 
 Typical auto-fixes:
@@ -216,7 +220,7 @@ Purpose:
 
 Usage:
 ```bash
-python3 <repo-root>/validators/run_survey_creator_pipeline.py \
+python3 <survey-creator-root>/validators/run_survey_creator_pipeline.py \
   --schema /absolute/path/to/schema.json \
   --output-dir /absolute/path/to/output-dir \
   --auto-repair \
@@ -259,7 +263,7 @@ These validators greatly reduce hallucination and protocol drift risk, but they 
 
 ## File
 
-`<repo-root>/validators/validate_survey_release.py`
+`<survey-creator-root>/validators/validate_survey_release.py`
 
 ## Purpose
 One command to run schema validation, HTML runtime validation, and payload validation together.
@@ -267,25 +271,25 @@ One command to run schema validation, HTML runtime validation, and payload valid
 ## Usage
 
 ```bash
-python3 <repo-root>/validators/validate_survey_release.py   --schema /absolute/path/to/schema.json   --html /absolute/path/to/file.html   --payload /absolute/path/to/payload.json
+python3 <survey-creator-root>/validators/validate_survey_release.py   --schema /absolute/path/to/schema.json   --html /absolute/path/to/file.html   --payload /absolute/path/to/payload.json
 ```
 
 JSON report:
 
 ```bash
-python3 <repo-root>/validators/validate_survey_release.py   --schema /absolute/path/to/schema.json   --html /absolute/path/to/file.html   --payload /absolute/path/to/payload.json   --json
+python3 <survey-creator-root>/validators/validate_survey_release.py   --schema /absolute/path/to/schema.json   --html /absolute/path/to/file.html   --payload /absolute/path/to/payload.json   --json
 ```
 
 Any subset also works, for example:
 
 ```bash
-python3 <repo-root>/validators/validate_survey_release.py --html /absolute/path/to/file.html
+python3 <survey-creator-root>/validators/validate_survey_release.py --html /absolute/path/to/file.html
 ```
 
 You can also let the release checker generate a payload sample from schema:
 
 ```bash
-python3 <repo-root>/validators/validate_survey_release.py \
+python3 <survey-creator-root>/validators/validate_survey_release.py \
   --schema /absolute/path/to/schema.json \
   --html /absolute/path/to/file.html \
   --generate-sample-payload \
@@ -299,7 +303,7 @@ python3 <repo-root>/validators/validate_survey_release.py \
 
 ## File
 
-`<repo-root>/validators/generate_sample_payload.py`
+`<survey-creator-root>/validators/generate_sample_payload.py`
 
 ## Purpose
 Generate a valid payload sample directly from a frozen schema, so you do not need to hand-write a payload JSON before running release checks.
@@ -307,13 +311,13 @@ Generate a valid payload sample directly from a frozen schema, so you do not nee
 ## Usage
 
 ```bash
-python3 <repo-root>/validators/generate_sample_payload.py /absolute/path/to/schema.json
+python3 <survey-creator-root>/validators/generate_sample_payload.py /absolute/path/to/schema.json
 ```
 
 Write to file:
 
 ```bash
-python3 <repo-root>/validators/generate_sample_payload.py /absolute/path/to/schema.json --out /absolute/path/to/payload.json
+python3 <survey-creator-root>/validators/generate_sample_payload.py /absolute/path/to/schema.json --out /absolute/path/to/payload.json
 ```
 
 
@@ -323,7 +327,7 @@ python3 <repo-root>/validators/generate_sample_payload.py /absolute/path/to/sche
 
 ## File
 
-`<repo-root>/validators/build_validated_survey.py`
+`<survey-creator-root>/validators/build_validated_survey.py`
 
 ## Purpose
 Run the full automatic pipeline from frozen schema to final HTML and generated payload sample, without requiring a person to manually step through each validator.
@@ -342,13 +346,13 @@ Practical rule:
 ## Usage
 
 ```bash
-python3 <repo-root>/validators/build_validated_survey.py   --schema /absolute/path/to/schema.json   --out-html /absolute/path/to/output.html   --out-payload /absolute/path/to/output-payload.json
+python3 <survey-creator-root>/validators/build_validated_survey.py   --schema /absolute/path/to/schema.json   --out-html /absolute/path/to/output.html   --out-payload /absolute/path/to/output-payload.json
 ```
 
 With repair and strict warning gate:
 
 ```bash
-python3 <repo-root>/validators/build_validated_survey.py \
+python3 <survey-creator-root>/validators/build_validated_survey.py \
   --schema /absolute/path/to/schema.json \
   --out-schema /absolute/path/to/repaired-schema.json \
   --out-html /absolute/path/to/output.html \
@@ -360,21 +364,21 @@ python3 <repo-root>/validators/build_validated_survey.py \
 JSON report:
 
 ```bash
-python3 <repo-root>/validators/build_validated_survey.py   --schema /absolute/path/to/schema.json   --out-html /absolute/path/to/output.html   --out-payload /absolute/path/to/output-payload.json   --json
+python3 <survey-creator-root>/validators/build_validated_survey.py   --schema /absolute/path/to/schema.json   --out-html /absolute/path/to/output.html   --out-payload /absolute/path/to/output-payload.json   --json
 ```
 
 
 ## One-command legality check
 
 ```bash
-<repo-root>/run_all_legality_checks.sh
+<survey-creator-root>/run_all_legality_checks.sh
 ```
 
 ## Reference consistency checker
 
 File:
 
-`<repo-root>/validators/validate_reference_consistency.py`
+`<survey-creator-root>/validators/validate_reference_consistency.py`
 
 Purpose:
 - verify reference JSON question types match schema validator supported types
@@ -385,6 +389,6 @@ Purpose:
 Usage:
 
 ```bash
-python3 <repo-root>/validators/validate_reference_consistency.py
-python3 <repo-root>/validators/validate_reference_consistency.py --json
+python3 <survey-creator-root>/validators/validate_reference_consistency.py
+python3 <survey-creator-root>/validators/validate_reference_consistency.py --json
 ```

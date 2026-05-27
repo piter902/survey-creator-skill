@@ -319,6 +319,46 @@ def resolve_output_paths(schema_path, output_dir, schema=None, prefix=None):
         "html": str(out_dir / f"{stem}.html"),
         "payload": str(out_dir / f"{stem}.payload.json"),
         "report": str(out_dir / f"{stem}.pipeline-report.json"),
+        "manifest": str(out_dir / "survey.manifest.json"),
+    }
+
+
+def build_manifest(schema, outputs, style_pack):
+    survey = schema.get("survey") if isinstance(schema, dict) else {}
+    out_dir = Path(outputs["manifest"]).parent
+
+    def relative(path_str):
+        return f"./{Path(path_str).name}"
+
+    return {
+        "surveyId": survey.get("id", ""),
+        "title": survey.get("title", ""),
+        "version": "1.0.0",
+        "createdAt": "",
+        "stylePack": style_pack,
+        "paths": {
+            "html": relative(outputs["html"]),
+            "schema": relative(outputs["schema"]),
+            "samplePayload": relative(outputs["payload"]),
+            "report": relative(outputs["report"]),
+        },
+        "submission": {
+            "contractVersion": "default-v1",
+            "endpoint": "",
+            "method": "POST",
+        },
+        "publish": {
+            "provider": "",
+            "mode": "",
+            "surveyUrl": "",
+            "schemaUrl": "",
+            "htmlStorageUrl": "",
+            "publishedAt": "",
+            "meta": {},
+        },
+        "bundle": {
+            "directory": str(out_dir),
+        },
     }
 
 
@@ -471,6 +511,8 @@ def main():
         "output": outputs,
     }
     Path(outputs["report"]).write_text(json.dumps(final_report, ensure_ascii=False, indent=2), encoding="utf-8")
+    manifest = build_manifest(repaired_schema, outputs, args.style_pack)
+    Path(outputs["manifest"]).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
     if args.json:
         print(json.dumps(final_report, ensure_ascii=False, indent=2))

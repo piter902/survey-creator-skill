@@ -4,7 +4,13 @@
 
 **An AI-agent-ready survey generation skill for teams that want fully custom UI, independent deployment, and validated HTML output.**
 
-`survey-creator-skill` is an open-source skill repository for **Claude Code, Codex, OpenCode, and similar AI coding agent workflows**.
+`survey-creator-skill` is an open-source survey skill suite repository for **Claude Code, Codex, OpenCode, and similar AI coding agent workflows**.
+
+Current structure:
+
+- `skills/survey-creator/` — generator skill
+- `skills/publisher/` — publishing skill
+- `services/tencent-cloudbase/` — Tencent Cloud runtime service layer
 
 It was created for one very specific reason:
 
@@ -205,13 +211,13 @@ Best practice:
 
 For technical setup, supported node types, logic rules, and runtime details, see:
 
-- [docs/TECHNICAL_DETAILS.md](./docs/TECHNICAL_DETAILS.md)
+- [skills/survey-creator/docs/TECHNICAL_DETAILS.md](./skills/survey-creator/docs/TECHNICAL_DETAILS.md)
 
 ---
 
 ## Example files
 
-The repository currently includes these example inputs in `examples/`:
+The repository currently includes these example inputs in `skills/survey-creator/examples/`:
 
 - `minimal-survey.json` — the smallest valid survey example
 - `ai-design-tool-demand-demo.json` — a richer demo covering logic, Pagination, multi-question pages, child input, score, and nps
@@ -222,23 +228,23 @@ The repository currently includes these example inputs in `examples/`:
 
 Generated HTML examples are also checked in for direct inspection and browser testing, including:
 
-- `examples/ai-design-tool-demand-demo.html`
-- `examples/service-satisfaction-multi-finish.html`
-- `examples/service-satisfaction-three-finish.html`
-- `examples/service-satisfaction-post-submit-redirect.html`
-- `examples/lead-qualification-sales-conversion.html`
+- `skills/survey-creator/examples/ai-design-tool-demand-demo.html`
+- `skills/survey-creator/examples/service-satisfaction-multi-finish.html`
+- `skills/survey-creator/examples/service-satisfaction-three-finish.html`
+- `skills/survey-creator/examples/service-satisfaction-post-submit-redirect.html`
+- `skills/survey-creator/examples/lead-qualification-sales-conversion.html`
 
 ---
 
 ## More docs
 
-- Technical details: [docs/TECHNICAL_DETAILS.md](./docs/TECHNICAL_DETAILS.md)
-- Logic condition and action guide: [references/logic-condition-action-guide.md](./references/logic-condition-action-guide.md)
-- toC survey UI spec: [docs/TOC_SURVEY_UI_SPEC.md](./docs/TOC_SURVEY_UI_SPEC.md)
-- Legality guarantee: [docs/LEGALITY_GUARANTEE.md](./docs/LEGALITY_GUARANTEE.md)
-- Legality matrix: [docs/LEGALITY_MATRIX.md](./docs/LEGALITY_MATRIX.md)
-- Pre-release checklist: [docs/PRE_RELEASE_CHECKLIST.md](./docs/PRE_RELEASE_CHECKLIST.md)
-- Performance benchmark: [docs/PERFORMANCE_BENCHMARK.md](./docs/PERFORMANCE_BENCHMARK.md)
+- Technical details: [skills/survey-creator/docs/TECHNICAL_DETAILS.md](./skills/survey-creator/docs/TECHNICAL_DETAILS.md)
+- Logic condition and action guide: [skills/survey-creator/references/logic-condition-action-guide.md](./skills/survey-creator/references/logic-condition-action-guide.md)
+- toC survey UI spec: [skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md](./skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md)
+- Legality guarantee: [skills/survey-creator/docs/LEGALITY_GUARANTEE.md](./skills/survey-creator/docs/LEGALITY_GUARANTEE.md)
+- Legality matrix: [skills/survey-creator/docs/LEGALITY_MATRIX.md](./skills/survey-creator/docs/LEGALITY_MATRIX.md)
+- Pre-release checklist: [skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md](./skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md)
+- Performance benchmark: [skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md](./skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md)
 
 ---
 

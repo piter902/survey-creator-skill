@@ -58,6 +58,45 @@ def resolve_output_path(out_arg, schema, schema_path, suffix):
     return out_path
 
 
+def build_manifest(schema, html_path, payload_path, schema_path, style_pack):
+    html_file = Path(html_path)
+    bundle_dir = html_file.parent
+
+    def relative(path_str):
+        return f"./{Path(path_str).name}" if path_str else ""
+
+    return {
+        "surveyId": (schema.get("survey") or {}).get("id", ""),
+        "title": (schema.get("survey") or {}).get("title", ""),
+        "version": "1.0.0",
+        "createdAt": "",
+        "stylePack": style_pack,
+        "paths": {
+            "html": relative(str(html_path)),
+            "schema": relative(str(schema_path)) if schema_path else "",
+            "samplePayload": relative(str(payload_path)) if payload_path else "",
+            "report": "",
+        },
+        "submission": {
+            "contractVersion": "default-v1",
+            "endpoint": "",
+            "method": "POST",
+        },
+        "publish": {
+            "provider": "",
+            "mode": "",
+            "surveyUrl": "",
+            "schemaUrl": "",
+            "htmlStorageUrl": "",
+            "publishedAt": "",
+            "meta": {},
+        },
+        "bundle": {
+            "directory": str(bundle_dir),
+        },
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description='Schema -> HTML -> payload fully automated release pipeline for survey-creator-skill.')
     parser.add_argument('--schema', required=True, help='Path to frozen schema JSON')
@@ -90,10 +129,12 @@ def main():
     out_html_path = resolve_output_path(args.out_html, schema, args.schema, '.html')
     out_payload_path = resolve_output_path(args.out_payload, schema, args.schema, '.payload.json') if args.out_payload else None
     out_schema_path = resolve_output_path(args.out_schema, schema, args.schema, '.repaired.schema.json') if args.out_schema else None
+    manifest_path = out_html_path.parent / 'survey.manifest.json'
     full_report['output'] = {
         'html': str(out_html_path),
         'payload': str(out_payload_path) if out_payload_path else None,
         'schema': str(out_schema_path) if out_schema_path else None,
+        'manifest': str(manifest_path),
     }
 
     schema_report = validate_survey_schema(schema)
@@ -124,10 +165,13 @@ def main():
         payload_report = validate_survey_payload(payload)
         payload_report['generated'] = True
         if out_payload_path:
-            payload_report['outputPath'] = str(out_payload_path)
+        payload_report['outputPath'] = str(out_payload_path)
         full_report['payload'] = payload_report
         full_report['summary']['payload'] = summarize(payload_report)
         full_report['valid'] = full_report['valid'] and payload_report.get('valid', False)
+
+    manifest = build_manifest(schema, out_html_path, out_payload_path, out_schema_path, args.style_pack)
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
 
     if args.json:
         print(json.dumps(full_report, ensure_ascii=False, indent=2))
@@ -147,6 +191,9 @@ def main():
         print(f'- html: {out_html_path}')
         if out_payload_path:
             print(f'- payload: {out_payload_path}')
+        if out_schema_path:
+            print(f'- schema: {out_schema_path}')
+        print(f'- manifest: {manifest_path}')
         print('\nSummary:')
         for key, value in full_report['summary'].items():
             print(f"- {key}: valid={value['valid']}, errors={value['error_count']}, warnings={value['warning_count']}")

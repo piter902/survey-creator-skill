@@ -16,3 +16,4 @@ dist/
 *.pipeline-report.json
 *.repaired.schema.json
 *.payload.json
+skills/survey-creator/evals/real-world/outputs/

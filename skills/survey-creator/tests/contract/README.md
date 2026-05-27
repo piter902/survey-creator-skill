@@ -23,7 +23,7 @@ They intentionally focus on protocol legality rather than business quality.
 ## Run
 
 ```bash
-python3 <repo-root>/tests/contract/run_contract_tests.py
+python3 <survey-creator-root>/tests/contract/run_contract_tests.py
 ```
 
 The test runner creates temporary output directories under `/tmp` and does not modify generated production surveys.
@@ -33,7 +33,7 @@ The test runner creates temporary output directories under `/tmp` and does not m
 The one-command legality check also runs:
 
 ```bash
-python3 <repo-root>/validators/validate_reference_consistency.py
+python3 <survey-creator-root>/validators/validate_reference_consistency.py
 ```
 
 This catches drift between references, validators, payload contract, and the fixed renderer before contract cases run.

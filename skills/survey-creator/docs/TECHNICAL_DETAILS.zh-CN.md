@@ -92,16 +92,25 @@
 
 ```text
 survey-creator-skill/
-  SKILL.md                    # Agent 读取的主 skill 定义
+  SKILL.md                    # 根桥接 skill
   README.md                   # 英文说明
   README.zh-CN.md             # 中文说明
-  docs/                       # 给人看的文档
-  references/                 # 给模型读取的 schema / logic 约束
-  templates/                  # HTML 模板资源
-  validators/                 # 校验与渲染辅助层
-  examples/                   # 示例 schema 与 HTML
-  tests/                      # contract tests
-  evals/                      # 评估样例
+  docs/                       # suite 级文档
+  services/                   # 运行时服务
+  skills/
+    survey-creator/
+      SKILL.md
+      docs/
+      evals/
+      examples/
+      references/
+      template-src/
+      templates/
+      tests/
+      tools/
+      validators/
+    publisher/
+      SKILL.md
   LICENSE
 ```
 
@@ -124,10 +133,9 @@ survey-creator-skill/
 
 ### 一次性安装
 
-在仓库根目录执行：
+在 `skills/survey-creator/validators` 目录执行：
 
 ```bash
-cd validators
 npm install
 npx playwright install
 ```
@@ -142,7 +150,7 @@ npx playwright install
 
 - `templates/base-survey-template.html`
 
-构建命令：
+请在 `skills/survey-creator/` 目录执行构建命令：
 
 ```bash
 python3 tools/build_template.py
@@ -189,7 +197,7 @@ python3 tools/build_template.py
 npx skills add piter902/survey-creator-skill -a codex
 ```
 
-3. 让 Codex 读取 `SKILL.md`，并从 `references/` 中取约束
+3. 让 Codex 读取 `skills/survey-creator/SKILL.md`，并从 `skills/survey-creator/references/` 中取约束
 
 如果你想先验证仓库能否被正确识别：
 
@@ -216,9 +224,9 @@ npx skills add piter902/survey-creator-skill -a claude-code
 
 然后：
 
-1. 把 `SKILL.md` 当作 skill / system instruction 主体
-2. 把 `references/` 当作检索材料
-3. 把 `templates/` 与 `validators/` 当作辅助实现层
+1. 把 `skills/survey-creator/SKILL.md` 当作 skill / system instruction 主体
+2. 把 `skills/survey-creator/references/` 当作检索材料
+3. 把 `skills/survey-creator/templates/` 与 `skills/survey-creator/validators/` 当作辅助实现层
 
 推荐 prompt：
 
@@ -234,8 +242,8 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 然后：
 
-1. 明确让 Agent 读取 `SKILL.md`
-2. 明确让 Agent 从 `references/` 获取 schema 与 logic 约束
+1. 明确让 Agent 读取 `skills/survey-creator/SKILL.md`
+2. 明确让 Agent 从 `skills/survey-creator/references/` 获取 schema 与 logic 约束
 3. 要求 Agent 先走 legality-first 流程，而不是直接根据 UI 描述吐 HTML
 
 推荐 prompt：
@@ -277,7 +285,7 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 当前生成 HTML 运行时的性能基准结果已归档在：
 
-- `docs/PERFORMANCE_BENCHMARK.md`
+- `skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md`
 
 简要结论：
 
@@ -289,8 +297,8 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 ## 更多文档
 
-- 逻辑条件与结果说明：`references/logic-condition-action-guide.md`
-- toC 问卷 UI 规范：`docs/TOC_SURVEY_UI_SPEC.md`
-- 合法性保证：`docs/LEGALITY_GUARANTEE.md`
-- 合法性矩阵：`docs/LEGALITY_MATRIX.md`
-- 上线前检查清单：`docs/PRE_RELEASE_CHECKLIST.md`
+- 逻辑条件与结果说明：`skills/survey-creator/references/logic-condition-action-guide.md`
+- toC 问卷 UI 规范：`skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md`
+- 合法性保证：`skills/survey-creator/docs/LEGALITY_GUARANTEE.md`
+- 合法性矩阵：`skills/survey-creator/docs/LEGALITY_MATRIX.md`
+- 上线前检查清单：`skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md`

@@ -4,7 +4,15 @@
 
 **一个面向 Codex、Claude Code、OpenCode 等 AI Agent 工作流的问卷生成 skill：支持完全自定义 UI、独立部署、以及可校验的 HTML 交付。**
 
-`survey-creator-skill` 是一个开源的 **agent skill 仓库**，目标不是再做一个传统问卷平台，而是让 AI Agent 可以把自然语言需求，转成：
+`survey-creator-skill` 是一个开源的 **问卷 skill suite 仓库**。目标不是再做一个传统问卷平台，而是让 AI Agent 可以把自然语言需求转成：
+
+当前结构：
+
+- `skills/survey-creator/`：问卷生成 skill
+- `skills/publisher/`：问卷发布 skill
+- `services/tencent-cloudbase/`：腾讯云运行时服务层
+
+核心产物：
 
 - 合法的问卷 schema
 - 可提交的 HTML 问卷页面
@@ -215,40 +223,40 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 技术细节、依赖、校验链路、支持范围请看：
 
-- [docs/TECHNICAL_DETAILS.zh-CN.md](./docs/TECHNICAL_DETAILS.zh-CN.md)
+- [skills/survey-creator/docs/TECHNICAL_DETAILS.zh-CN.md](./skills/survey-creator/docs/TECHNICAL_DETAILS.zh-CN.md)
 
 ---
 
 ## examples 目录说明
 
-当前仓库里包含这些示例输入：
+当前仓库里包含这些示例输入，位置都在 `skills/survey-creator/examples/`：
 
-- `examples/minimal-survey.json`：最小可运行问卷示例
-- `examples/ai-design-tool-demand-demo.json`：更完整的综合示例，覆盖 logic、Pagination、手动分页、一页多题、child input、score、nps
-- `examples/service-satisfaction-multi-finish.json`：更接近真实业务的双结束页满意度问卷示例
-- `examples/service-satisfaction-three-finish.json`：满意 / 中立 / 不满意三结束页分流示例
-- `examples/service-satisfaction-post-submit-redirect.json`：更贴近真实投放的服务回访示例，覆盖多结束页 + 提交后差异化跳转
-- `examples/lead-qualification-sales-conversion.json`：线索筛选 / 销售转化型示例，覆盖热线索、咨询、培育、自助资源四类分流
+- `skills/survey-creator/examples/minimal-survey.json`：最小可运行问卷示例
+- `skills/survey-creator/examples/ai-design-tool-demand-demo.json`：更完整的综合示例，覆盖 logic、Pagination、手动分页、一页多题、child input、score、nps
+- `skills/survey-creator/examples/service-satisfaction-multi-finish.json`：更接近真实业务的双结束页满意度问卷示例
+- `skills/survey-creator/examples/service-satisfaction-three-finish.json`：满意 / 中立 / 不满意三结束页分流示例
+- `skills/survey-creator/examples/service-satisfaction-post-submit-redirect.json`：更贴近真实投放的服务回访示例，覆盖多结束页 + 提交后差异化跳转
+- `skills/survey-creator/examples/lead-qualification-sales-conversion.json`：线索筛选 / 销售转化型示例，覆盖热线索、咨询、培育、自助资源四类分流
 
 仓库中也附带了可直接打开查看的生成 HTML：
 
-- `examples/ai-design-tool-demand-demo.html`
-- `examples/service-satisfaction-multi-finish.html`
-- `examples/service-satisfaction-three-finish.html`
-- `examples/service-satisfaction-post-submit-redirect.html`
-- `examples/lead-qualification-sales-conversion.html`
+- `skills/survey-creator/examples/ai-design-tool-demand-demo.html`
+- `skills/survey-creator/examples/service-satisfaction-multi-finish.html`
+- `skills/survey-creator/examples/service-satisfaction-three-finish.html`
+- `skills/survey-creator/examples/service-satisfaction-post-submit-redirect.html`
+- `skills/survey-creator/examples/lead-qualification-sales-conversion.html`
 
 ---
 
 ## 更多文档
 
-- 技术细节：[docs/TECHNICAL_DETAILS.zh-CN.md](./docs/TECHNICAL_DETAILS.zh-CN.md)
-- 逻辑条件与结果说明：[references/logic-condition-action-guide.md](./references/logic-condition-action-guide.md)
-- toC 问卷 UI 规范：[docs/TOC_SURVEY_UI_SPEC.md](./docs/TOC_SURVEY_UI_SPEC.md)
-- 合法性保证：[docs/LEGALITY_GUARANTEE.md](./docs/LEGALITY_GUARANTEE.md)
-- 合法性矩阵：[docs/LEGALITY_MATRIX.md](./docs/LEGALITY_MATRIX.md)
-- 上线前检查清单：[docs/PRE_RELEASE_CHECKLIST.md](./docs/PRE_RELEASE_CHECKLIST.md)
-- 性能 benchmark：[docs/PERFORMANCE_BENCHMARK.md](./docs/PERFORMANCE_BENCHMARK.md)
+- 技术细节：[skills/survey-creator/docs/TECHNICAL_DETAILS.zh-CN.md](./skills/survey-creator/docs/TECHNICAL_DETAILS.zh-CN.md)
+- 逻辑条件与结果说明：[skills/survey-creator/references/logic-condition-action-guide.md](./skills/survey-creator/references/logic-condition-action-guide.md)
+- toC 问卷 UI 规范：[skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md](./skills/survey-creator/docs/TOC_SURVEY_UI_SPEC.md)
+- 合法性保证：[skills/survey-creator/docs/LEGALITY_GUARANTEE.md](./skills/survey-creator/docs/LEGALITY_GUARANTEE.md)
+- 合法性矩阵：[skills/survey-creator/docs/LEGALITY_MATRIX.md](./skills/survey-creator/docs/LEGALITY_MATRIX.md)
+- 上线前检查清单：[skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md](./skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md)
+- 性能 benchmark：[skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md](./skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md)
 
 ---
 
