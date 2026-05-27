@@ -79,7 +79,7 @@ def build_manifest(schema, html_path, payload_path, schema_path, style_pack):
         },
         "submission": {
             "contractVersion": "default-v1",
-            "endpoint": "",
+            "endpoint": "/api/survey/submit",
             "method": "POST",
         },
         "publish": {

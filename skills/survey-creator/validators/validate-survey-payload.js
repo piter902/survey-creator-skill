@@ -147,9 +147,29 @@ function validateSurveyPayload(payload) {
     reporter.error('payload', 'Payload must be an object.');
     return reporter.result();
   }
-  assertAllowedKeys(payload, ['surveyId', 'submittedAt', 'answers'], 'payload', reporter);
+  assertAllowedKeys(payload, ['surveyId', 'submittedAt', 'extra', 'answers'], 'payload', reporter);
   if (!isNonEmptyString(payload.surveyId)) reporter.error('payload.surveyId', 'surveyId must be a non-empty string.');
   if (!Number.isInteger(payload.submittedAt) || payload.submittedAt < 0) reporter.error('payload.submittedAt', 'submittedAt must be a non-negative integer timestamp.');
+  if (payload.extra != null) {
+    if (!isPlainObject(payload.extra)) {
+      reporter.error('payload.extra', 'extra must be an object when present.');
+    } else {
+      Object.entries(payload.extra).forEach(([key, value]) => {
+        if (!isNonEmptyString(key)) {
+          reporter.error('payload.extra', 'extra keys must be non-empty strings.');
+          return;
+        }
+        if (Array.isArray(value)) {
+          if (!value.length) reporter.error(`payload.extra.${key}`, 'extra array values must not be empty.');
+          value.forEach((item, index) => {
+            if (!isNonEmptyString(item)) reporter.error(`payload.extra.${key}[${index}]`, 'extra array items must be non-empty strings.');
+          });
+        } else if (!isNonEmptyString(value)) {
+          reporter.error(`payload.extra.${key}`, 'extra values must be non-empty strings or arrays of non-empty strings.');
+        }
+      });
+    }
+  }
   if (!Array.isArray(payload.answers)) {
     reporter.error('payload.answers', 'answers must be an array.');
   } else {

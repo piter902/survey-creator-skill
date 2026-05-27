@@ -375,14 +375,17 @@ Until the user provides the exact submit contract, use this default approach:
 - ensure inputs have usable `name` attributes
 - ensure question and option relationships can be reconstructed from submitted values
 - preserve schema ids in form names, values, or data attributes so downstream positioning and analytics remain possible
-- use a safe placeholder submission target such as `action="#"` or a lightweight JS submit interception when no backend contract is provided
+- use `POST /api/survey/submit` as the default submission endpoint
+- call the endpoint with JSON payload and `credentials: same-origin`
 - when `survey.attribute.onePageOneQuestion === true`, render the intro, each question, and the finish section as separate steps and show only one at a time
 - never combine `Pagination` with `survey.attribute.onePageOneQuestion === true`; validation must reject this conflict
 - when manual `Pagination` grouping is needed, set `survey.attribute.onePageOneQuestion` to `false` and use `Pagination` nodes only as page separators
 - in one-page-one-question mode, cache step answers in `localStorage` between screens using the key rules from `references/local-cache-rules.md`
 - when `survey.attribute.allowBack === true`, render a previous-step action; otherwise do not expose previous-step navigation
-- by default, final submit behavior should `console.log` the assembled payload
-- after successful submit, clear the current survey cache from `localStorage`
+- always expose the assembled payload to console/test hooks for inspection
+- after successful endpoint response, clear the current survey cache from `localStorage`
+- if the endpoint request fails, keep answers and local cache so the respondent can retry
+- run `finish[].postSubmit.redirect` only after successful endpoint response
 
 Follow `references/submission-contract.md` as the default payload shape.
 Do not invent a different backend API contract unless the user later specifies one.

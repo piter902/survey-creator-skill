@@ -8,9 +8,9 @@
 
 Current structure:
 
-- `skills/survey-creator/` — generator skill
-- `skills/publisher/` — publishing skill
-- `services/tencent-cloudbase/` — Tencent Cloud runtime service layer
+- `skills/survey-creator/` — survey generation skill
+- `skills/survey-analytics/` — survey analysis skill
+- `specs/` — integration contracts adopters implement in their own systems
 
 It was created for one very specific reason:
 
@@ -24,13 +24,14 @@ If you have ever used hosted survey platforms, the pain is familiar:
 - even a one-question page may carry a platform-heavy runtime
 - the final payload and logic behavior are often hard to verify precisely
 
-This skill takes a different path:
+This repository takes a different path:
 
 - generate survey schema from natural-language intent
 - validate legality before delivery
 - render **fully customizable HTML survey pages**
 - verify runtime behavior, interaction flow, accessibility, and payload correctness
 - let every survey be delivered as an **independent artifact**, not a platform-bound page
+- define the backend integration contracts without hard-binding users to one hosted service
 
 If you want AI to generate questionnaires **without silently producing invalid forms, broken payloads, or locked-in platform UI**, this project is built for that.
 
@@ -152,10 +153,11 @@ Its focus is narrower and more intentional:
 - runtime
 - validation
 - HTML artifact output
+- analysis input/output contracts
 
 In short:
 
-> this project is about **survey generation and delivery**, not survey operations software.
+> this project is about **survey generation and analysis contracts**, not survey operations software.
 
 ---
 
@@ -172,6 +174,15 @@ In short:
 - teams that need stronger legality guardrails before shipping HTML questionnaires
 
 ---
+
+## Skill model
+
+This repository is intentionally centered on two open-source skills:
+
+- `survey-creator`
+- `survey-analytics`
+
+Everything else that looks like hosting, publishing, storage, or answer-service behavior is defined as an integration contract under `specs/`, so adopters can implement it in their own stack.
 
 ## Quick start with AI coding agents
 
@@ -202,6 +213,10 @@ npx skills add piter902/survey-creator-skill -a opencode
 Typical prompt:
 
 > Use `survey-creator-skill` to generate a survey HTML page, validate the schema, render the HTML, and verify payload correctness before returning the result.
+
+For analysis:
+
+> Use `survey-analytics` to analyze a survey schema plus answer dataset and return key findings, segment patterns, and recommendations.
 
 Best practice:
 
@@ -245,6 +260,10 @@ Generated HTML examples are also checked in for direct inspection and browser te
 - Legality matrix: [skills/survey-creator/docs/LEGALITY_MATRIX.md](./skills/survey-creator/docs/LEGALITY_MATRIX.md)
 - Pre-release checklist: [skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md](./skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md)
 - Performance benchmark: [skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md](./skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md)
+- Bundle contract: [specs/survey-bundle.md](./specs/survey-bundle.md)
+- Submission API contract: [specs/submission-api.md](./specs/submission-api.md)
+- Answer storage contract: [specs/answer-storage.md](./specs/answer-storage.md)
+- Analytics input contract: [specs/analytics-input.md](./specs/analytics-input.md)
 
 ---
 

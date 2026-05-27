@@ -4,18 +4,15 @@
 
 Evolve `survey-creator-skill` from a single generation skill into a **survey skill suite repository** without breaking the existing generation pipeline.
 
-The repository should keep its current generator capability intact and add adjacent skills for:
+The repository should keep its current generator capability intact and add one adjacent skill for:
 
-- publishing
-- backend submission/runtime scaffolding
 - analytics
-- orchestration
 
 ## Non-goal
 
 Do not rewrite the current generator.
 
-Do not merge publishing, backend, and analytics responsibilities into the current `survey-creator-skill` body.
+Do not merge hosting, backend, and analytics responsibilities into the current `survey-creator-skill` body.
 
 Do not create a second repository unless there is a packaging constraint that cannot be solved inside this repo.
 
@@ -32,7 +29,7 @@ The current repository already contains the hardest and most valuable layer:
 
 Those are upstream primitives for the whole workflow.
 
-If publishing, backend, and analytics are built elsewhere, they will either:
+If analytics and external integrations are built elsewhere, they will either:
 
 1. duplicate these rules
 2. drift from these rules
@@ -42,7 +39,7 @@ Reusing this repository avoids that.
 
 ## Target repository model
 
-Keep this repository as the **source-of-truth survey suite repo**.
+Keep this repository as the **source-of-truth survey skill + contract repo**.
 
 Recommended shape:
 
@@ -52,6 +49,7 @@ survey-creator-skill/
   README.zh-CN.md
   SKILL.md
   docs/
+  specs/
 
   skills/
     survey-creator/
@@ -65,24 +63,14 @@ survey-creator-skill/
       tests/
       tools/
       validators/
-    publisher/
+    survey-analytics/
       SKILL.md
       references/
-      scripts/
-    analytics/
-      SKILL.md
-      references/
-      scripts/
-    orchestrator/
-      SKILL.md
-      references/
-
-  services/
-    tencent-cloudbase/
-      functions/
-      docs/
-      configs/
 ```
+
+`specs/` is where backend/storage/hosting integration contracts live.
+
+They are intentionally **not** implemented as first-party hosted services in this repository.
 
 ## Why `skills/`
 
@@ -112,50 +100,25 @@ Role:
 
 This remains the upstream artifact producer.
 
-### `skills/publisher`
-
-Role:
-- consume a generated bundle
-- archive artifacts in provider storage
-- deploy HTML to a browser-openable web-facing hosting layer
-- produce a publish record
-
-Current first provider:
-- `tencent`
-
-### `services/tencent-cloudbase`
-
-Role:
-- real runtime service layer, not a skill
-- store survey answers
-- provide submission endpoint
-- provide CloudBase Functions and document-database integration
-
-Recommended storage model:
-- survey answers stored as full JSON payload documents
-- no need to flatten answers into relational rows in the first phase
-
-### `skills/analytics`
+### `skills/survey-analytics`
 
 Role:
 - consume schema + answers
 - produce analytics summaries and insight reports
 
-### `skills/orchestrator`
+### `specs/*`
 
 Role:
-- route multi-step user intents across the above skills
-
-Example:
-- generate survey
-- publish to Tencent
-- wire submission backend
+- define how adopters should host generated HTML
+- define how adopters should receive answer payloads
+- define how adopters should store answers
+- define what `survey-analytics` expects as input
 
 ## Shared contracts
 
-The suite should not exchange loose files informally.
+The repository should not exchange loose files informally.
 
-All downstream skills should consume a normalized bundle contract.
+The core skills and external adopters should consume a normalized bundle contract.
 
 Recommended bundle:
 
@@ -168,7 +131,7 @@ Recommended bundle:
   survey.manifest.json
 ```
 
-`survey.manifest.json` is the handoff object between skills.
+`survey.manifest.json` is the handoff object between the creator skill and any external system.
 
 ## Manifest minimum
 
@@ -186,16 +149,8 @@ Recommended bundle:
   },
   "submission": {
     "contractVersion": "default-v1",
-    "endpoint": "",
+    "endpoint": "/api/survey/submit",
     "method": "POST"
-  },
-  "publish": {
-    "provider": "",
-    "mode": "",
-    "surveyUrl": "",
-    "schemaUrl": "",
-    "htmlStorageUrl": "",
-    "publishedAt": ""
   }
 }
 ```
@@ -214,33 +169,23 @@ Only add:
 
 ### Phase 2
 
-Add `skills/publisher/`.
-
-This is the first operational downstream skill and should be implemented before backend or analytics.
+Add `skills/survey-analytics/` and formalize `specs/`.
 
 Reason:
-- it directly consumes current generator output
-- it solves the first real deployment problem
+- analytics is a natural second skill
+- hosting/storage/submission should remain external implementation concerns
 - it forces the bundle contract to become concrete
 
 ### Phase 3
 
-Add `services/tencent-cloudbase/`.
+Refine `specs/` based on real adopter feedback.
 
-This depends on stable publish metadata and stable schema contract.
-It should be implemented as deployable service code, not as a skill.
+This should focus on:
 
-### Phase 4
-
-Add `skills/analytics/`.
-
-This depends on stable answer payloads and schema semantics.
-
-### Phase 5
-
-Add `skills/orchestrator/`.
-
-This should be last, because orchestration on unstable primitives only hides design mistakes.
+- bundle portability
+- submission payload interoperability
+- answer storage compatibility
+- analytics input clarity
 
 ## What should change in the root skill
 
@@ -249,28 +194,28 @@ Only lightweight, backward-compatible changes are justified during migration:
 1. document that the repository is becoming a suite repo
 2. formalize bundle output naming
 3. formalize manifest generation
-4. reference downstream skills and services in docs
+4. reference the analytics skill and external integration specs in docs
 5. keep a temporary root bridge only if packaging compatibility requires it
 
 The generator skill should not become a deployment skill.
 
 ## Recommended next implementation step
 
-Implement `skills/publisher/` first, with `tencent` as the first provider.
+Implement `skills/survey-analytics/` first and stabilize `specs/`.
 
-This is the smallest useful addition and the one most tightly connected to the current user pain:
+This is the smallest useful addition that stays inside the right open-source boundary:
 
-- generated HTML exists
-- schema exists
-- users need a stable online survey URL
+- generated HTML/schema already exist
+- answer submission/storage should remain adopter-owned
+- analytics is the natural second capability on top of the creator output
 
 ## Packaging note
 
 Two distribution models are possible later:
 
-1. single repository, multiple skill entrypoints under `skills/`, plus real runtime service code under `services/`
-2. root repo as source-of-truth, with optional split-out packaged skills
+1. single repository, many skills plus embedded service implementations
+2. single repository, two core skills under `skills/`, plus protocol contracts under `specs/`
 
-For now, keep model 1.
+For now, keep model 2.
 
 The repository should evolve first; packaging can be decided later.

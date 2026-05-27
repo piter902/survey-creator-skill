@@ -1,6 +1,6 @@
 ---
 name: survey-creator-skill
-description: Bridge entry for the survey skill suite repository. The canonical generator skill now lives at `skills/survey-creator/`. Use that skill for survey generation, and use sibling skills under `skills/` for publishing and other workflow steps.
+description: Bridge entry for the survey skill suite repository. The repository now centers on two canonical skills: `skills/survey-creator/` for survey generation and `skills/survey-analytics/` for survey result analysis. Use `specs/` for integration contracts that adopters implement in their own systems.
 ---
 
 # Survey Skill Suite Bridge
@@ -10,12 +10,18 @@ This repository has evolved from a single-skill repository into a multi-skill su
 Canonical skill locations:
 
 - `skills/survey-creator/`
-- `skills/publisher/`
+- `skills/survey-analytics/`
 
-If you need the survey generator workflow, use:
+If you need survey generation, use:
 
 ```text
 skills/survey-creator/SKILL.md
 ```
 
-This bridge exists for compatibility while the repository transitions to a `skills/`-based structure.
+If you need survey result analysis, use:
+
+```text
+skills/survey-analytics/SKILL.md
+```
+
+This bridge exists for compatibility while the repository transitions to a `skills/`-based structure and keeps backend hosting/storage concerns outside the core open-source skills.

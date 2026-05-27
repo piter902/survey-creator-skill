@@ -9,8 +9,8 @@
 当前结构：
 
 - `skills/survey-creator/`：问卷生成 skill
-- `skills/publisher/`：问卷发布 skill
-- `services/tencent-cloudbase/`：腾讯云运行时服务层
+- `skills/survey-analytics/`：问卷分析 skill
+- `specs/`：由使用方自己实现的后端 / 托管 / 存储接入规范
 
 核心产物：
 
@@ -38,6 +38,7 @@
 - 生成 **完全可自定义 UI 的 HTML 问卷页面**
 - 校验运行时、交互、可访问性、payload 正确性
 - 让每一份问卷都成为 **独立产物**，而不是平台托管页面
+- 只定义后端接入协议，不把托管和存储强绑定到仓库本身
 
 如果你希望 AI 生成问卷时，**不是只出一个能看但不一定能交付的页面**，而是得到一套可校验、可提交、可独立部署、可回收数据的结果，这个项目就是为此设计的。
 
@@ -164,10 +165,22 @@
 - runtime
 - validation
 - HTML artifact 输出
+- 分析输入输出协议
 
 换句话说：
 
-> 这个项目做的是 **问卷生成与交付层**，不是完整的问卷运营平台。
+> 这个项目做的是 **问卷生成与分析协议层**，不是完整的问卷运营平台。
+
+---
+
+## skill 模型
+
+这个仓库当前只保留两个核心 skill：
+
+- `survey-creator`
+- `survey-analytics`
+
+至于怎么上传 HTML / schema、怎么保存答案、怎么提供访问 URL，这些都交给使用这个开源仓库的团队自己实现，仓库只负责在 `specs/` 里把协议定义清楚。
 
 ---
 
@@ -215,6 +228,10 @@ npx skills add piter902/survey-creator-skill -a opencode
 
 > Use `survey-creator-skill` to generate a survey HTML page, validate the schema, render the HTML, and verify payload correctness before returning the result.
 
+分析类 prompt：
+
+> Use `survey-analytics` to analyze a survey schema plus answer dataset and return key findings, segment patterns, and recommendations.
+
 最佳实践：
 
 - 用自然语言描述问卷目标
@@ -257,6 +274,10 @@ npx skills add piter902/survey-creator-skill -a opencode
 - 合法性矩阵：[skills/survey-creator/docs/LEGALITY_MATRIX.md](./skills/survey-creator/docs/LEGALITY_MATRIX.md)
 - 上线前检查清单：[skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md](./skills/survey-creator/docs/PRE_RELEASE_CHECKLIST.md)
 - 性能 benchmark：[skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md](./skills/survey-creator/docs/PERFORMANCE_BENCHMARK.md)
+- 问卷 bundle 协议：[specs/survey-bundle.md](./specs/survey-bundle.md)
+- 提交接口协议：[specs/submission-api.md](./specs/submission-api.md)
+- 答案存储协议：[specs/answer-storage.md](./specs/answer-storage.md)
+- 分析输入协议：[specs/analytics-input.md](./specs/analytics-input.md)
 
 ---
 

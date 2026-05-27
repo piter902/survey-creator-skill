@@ -1012,12 +1012,13 @@
     </div>
     <div class="progress-caption" id="progressCaption">当前正在开始填写</div>
 
-    <form id="surveyForm" action="#">
+    <form id="surveyForm" action="/api/survey/submit" method="post">
       <!-- screens rendered by schema -->
     </form>
   </div>
   <script>
     const richMediaImg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDcyMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0MDAiIHJ4PSIzMiIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjEyNSIgY3k9IjExNSIgcj0iNjAiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik02MCAzMjBDMTQ1IDI1NSAyNTUgMjI1IDM2MCAyNDVDNDU1IDI2MyA1NTIgMzQwIDY2MCAyNzVWNDAwSDYwVjMyMFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9Ii4xMiIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iNzIwIiB5Mj0iNDAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzVCN0NGRiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzI1QzJBMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==';
+    const DEFAULT_SUBMIT_ENDPOINT = '/api/survey/submit';
 
     const surveySchema = {
   "survey": {
@@ -1292,7 +1293,7 @@
   ]
 };
 
-    const surveyStylePack = "consumer-minimal";
+    const surveyStylePack = "consumer-polished";
 
     const form = document.getElementById('surveyForm');
     const progressBar = document.getElementById('progressBar');
@@ -1313,13 +1314,13 @@
         .map((item, index) => ({
           ...item,
           type: 'finish',
-          id: item.id || `finish_${index + 1}`,
+          id: item.id || `finish-${String(index + 1).padStart(6, '0')}`,
           media: Array.isArray(item.media) ? item.media : []
         }));
       if (!normalized.length) {
         normalized.push({
           type: 'finish',
-          id: 'finish_fallback',
+          id: 'finish-999999',
           title: '<h2>提交完成</h2>',
           description: '<p>感谢你的填写。</p>',
           media: []
@@ -2367,9 +2368,23 @@
 
     function assemblePayload() {
       answerableQuestions.forEach((q) => persist(q));
+      const extra = (() => {
+        const params = new URLSearchParams(window.location.search || '');
+        const data = {};
+        params.forEach((value, key) => {
+          if (Object.prototype.hasOwnProperty.call(data, key)) {
+            if (Array.isArray(data[key])) data[key].push(value);
+            else data[key] = [data[key], value];
+          } else {
+            data[key] = value;
+          }
+        });
+        return data;
+      })();
       return {
         surveyId,
         submittedAt: Date.now(),
+        extra,
         answers: Object.entries(cache.answers).filter(([questionId]) => !isQuestionHidden(questionId)).map(([questionId, answer]) => ({
           questionId,
           questionType: answer.questionType,
@@ -2479,6 +2494,82 @@
       node.classList.add('is-visible');
     }
 
+    function setSubmitButtonsDisabled(disabled) {
+      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = disabled; });
+    }
+
+    function submitEndpoint() {
+      const configured = surveySchema.survey.attribute?.submitEndpoint || surveySchema.survey.submitEndpoint;
+      return typeof configured === 'string' && configured.trim() ? configured.trim() : DEFAULT_SUBMIT_ENDPOINT;
+    }
+
+    function isLocalPreview() {
+      return window.location.protocol === 'file:';
+    }
+
+    async function submitPayload(payload) {
+      window.__surveyPayloads = Array.isArray(window.__surveyPayloads) ? window.__surveyPayloads : [];
+      window.__surveyPayloads.push(payload);
+      console.log(payload);
+
+      if (typeof window.__surveySubmit === 'function') {
+        return window.__surveySubmit(payload, { endpoint: submitEndpoint(), surveyId });
+      }
+
+      if (isLocalPreview()) {
+        return { ok: true, localPreview: true };
+      }
+
+      let response;
+      try {
+        response = await fetch(submitEndpoint(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
+        });
+      } catch (error) {
+        return {
+          ok: false,
+          code: 'NETWORK_ERROR',
+          message: '提交失败，请检查网络后重试。',
+          detail: String(error && error.message ? error.message : error)
+        };
+      }
+
+      let data = null;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch {
+          data = null;
+        }
+      }
+
+      if (!response.ok) {
+        return {
+          ok: false,
+          code: data?.code || `HTTP_${response.status}`,
+          message: data?.message || '提交失败，请稍后重试。',
+          status: response.status
+        };
+      }
+
+      if (data && data.ok === false) {
+        return {
+          ok: false,
+          code: data.code || 'SUBMIT_REJECTED',
+          message: data.message || '提交未通过服务端校验，请检查填写内容后重试。'
+        };
+      }
+
+      return data || { ok: true };
+    }
+
     function resetAfterSubmit() {
       cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
       form.reset();
@@ -2526,7 +2617,7 @@
         return;
       }
 
-      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = true; });
+      setSubmitButtonsDisabled(true);
       const immediateActionHtml = action.mode === 'delay'
         ? `<div class="submit-status-actions"><button class="btn secondary" type="button" data-submit-go-now>立即前往</button></div>`
         : '';
@@ -2612,7 +2703,7 @@
         applyLogicRuntime({ preserveActiveId: currentScreenId() });
       });
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         applyLogicRuntime({ preserveActiveId: currentScreenId() });
         for (let i = 0; i < answerableQuestions.length; i++) {
@@ -2626,7 +2717,14 @@
         }
         saveCache();
         const payload = assemblePayload();
-        console.log(payload);
+        setSubmitButtonsDisabled(true);
+        setSubmitStatus('正在提交，请稍候...');
+        const submitResult = await submitPayload(payload);
+        if (!submitResult || submitResult.ok === false) {
+          setSubmitButtonsDisabled(false);
+          setSubmitStatus(submitResult?.message || '提交失败，请稍后重试。');
+          return;
+        }
         localStorage.removeItem(cacheKey);
         runPostSubmitAction(activeFinishScreen(), payload);
       });

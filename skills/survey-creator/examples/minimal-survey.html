@@ -1023,9 +1023,9 @@
     const surveySchema = {
   "survey": {
     "type": "survey",
-    "id": "survey-310991634221453312",
-    "title": "<h1>服务满意度回访</h1>",
-    "description": "<p>你好，这是一份面向真实服务场景的满意度回访问卷示例。我们会根据你的反馈，判断是进入普通感谢结束页，还是进入更偏 <strong>安抚 + 后续跟进</strong> 的结束页。</p>",
+    "id": "survey-310991634108207104",
+    "title": "<h1>Minimal Survey Example</h1>",
+    "description": "<p>This is a minimal example for the survey-creator-skill pipeline.</p>",
     "attribute": {
       "onePageOneQuestion": true,
       "allowBack": true,
@@ -1035,9 +1035,9 @@
   "questions": [
     {
       "type": "radio",
-      "id": "radio-440832",
-      "title": "<h2>你本次体验的是哪类服务？</h2>",
-      "description": "<p>用于帮助我们区分不同服务链路的体验差异。</p>",
+      "id": "radio-562944",
+      "title": "<h2>How satisfied are you?</h2>",
+      "description": "<p>Please choose one option.</p>",
       "attribute": {
         "required": true,
         "random": false,
@@ -1045,262 +1045,17 @@
       },
       "option": [
         {
-          "id": "radio-440833",
-          "title": "<p>线上咨询 / 在线客服</p>",
+          "id": "radio-562945",
+          "title": "<p>Satisfied</p>",
           "attribute": {
             "media": []
           }
         },
         {
-          "id": "radio-440834",
-          "title": "<p>到店服务 / 线下接待</p>",
+          "id": "radio-562946",
+          "title": "<p>Not satisfied</p>",
           "attribute": {
             "media": []
-          }
-        },
-        {
-          "id": "radio-440835",
-          "title": "<p>上门 / 配送 / 履约相关服务</p>",
-          "attribute": {
-            "media": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "radio",
-      "id": "radio-440836",
-      "title": "<h2>你对本次服务整体满意吗？</h2>",
-      "description": "<p>这是本次回访里最核心的一题。</p>",
-      "attribute": {
-        "required": true,
-        "random": false,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "radio-440837",
-          "title": "<p>满意</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "radio-440838",
-          "title": "<p>不满意</p>",
-          "attribute": {
-            "media": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "score",
-      "id": "score-440839",
-      "title": "<h2>请你为以下维度打分</h2>",
-      "description": "<p>1 分最低，5 分最高。</p>",
-      "attribute": {
-        "required": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "score-440840",
-          "title": "<p>响应速度</p>",
-          "attribute": {
-            "scope": [
-              1,
-              5
-            ],
-            "step": 1,
-            "scoreDesc": {
-              "1": "很差",
-              "2": "较差",
-              "3": "一般",
-              "4": "满意",
-              "5": "非常满意"
-            },
-            "media": []
-          }
-        },
-        {
-          "id": "score-440841",
-          "title": "<p>沟通清晰度</p>",
-          "attribute": {
-            "scope": [
-              1,
-              5
-            ],
-            "step": 1,
-            "scoreDesc": {
-              "1": "很差",
-              "2": "较差",
-              "3": "一般",
-              "4": "满意",
-              "5": "非常满意"
-            },
-            "media": []
-          }
-        },
-        {
-          "id": "score-440842",
-          "title": "<p>问题解决结果</p>",
-          "attribute": {
-            "scope": [
-              1,
-              5
-            ],
-            "step": 1,
-            "scoreDesc": {
-              "1": "很差",
-              "2": "较差",
-              "3": "一般",
-              "4": "满意",
-              "5": "非常满意"
-            },
-            "media": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "input",
-      "id": "input-440843",
-      "title": "<h2>如果你满意，欢迎补充最认可我们的哪一点</h2>",
-      "description": "<p>这会帮助我们知道最应该继续保持的服务优势。</p>",
-      "attribute": {
-        "required": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "input-440844",
-          "title": "<p>你最认可的服务亮点</p>",
-          "attribute": {
-            "dataType": "text",
-            "required": true,
-            "placeholder": "例如：响应很快、态度很好、处理很专业",
-            "maxLength": 200
-          }
-        }
-      ]
-    },
-    {
-      "type": "checkbox",
-      "id": "checkbox-440845",
-      "title": "<h2>如果不满意，主要原因是什么？</h2>",
-      "description": "<p>可多选，我们会优先定位影响最大的问题。</p>",
-      "attribute": {
-        "required": true,
-        "random": false,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "checkbox-440846",
-          "title": "<p>响应速度慢</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "checkbox-440847",
-          "title": "<p>服务态度一般</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "checkbox-440848",
-          "title": "<p>问题没有真正解决</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "checkbox-440849",
-          "title": "<p>结果与预期差距较大</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "checkbox-440850",
-          "title": "<p>其他，请说明</p>",
-          "attribute": {
-            "media": []
-          },
-          "child": [
-            {
-              "type": "input",
-              "id": "input-440851",
-              "title": "<p>补充说明</p>",
-              "attribute": {
-                "required": true,
-                "dataType": "text",
-                "placeholder": "请补充你的真实感受",
-                "maxLength": 200
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "radio",
-      "id": "radio-440852",
-      "title": "<h2>如果我们安排专人跟进，你愿意接受回访吗？</h2>",
-      "description": "<p>仅用于处理本次反馈，不会用于营销打扰。</p>",
-      "attribute": {
-        "required": true,
-        "random": false,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "radio-440853",
-          "title": "<p>愿意，请联系我</p>",
-          "attribute": {
-            "media": []
-          }
-        },
-        {
-          "id": "radio-440854",
-          "title": "<p>暂时不用联系</p>",
-          "attribute": {
-            "media": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "input",
-      "id": "input-440855",
-      "title": "<h2>请留下你的联系方式</h2>",
-      "description": "<p>仅在你同意回访时用于后续处理。</p>",
-      "attribute": {
-        "required": true,
-        "media": []
-      },
-      "option": [
-        {
-          "id": "input-440856",
-          "title": "<p>姓名</p>",
-          "attribute": {
-            "dataType": "text",
-            "required": true,
-            "placeholder": "请输入你的姓名",
-            "maxLength": 40
-          }
-        },
-        {
-          "id": "input-440857",
-          "title": "<p>手机号</p>",
-          "attribute": {
-            "dataType": "tel",
-            "required": true,
-            "placeholder": "请输入手机号，如 13800000000",
-            "maxLength": 20
           }
         }
       ]
@@ -1309,101 +1064,10 @@
   "finish": [
     {
       "type": "finish",
-      "id": "finish-440858",
-      "title": "<h2>感谢你的认可</h2>",
-      "description": "<p>你的正向反馈会帮助我们继续稳定输出更好的服务体验，也欢迎你未来继续提出建议。</p>",
+      "id": "finish-562947",
+      "title": "<h2>Thank you</h2>",
+      "description": "<p>Your response has been recorded.</p>",
       "media": []
-    },
-    {
-      "type": "finish",
-      "id": "finish-440859",
-      "title": "<h2>感谢你的坦诚反馈</h2>",
-      "description": "<p>很抱歉这次体验没有达到预期。我们会认真处理你的意见，并持续优化服务流程。</p>",
-      "media": []
-    }
-  ],
-  "logic": [
-    {
-      "id": "logic_show_highlight_for_satisfied",
-      "when": {
-        "questionId": "radio-440836",
-        "operator": "selected",
-        "optionId": "radio-440837"
-      },
-      "action": {
-        "type": "show_question",
-        "targetQuestionId": "input-440843"
-      }
-    },
-    {
-      "id": "logic_show_reason_for_unsatisfied",
-      "when": {
-        "questionId": "radio-440836",
-        "operator": "selected",
-        "optionId": "radio-440838"
-      },
-      "action": {
-        "type": "show_question",
-        "targetQuestionId": "checkbox-440845"
-      }
-    },
-    {
-      "id": "logic_show_followup_for_unsatisfied",
-      "when": {
-        "questionId": "radio-440836",
-        "operator": "selected",
-        "optionId": "radio-440838"
-      },
-      "action": {
-        "type": "show_question",
-        "targetQuestionId": "radio-440852"
-      }
-    },
-    {
-      "id": "logic_satisfied_end_to_happy_finish",
-      "when": {
-        "questionId": "input-440843",
-        "operator": "answered"
-      },
-      "action": {
-        "type": "end_survey",
-        "targetQuestionId": "finish-440858"
-      }
-    },
-    {
-      "id": "logic_show_contact_detail_when_followup_yes",
-      "when": {
-        "questionId": "radio-440852",
-        "operator": "selected",
-        "optionId": "radio-440853"
-      },
-      "action": {
-        "type": "show_question",
-        "targetQuestionId": "input-440855"
-      }
-    },
-    {
-      "id": "logic_followup_no_to_care_finish",
-      "when": {
-        "questionId": "radio-440852",
-        "operator": "selected",
-        "optionId": "radio-440854"
-      },
-      "action": {
-        "type": "end_survey",
-        "targetQuestionId": "finish-440859"
-      }
-    },
-    {
-      "id": "logic_contact_detail_to_care_finish",
-      "when": {
-        "questionId": "input-440855",
-        "operator": "answered"
-      },
-      "action": {
-        "type": "end_survey",
-        "targetQuestionId": "finish-440859"
-      }
     }
   ]
 };

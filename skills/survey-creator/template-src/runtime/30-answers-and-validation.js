@@ -364,6 +364,82 @@
       node.classList.add('is-visible');
     }
 
+    function setSubmitButtonsDisabled(disabled) {
+      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = disabled; });
+    }
+
+    function submitEndpoint() {
+      const configured = surveySchema.survey.attribute?.submitEndpoint || surveySchema.survey.submitEndpoint;
+      return typeof configured === 'string' && configured.trim() ? configured.trim() : DEFAULT_SUBMIT_ENDPOINT;
+    }
+
+    function isLocalPreview() {
+      return window.location.protocol === 'file:';
+    }
+
+    async function submitPayload(payload) {
+      window.__surveyPayloads = Array.isArray(window.__surveyPayloads) ? window.__surveyPayloads : [];
+      window.__surveyPayloads.push(payload);
+      console.log(payload);
+
+      if (typeof window.__surveySubmit === 'function') {
+        return window.__surveySubmit(payload, { endpoint: submitEndpoint(), surveyId });
+      }
+
+      if (isLocalPreview()) {
+        return { ok: true, localPreview: true };
+      }
+
+      let response;
+      try {
+        response = await fetch(submitEndpoint(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
+        });
+      } catch (error) {
+        return {
+          ok: false,
+          code: 'NETWORK_ERROR',
+          message: '提交失败，请检查网络后重试。',
+          detail: String(error && error.message ? error.message : error)
+        };
+      }
+
+      let data = null;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch {
+          data = null;
+        }
+      }
+
+      if (!response.ok) {
+        return {
+          ok: false,
+          code: data?.code || `HTTP_${response.status}`,
+          message: data?.message || '提交失败，请稍后重试。',
+          status: response.status
+        };
+      }
+
+      if (data && data.ok === false) {
+        return {
+          ok: false,
+          code: data.code || 'SUBMIT_REJECTED',
+          message: data.message || '提交未通过服务端校验，请检查填写内容后重试。'
+        };
+      }
+
+      return data || { ok: true };
+    }
+
     function resetAfterSubmit() {
       cache = { surveyId, updatedAt: new Date().toISOString(), answers: {} };
       form.reset();
@@ -411,7 +487,7 @@
         return;
       }
 
-      document.querySelectorAll('button[type="submit"]').forEach((button) => { button.disabled = true; });
+      setSubmitButtonsDisabled(true);
       const immediateActionHtml = action.mode === 'delay'
         ? `<div class="submit-status-actions"><button class="btn secondary" type="button" data-submit-go-now>立即前往</button></div>`
         : '';
@@ -497,7 +573,7 @@
         applyLogicRuntime({ preserveActiveId: currentScreenId() });
       });
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         applyLogicRuntime({ preserveActiveId: currentScreenId() });
         for (let i = 0; i < answerableQuestions.length; i++) {
@@ -511,7 +587,14 @@
         }
         saveCache();
         const payload = assemblePayload();
-        console.log(payload);
+        setSubmitButtonsDisabled(true);
+        setSubmitStatus('正在提交，请稍候...');
+        const submitResult = await submitPayload(payload);
+        if (!submitResult || submitResult.ok === false) {
+          setSubmitButtonsDisabled(false);
+          setSubmitStatus(submitResult?.message || '提交失败，请稍后重试。');
+          return;
+        }
         localStorage.removeItem(cacheKey);
         runPostSubmitAction(activeFinishScreen(), payload);
       });

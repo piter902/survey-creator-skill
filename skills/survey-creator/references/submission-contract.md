@@ -4,6 +4,10 @@ This document defines the default submission data protocol for `survey-creator-s
 
 This contract is the default until the user provides a more specific backend format.
 
+Generated HTML submits this payload to `POST /api/survey/submit` by default.
+
+Adopters should implement that endpoint in their own application. The generated HTML keeps local answers if the request fails, clears local cache only after success, and only runs finish redirects after successful submission.
+
 ## Goal
 The submission payload should make it possible to:
 - identify which survey was answered
@@ -21,6 +25,7 @@ Default shape:
 {
   "surveyId": "survey_xxx",
   "submittedAt": 1776742800000,
+  "extra": {},
   "answers": [ ... ]
 }
 
